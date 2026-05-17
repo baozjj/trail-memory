@@ -1,7 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  withTabBar?: boolean
-}>()
+import type { MobilePageProps } from './types'
+
+defineProps<MobilePageProps>()
 </script>
 
 <template>

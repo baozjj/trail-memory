@@ -1,21 +1,23 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { AddIcon } from 'tdesign-icons-vue-next'
-import { MOCK_IMAGES } from '@/mock'
+import {
+  ADD_BTN_WIDTH_COMPACT,
+  ADD_BTN_WIDTH_FULL,
+  IMAGE_CELL_SIZE,
+  MAX_IMAGE_COUNT,
+  OVERFLOW_IMAGE_COUNT,
+} from './const'
+import type { PublishImageRowEmits, PublishImageRowProps } from './types'
 
-const props = defineProps<{
-  images: string[]
-  maxCount?: number
-}>()
+const props = defineProps<PublishImageRowProps>()
+const emit = defineEmits<PublishImageRowEmits>()
 
-const emit = defineEmits<{
-  add: []
-  remove: [index: number]
-}>()
-
-const maxCount = computed(() => props.maxCount ?? 9)
-const isOverflow = computed(() => props.images.length >= 3)
-const addBtnWidth = computed(() => (isOverflow.value ? 48 : 96))
+const maxCount = computed(() => props.maxCount ?? MAX_IMAGE_COUNT)
+const isOverflow = computed(() => props.images.length >= OVERFLOW_IMAGE_COUNT)
+const addBtnWidth = computed(() =>
+  isOverflow.value ? ADD_BTN_WIDTH_COMPACT : ADD_BTN_WIDTH_FULL,
+)
 </script>
 
 <template>
@@ -26,6 +28,7 @@ const addBtnWidth = computed(() => (isOverflow.value ? 48 : 96))
         :key="`${url}-${index}`"
         type="button"
         class="image-cell"
+        :style="{ width: `${IMAGE_CELL_SIZE}px`, height: `${IMAGE_CELL_SIZE}px` }"
         @click="emit('remove', index)"
       >
         <img :src="url" alt="" />
@@ -35,7 +38,7 @@ const addBtnWidth = computed(() => (isOverflow.value ? 48 : 96))
       v-if="images.length < maxCount"
       type="button"
       class="add-btn"
-      :style="{ width: `${addBtnWidth}px` }"
+      :style="{ width: `${addBtnWidth}px`, height: `${IMAGE_CELL_SIZE}px` }"
       aria-label="添加图片"
       @click="emit('add')"
     >

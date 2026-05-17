@@ -8,10 +8,11 @@ import {
   Button as TButton,
   Toast,
 } from 'tdesign-mobile-vue'
-import MobilePage from '@/components/layout/MobilePage.vue'
-import PublishImageRow from '@/components/publish/PublishImageRow.vue'
-import { usePublishDraft } from '@/composables/usePublishDraft'
+import MobilePage from '@/components/layout/mobile-page/index.vue'
+import PublishImageRow from '@/components/publish/image-row/index.vue'
+import { usePublishDraft } from './hooks'
 import { MOCK_IMAGES } from '@/mock'
+import { MOCK_LOCATION, SUBMIT_DELAY_MS } from './const'
 
 const router = useRouter()
 const { draft, addImage, removeImage } = usePublishDraft()
@@ -26,7 +27,7 @@ function onAddImage() {
 }
 
 function onPickLocation() {
-  draft.location = '四川·稻城亚丁'
+  draft.location = MOCK_LOCATION
   Toast({ message: '已选择示例地点（Mock）' })
 }
 
@@ -36,7 +37,7 @@ async function onSubmit() {
     return
   }
   submitting.value = true
-  await new Promise((r) => setTimeout(r, 600))
+  await new Promise((r) => setTimeout(r, SUBMIT_DELAY_MS))
   submitting.value = false
   Toast({ message: '感应链接已生成（Mock）' })
   router.push({ name: 'home' })
@@ -46,7 +47,7 @@ async function onSubmit() {
 <template>
   <MobilePage>
     <TNavbar title="封存印记" left-arrow @left-click="goBack" />
-    <main class="publish">
+    <div class="publish">
       <PublishImageRow
         :images="draft.imageUrls"
         @add="onAddImage"
@@ -65,7 +66,7 @@ async function onSubmit() {
         placeholder="分享这块印记的故事..."
         rows="4"
       />
-      <section class="publish__config">
+      <div class="publish__config">
         <TCell
           title="添加地点"
           :note="draft.location || undefined"
@@ -77,9 +78,9 @@ async function onSubmit() {
             <TSwitch v-model="draft.isPublic" @click.stop />
           </template>
         </TCell>
-      </section>
-    </main>
-    <footer class="publish__footer">
+      </div>
+    </div>
+    <div class="publish__footer">
       <TButton
         block
         theme="primary"
@@ -90,7 +91,7 @@ async function onSubmit() {
       >
         生成感应链接
       </TButton>
-    </footer>
+    </div>
   </MobilePage>
 </template>
 

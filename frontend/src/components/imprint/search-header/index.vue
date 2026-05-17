@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { SearchIcon, AddIcon } from 'tdesign-icons-vue-next'
 import { useRouter } from 'vue-router'
+import { SEARCH_PLACEHOLDER } from './const'
 
 const keyword = defineModel<string>('keyword', { default: '' })
 
@@ -12,21 +13,21 @@ function goPublish() {
 </script>
 
 <template>
-  <header class="imprint-header">
+  <div class="imprint-header">
     <div class="search-box">
       <SearchIcon class="search-icon" />
       <input
         v-model="keyword"
         type="search"
         class="search-input"
-        placeholder="搜索印记"
+        :placeholder="SEARCH_PLACEHOLDER"
         enterkeyhint="search"
       />
     </div>
     <button type="button" class="add-btn" aria-label="封存新印记" @click="goPublish">
       <AddIcon />
     </button>
-  </header>
+  </div>
 </template>
 
 <style scoped>

@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import { AppIcon, UserIcon } from 'tdesign-icons-vue-next'
+import type { FloatingTabBarEmits, FloatingTabBarProps } from './types'
 
-defineProps<{
-  active?: 'grid' | 'user'
-}>()
-
-const emit = defineEmits<{
-  change: [tab: 'grid' | 'user']
-}>()
+defineProps<FloatingTabBarProps>()
+const emit = defineEmits<FloatingTabBarEmits>()
 </script>
 
 <template>
-  <nav class="floating-tab-bar" aria-label="主导航">
+  <div class="floating-tab-bar" aria-label="主导航">
     <button
       type="button"
       class="tab-item"
@@ -31,7 +27,7 @@ const emit = defineEmits<{
     >
       <UserIcon class="tab-icon tab-icon--inactive" />
     </button>
-  </nav>
+  </div>
 </template>
 
 <style scoped>

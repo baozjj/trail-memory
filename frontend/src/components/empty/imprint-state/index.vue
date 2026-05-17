@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { Button as TButton } from 'tdesign-mobile-vue'
 import { MOCK_IMAGES } from '@/mock'
+import { CTA_TEXT, EMPTY_HINT_TEXT } from './const'
 
 const router = useRouter()
 
@@ -11,18 +12,18 @@ function goPublish() {
 </script>
 
 <template>
-  <section class="empty-state">
+  <div class="empty-state">
     <img
       class="empty-state__hex"
       :src="MOCK_IMAGES.hexWireframe"
       alt=""
       aria-hidden="true"
     />
-    <p class="empty-state__text">行囊空空，去走一段路，把山野装进这里</p>
+    <p class="empty-state__text">{{ EMPTY_HINT_TEXT }}</p>
     <TButton class="empty-state__cta" theme="primary" shape="round" size="large" @click="goPublish">
-      + 封存新印记
+      {{ CTA_TEXT }}
     </TButton>
-  </section>
+  </div>
 </template>
 
 <style scoped>

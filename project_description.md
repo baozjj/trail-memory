@@ -29,10 +29,27 @@
 
 ## 前端结构
 
-- `frontend/src/mock/` — 统一 Mock 数据（印记列表、详情、发布草稿）
-- `frontend/src/components/` — 可复用 UI 组件
-- `frontend/src/views/` — 页面级组件
-- 组件库：`tdesign-mobile-vue`
+每个页面 / 组件目录包含 `index.vue`，以及按需的 `types.ts`、`const.ts`、`utils.ts`、`hooks/index.ts`；内部子组件放在同级 `components/` 下，命名规则相同。
+
+```
+frontend/src/
+├── mock/                    # 统一 Mock 数据
+├── types/imprint.ts         # 全局领域类型
+├── stores/
+├── views/
+│   ├── home/                # 印记首页
+│   ├── empty/               # 空状态页
+│   ├── publish/             # 封存印记
+│   └── article/             # 印记详情
+└── components/
+    ├── layout/              # mobile-page、floating-tab-bar
+    ├── imprint/             # search-header、waterfall-grid/…
+    ├── publish/             # image-row
+    ├── article/             # hero、author-card
+    └── empty/               # imprint-state
+```
+
+组件库：`tdesign-mobile-vue`
 
 ## 开发
 

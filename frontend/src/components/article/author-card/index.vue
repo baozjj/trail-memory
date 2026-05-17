@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import type { Author } from '@/types/imprint'
+import type { AuthorCardProps } from './types'
 
-defineProps<{
-  author: Author
-}>()
+defineProps<AuthorCardProps>()
 </script>
 
 <template>
-  <aside class="author-card">
+  <div class="author-card">
     <img class="author-card__avatar" :src="author.avatarUrl" :alt="author.name" />
     <div class="author-card__info">
-      <p class="author-card__name">{{ author.name }}</p>
-      <p class="author-card__bio">{{ author.bio }}</p>
+      <p class="author-card__name">{ author.name }</p>
+      <p class="author-card__bio">{ author.bio }</p>
     </div>
-  </aside>
+  </div>
 </template>
 
 <style scoped>

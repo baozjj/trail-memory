@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import type { ImprintListItem } from '@/types/imprint'
+import type { ImprintCardEmits, ImprintCardProps } from './types'
 
-const props = defineProps<{
-  item: ImprintListItem
-}>()
-
-const emit = defineEmits<{
-  click: [id: string]
-}>()
+const props = defineProps<ImprintCardProps>()
+const emit = defineEmits<ImprintCardEmits>()
 </script>
 
 <template>
-  <article class="imprint-card" @click="emit('click', props.item.id)">
+  <div class="imprint-card" @click="emit('click', props.item.id)">
     <div
       class="imprint-card__cover"
       :style="{ paddingBottom: `${props.item.heightWeight * 100}%` }"
@@ -22,7 +17,7 @@ const emit = defineEmits<{
       <h3 class="imprint-card__title">{{ props.item.title }}</h3>
       <span class="imprint-card__more" aria-hidden="true">···</span>
     </div>
-  </article>
+  </div>
 </template>
 
 <style scoped>

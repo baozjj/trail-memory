@@ -1,29 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ImprintListItem } from '@/types/imprint'
-import ImprintCard from './ImprintCard.vue'
+import ImprintCard from './components/imprint-card/index.vue'
+import type { WaterfallGridEmits, WaterfallGridProps } from './types'
+import { splitWaterfallColumns } from './utils'
 
-const props = defineProps<{
-  items: ImprintListItem[]
-}>()
+const props = defineProps<WaterfallGridProps>()
+const emit = defineEmits<WaterfallGridEmits>()
 
-const emit = defineEmits<{
-  select: [id: string]
-}>()
-
-const columns = computed(() => {
-  const left: ImprintListItem[] = []
-  const right: ImprintListItem[] = []
-  props.items.forEach((item, index) => {
-    if (index % 2 === 0) left.push(item)
-    else right.push(item)
-  })
-  return { left, right }
-})
+const columns = computed(() => splitWaterfallColumns(props.items))
 </script>
 
 <template>
-  <section class="waterfall" aria-label="印记瀑布流">
+  <div class="waterfall" aria-label="印记瀑布流">
     <div class="waterfall__col">
       <ImprintCard
         v-for="item in columns.left"
@@ -40,7 +28,7 @@ const columns = computed(() => {
         @click="emit('select', $event)"
       />
     </div>
-  </section>
+  </div>
 </template>
 
 <style scoped>

@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Navbar as TNavbar } from 'tdesign-mobile-vue'
-import MobilePage from '@/components/layout/MobilePage.vue'
-import ArticleHero from '@/components/article/ArticleHero.vue'
-import AuthorCard from '@/components/article/AuthorCard.vue'
+import MobilePage from '@/components/layout/mobile-page/index.vue'
+import ArticleHero from '@/components/article/hero/index.vue'
+import AuthorCard from '@/components/article/author-card/index.vue'
 import { getArticleById } from '@/mock'
 
 const route = useRoute()
@@ -21,14 +21,14 @@ function goBack() {
   <MobilePage v-if="article">
     <ArticleHero :images="article.images" />
     <TNavbar class="article-nav" left-arrow :title="''" @left-click="goBack" />
-    <main class="article">
-      <section class="article__body">
+    <div class="article">
+      <div class="article__body">
         <h1 class="article__title">{{ article.title }}</h1>
         <p class="article__content">{{ article.content }}</p>
         <p class="article__meta">{{ article.meta }}</p>
-      </section>
+      </div>
       <AuthorCard :author="article.author" />
-    </main>
+    </div>
   </MobilePage>
   <MobilePage v-else>
     <TNavbar title="印记详情" left-arrow @left-click="goBack" />

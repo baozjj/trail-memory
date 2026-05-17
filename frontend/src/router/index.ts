@@ -6,25 +6,25 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/home/HomeView.vue'),
+      component: () => import('@/views/home/index.vue'),
       meta: { title: '印记首页' },
     },
     {
       path: '/empty',
       name: 'empty',
-      component: () => import('@/views/home/EmptyHomeView.vue'),
+      component: () => import('@/views/empty/index.vue'),
       meta: { title: '空状态' },
     },
     {
       path: '/publish',
       name: 'publish',
-      component: () => import('@/views/publish/PublishView.vue'),
+      component: () => import('@/views/publish/index.vue'),
       meta: { title: '封存印记' },
     },
     {
       path: '/article/:id',
       name: 'article',
-      component: () => import('@/views/article/ArticleDetailView.vue'),
+      component: () => import('@/views/article/index.vue'),
       meta: { title: '印记详情' },
     },
     {

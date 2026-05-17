@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import MobilePage from '@/components/layout/MobilePage.vue'
-import FloatingTabBar from '@/components/layout/FloatingTabBar.vue'
-import EmptyImprintState from '@/components/empty/EmptyImprintState.vue'
+import MobilePage from '@/components/layout/mobile-page/index.vue'
+import FloatingTabBar from '@/components/layout/floating-tab-bar/index.vue'
+import EmptyImprintState from '@/components/empty/imprint-state/index.vue'
 </script>
 
 <template>
   <MobilePage with-tab-bar>
-    <main class="empty-home">
+    <div class="empty-home">
       <EmptyImprintState />
-    </main>
+    </div>
     <FloatingTabBar active="grid" />
   </MobilePage>
 </template>
