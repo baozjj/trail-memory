@@ -60,7 +60,7 @@ function goPublish() {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--tm-color-text-primary);
 }
 

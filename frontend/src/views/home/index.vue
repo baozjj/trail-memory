@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import FloatingTabBar from '@/components/layout/floating-tab-bar/index.vue'
 import ImprintSearchHeader from '@/components/imprint/search-header/index.vue'
@@ -7,6 +8,7 @@ import EmptyImprintState from '@/components/empty/imprint-state/index.vue'
 import CardActionSheet from '@/components/imprint/card-action-sheet/index.vue'
 import ExhibitSettingsSheet from '@/components/imprint/exhibit-settings-sheet/index.vue'
 import { useHomePage } from './hooks'
+import { useHomeScrollHeader } from './hooks/use-scroll-header'
 
 const {
   filteredItems,
@@ -21,12 +23,27 @@ const {
   onExhibitSave,
   onTabChange,
 } = useHomePage()
+
+const headerRef = ref<HTMLElement | null>(null)
+const { headerVisible, spacerHeight } = useHomeScrollHeader(headerRef)
 </script>
 
 <template>
   <MobilePage with-tab-bar>
     <div class="home">
-      <header v-if="!isEmpty" class="home__header">
+      <div
+        v-if="!isEmpty"
+        class="home__header-spacer"
+        :style="{ height: `${spacerHeight}px` }"
+        aria-hidden="true"
+      />
+
+      <header
+        v-if="!isEmpty"
+        ref="headerRef"
+        class="home__header"
+        :class="{ 'home__header--hidden': !headerVisible }"
+      >
         <ImprintSearchHeader v-model:keyword="searchKeyword" />
       </header>
 
@@ -59,13 +76,36 @@ const {
   padding: 4px var(--tm-spacing-page-x) 0;
 }
 
+.home__header-spacer {
+  flex-shrink: 0;
+  margin: 0;
+}
+
 .home__header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 20;
-  margin: 0 calc(-1 * var(--tm-spacing-page-x));
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
   padding: 4px var(--tm-spacing-page-x) 12px;
   background: var(--tm-color-bg-page);
+  transform: translateY(0);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.home__header--hidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home__header {
+    transition: none;
+  }
 }
 
 .home__grid {
