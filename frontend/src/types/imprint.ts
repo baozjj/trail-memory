@@ -11,6 +11,10 @@ export interface ImprintListItem {
   coverUrl: string
   /** 瀑布流高度权重，越大卡片越高 */
   heightWeight: number
+  /** 公开展示：开启则游客可看 */
+  isPublic: boolean
+  /** 分享链接自定义后缀（字母与数字） */
+  linkSuffix: string
 }
 
 export interface ImprintArticle {

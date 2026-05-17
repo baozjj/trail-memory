@@ -17,7 +17,8 @@ const columns = computed(() => splitWaterfallColumns(props.items))
         v-for="item in columns.left"
         :key="item.id"
         :item="item"
-        @click="emit('select', $event)"
+        @select="emit('select', $event)"
+        @more="emit('more', $event)"
       />
     </div>
     <div class="waterfall__col">
@@ -25,7 +26,8 @@ const columns = computed(() => splitWaterfallColumns(props.items))
         v-for="item in columns.right"
         :key="item.id"
         :item="item"
-        @click="emit('select', $event)"
+        @select="emit('select', $event)"
+        @more="emit('more', $event)"
       />
     </div>
   </div>

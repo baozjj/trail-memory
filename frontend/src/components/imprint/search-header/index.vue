@@ -72,8 +72,10 @@ function goPublish() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: -6px -8px -6px 0;
   padding: 0;
   border: none;
   background: transparent;

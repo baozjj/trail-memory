@@ -6,4 +6,5 @@ export interface WaterfallGridProps {
 
 export interface WaterfallGridEmits {
   select: [id: string]
+  more: [id: string]
 }

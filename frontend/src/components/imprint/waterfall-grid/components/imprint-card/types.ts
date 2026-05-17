@@ -5,5 +5,6 @@ export interface ImprintCardProps {
 }
 
 export interface ImprintCardEmits {
-  click: [id: string]
+  select: [id: string]
+  more: [id: string]
 }

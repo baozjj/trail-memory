@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useImprintStore } from '@/stores/imprint'
 import {
   Navbar as TNavbar,
   Switch as TSwitch,
@@ -15,8 +16,28 @@ import { MOCK_IMAGES } from '@/mock'
 import { MOCK_LOCATION, SUBMIT_DELAY_MS } from './const'
 
 const router = useRouter()
+const route = useRoute()
+const imprintStore = useImprintStore()
 const { draft, addImage, removeImage } = usePublishDraft()
 const submitting = ref(false)
+
+const editId = computed(() => {
+  const id = route.query.id
+  return typeof id === 'string' && id.length > 0 ? id : null
+})
+
+const pageTitle = computed(() => (editId.value ? '编辑印记' : '封存印记'))
+
+onMounted(() => {
+  if (!editId.value) return
+  const item = imprintStore.getById(editId.value)
+  if (!item) return
+  draft.title = item.title
+  draft.isPublic = item.isPublic
+  if (!draft.imageUrls.length) {
+    draft.imageUrls.push(item.coverUrl)
+  }
+})
 
 function goBack() {
   router.back()
@@ -39,14 +60,22 @@ async function onSubmit() {
   submitting.value = true
   await new Promise((r) => setTimeout(r, SUBMIT_DELAY_MS))
   submitting.value = false
-  Toast({ message: '感应链接已生成（Mock）' })
+  if (editId.value) {
+    imprintStore.updateItem(editId.value, {
+      title: draft.title.trim(),
+      isPublic: draft.isPublic,
+    })
+    Toast({ message: '印记已更新（Mock）' })
+  } else {
+    Toast({ message: '感应链接已生成（Mock）' })
+  }
   router.push({ name: 'home' })
 }
 </script>
 
 <template>
   <MobilePage>
-    <TNavbar title="封存印记" left-arrow @left-click="goBack" />
+    <TNavbar :title="pageTitle" left-arrow @left-click="goBack" />
     <div class="publish">
       <PublishImageRow
         :images="draft.imageUrls"

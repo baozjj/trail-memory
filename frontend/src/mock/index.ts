@@ -1,4 +1,5 @@
 export { MOCK_IMAGES } from './constants'
+export { SHARE_DOMAIN } from './domain'
 export { mockAuthors, getAuthorById } from './authors'
 export { mockImprintList } from './imprints'
 export { mockArticles, getArticleById } from './articles'
