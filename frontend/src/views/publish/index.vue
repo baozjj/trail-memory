@@ -75,7 +75,7 @@ async function onSubmit() {
 
 <template>
   <MobilePage>
-    <TNavbar :title="pageTitle" left-arrow @left-click="goBack" />
+    <TNavbar :title="pageTitle" left-arrow placeholder @left-click="goBack" />
     <div class="publish">
       <PublishImageRow
         :images="draft.imageUrls"
