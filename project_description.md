@@ -18,12 +18,21 @@
 - **设计**：Pencil（`.pen` + Variables）
 - **前端**：Vue 3.5、Vue Router 5、Pinia 3、Vite 8、TypeScript
 
-## 设计画板
+## 设计画板与路由
 
-1. **印记首页** — 瀑布流印记列表、搜索、底部 Tab
-2. **Publish Edit** — 发布/编辑印记（图片、标题、描述、位置、开关）
-3. **Article Detail** — 印记详情（大图、正文、作者）
-4. **Empty State** — 空列表引导（六边形线框 + CTA）
+| 画板 | 路由 | 说明 |
+|------|------|------|
+| 印记首页 | `/` | 瀑布流、搜索、浮动 Tab |
+| Empty State | `/empty` | 空列表引导 |
+| Publish Edit | `/publish` | 发布/编辑印记 |
+| Article Detail | `/article/:id` | 印记详情 |
+
+## 前端结构
+
+- `frontend/src/mock/` — 统一 Mock 数据（印记列表、详情、发布草稿）
+- `frontend/src/components/` — 可复用 UI 组件
+- `frontend/src/views/` — 页面级组件
+- 组件库：`tdesign-mobile-vue`
 
 ## 开发
 

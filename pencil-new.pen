@@ -194,7 +194,7 @@
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "./images/generated-1778923486789.png",
+                            "url": "images/generated-1778923486789.png",
                             "mode": "fill"
                           },
                           "cornerRadius": "$radius/card"
@@ -314,7 +314,7 @@
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "./images/generated-1778923486857.png",
+                            "url": "images/generated-1778923486857.png",
                             "mode": "fill"
                           },
                           "cornerRadius": "$radius/card"
@@ -444,7 +444,7 @@
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "./images/generated-1778923486789.png",
+                            "url": "images/generated-1778923486789.png",
                             "mode": "fill"
                           },
                           "cornerRadius": "$radius/card"
@@ -504,7 +504,7 @@
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "./images/generated-1778923486857.png",
+                            "url": "images/generated-1778923486857.png",
                             "mode": "fill"
                           },
                           "cornerRadius": "$radius/card"
@@ -782,62 +782,62 @@
               "width": "fill_container",
               "height": 96,
               "gap": 8,
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
                   "id": "j7o14m",
                   "name": "Images Scroll Area",
-                  "layout": "horizontal",
-                  "alignItems": "center",
+                  "clip": true,
                   "width": "fill_container",
                   "height": 96,
                   "gap": 8,
-                  "clip": true,
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
                       "id": "S6r38P",
                       "name": "cell2",
+                      "clip": true,
                       "width": 96,
                       "height": 96,
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "./images/generated-1778923486789.png",
+                        "url": "images/generated-1778923486789.png",
                         "mode": "fill"
                       },
-                      "cornerRadius": "$radius/card",
-                      "clip": true
+                      "cornerRadius": "$radius/card"
                     },
                     {
                       "type": "frame",
                       "id": "D24vbg",
                       "name": "cell3",
+                      "clip": true,
                       "width": 96,
                       "height": 96,
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "./images/generated-1778923486789.png",
+                        "url": "images/generated-1778923486789.png",
                         "mode": "fill"
                       },
-                      "cornerRadius": "$radius/card",
-                      "clip": true
+                      "cornerRadius": "$radius/card"
                     },
                     {
                       "type": "frame",
                       "id": "WK8v8",
                       "name": "cell4",
+                      "clip": true,
                       "width": 96,
                       "height": 96,
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "./images/generated-1778923486789.png",
+                        "url": "images/generated-1778923486789.png",
                         "mode": "fill"
                       },
-                      "cornerRadius": "$radius/card",
-                      "clip": true
+                      "cornerRadius": "$radius/card"
                     }
                   ]
                 },
@@ -864,9 +864,7 @@
                     }
                   ]
                 }
-              ],
-              "layout": "horizontal",
-              "alignItems": "center"
+              ]
             },
             {
               "type": "frame",
@@ -943,8 +941,7 @@
                       "content": "添加地点",
                       "fontFamily": "Inter",
                       "fontSize": 15,
-                      "fontWeight": "normal",
-                      "width": "fill_container"
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "icon_font",
@@ -1076,7 +1073,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "./images/generated-1778923486789.png",
+            "url": "images/generated-1778923486789.png",
             "mode": "fill"
           },
           "layout": "none",
@@ -1198,7 +1195,7 @@
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "./images/generated-1778923486857.png",
+                    "url": "images/generated-1778923486857.png",
                     "mode": "fill"
                   },
                   "cornerRadius": 22
