@@ -1,0 +1,61 @@
+---
+description: Trail Memory 前端目录与模块结构（views/components 文件夹规范）
+globs: frontend/src/**/*
+alwaysApply: false
+---
+
+# 前端模块结构（Trail Memory）
+
+在 `frontend/src` 下新增或重构**页面、组件**时，必须遵守以下结构。
+
+## 目录命名
+
+- 路径：`views/<页面名>/` 或 `components/<域>/<组件名>/`
+- 文件夹名：**kebab-case**（如 `floating-tab-bar`、`imprint-state`）
+- 入口文件：固定为 **`index.vue`**，禁止 `HomeView.vue` 等 PascalCase 单文件
+
+## 每个模块文件夹内
+
+| 文件 | 必需 | 用途 |
+|------|------|------|
+| `index.vue` | ✅ | 组件/页面入口，仅负责组装与样式 |
+| `types.ts` | ✅ | Props、Emits、本模块类型；从 `@/types/imprint` 复用领域类型 |
+| `const.ts` | 可选 | 常量、文案、尺寸阈值 |
+| `utils.ts` | 可选 | 纯函数，无副作用 |
+| `hooks/index.ts` | 可选 | 组合式函数（`useXxx`），页面逻辑优先放页面 hooks |
+
+## 内部子组件
+
+仅本模块使用时，放在同级 **`components/<子组件名>/`**，子目录同样包含 `index.vue` + `types.ts`（及可选文件）。
+
+```
+components/imprint/waterfall-grid/
+├── index.vue
+├── types.ts
+├── utils.ts
+└── components/imprint-card/
+    ├── index.vue
+    └── types.ts
+```
+
+## 放置原则
+
+- **views/**：路由级页面；路由懒加载 `@/views/<名>/index.vue`
+- **components/**：可复用 UI；跨页面共享放 `components/`，否则嵌套在父模块 `components/` 下
+- **hooks**：页面交互 → `views/<page>/hooks/index.ts`；可复用业务 → 再抽到 `src/composables/`（慎用，优先页面 hooks）
+- **types/imprint.ts**：跨模块领域模型；模块内 Props/Emits 放本目录 `types.ts`
+- **mock/**：Mock 数据统一在 `src/mock/`，不在组件内硬编码列表数据
+
+## 代码约定
+
+- Vue 3：`<script setup lang="ts">` + Composition API
+- UI 库：`tdesign-mobile-vue`（勿混用其他组件库）
+- 导入组件：`@/components/<域>/<名>/index.vue`；同模块内子组件用相对路径 `./components/.../index.vue`
+- 逻辑：`index.vue` 保持精简，通过 `./hooks`、`./utils`、`./const` 引用
+
+## 新增页面检查清单
+
+1. 创建 `views/<name>/index.vue` + `types.ts`
+2. 更新 `router/index.ts` 懒加载路径
+3. 需要时加 `hooks/index.ts`、`const.ts`
+4. 复用组件从 `@/components/...` 引入，不复制粘贴整页代码

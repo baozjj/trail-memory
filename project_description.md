@@ -51,6 +51,11 @@ frontend/src/
 
 组件库：`tdesign-mobile-vue`
 
+## AI / 协作规范
+
+- **Cursor Rule**：`.cursor/rules/frontend-module-structure.mdc`（编辑 `frontend/src` 时自动提示）
+- **Skill**：`.cursor/skills/trail-memory-frontend-structure/SKILL.md`（生成页面/组件前可 `@trail-memory-frontend-structure`）
+
 ## 开发
 
 ```bash
