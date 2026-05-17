@@ -1,0 +1,23 @@
+:root {
+  --tm-color-bg-page: #ffffff;
+  --tm-color-bg-muted: #efefef;
+  --tm-color-bg-elevated: #f2f2f2;
+  --tm-color-text-primary: #000000;
+  --tm-color-text-secondary: #333333;
+  --tm-color-text-tertiary: #888888;
+  --tm-color-text-placeholder: #a8a8a8;
+  --tm-color-text-hint: #d0d0d0;
+  --tm-color-text-meta: #aaaaaa;
+  --tm-color-icon-muted: #c4c4c4;
+  --tm-color-icon-inactive: #c8c8c8;
+  --tm-color-border-subtle: #f0f0f0;
+  --tm-color-cta-primary: #000000;
+  --tm-color-cta-on-primary: #ffffff;
+  --tm-radius-card: 8px;
+  --tm-radius-chip: 13px;
+  --tm-radius-pill: 26px;
+  --tm-spacing-page-x: 16px;
+  --tm-spacing-grid-gap: 12px;
+  --tm-spacing-card-gap: 20px;
+  --tm-shadow-tab: 0 6px 24px rgba(0, 0, 0, 0.094);
+}
