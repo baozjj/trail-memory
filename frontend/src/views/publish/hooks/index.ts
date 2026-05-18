@@ -13,10 +13,6 @@ export function usePublishDraft(initial?: Partial<PublishDraft>) {
     draft.imageUrls.push(url)
   }
 
-  function removeImage(index: number) {
-    draft.imageUrls.splice(index, 1)
-  }
-
   function resetDraft() {
     Object.assign(draft, createDefaultPublishDraft())
   }
@@ -25,7 +21,6 @@ export function usePublishDraft(initial?: Partial<PublishDraft>) {
     ...toRefs(draft),
     draft,
     addImage,
-    removeImage,
     resetDraft,
   }
 }

@@ -1,5 +1,9 @@
 export const MAX_IMAGE_COUNT = 9
-export const OVERFLOW_IMAGE_COUNT = 3
 export const IMAGE_CELL_SIZE = 96
-export const ADD_BTN_WIDTH_FULL = 96
-export const ADD_BTN_WIDTH_COMPACT = 48
+export const IMAGE_ROW_GAP = 8
+export const ADD_BTN_WIDTH_FULL = IMAGE_CELL_SIZE
+export const ADD_BTN_WIDTH_COMPACT = IMAGE_CELL_SIZE / 2
+export const ADD_BTN_WIDTH_TRANSITION_MS = 180
+export const DRAG_DELAY_MS = 120
+export const DELETE_ZONE_HEIGHT = 72
+export const DELETE_ZONE_ACTIVE_SCALE = 1.02

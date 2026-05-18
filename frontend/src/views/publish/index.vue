@@ -18,7 +18,7 @@ import { MOCK_LOCATION, SUBMIT_DELAY_MS } from './const'
 const router = useRouter()
 const route = useRoute()
 const imprintStore = useImprintStore()
-const { draft, addImage, removeImage } = usePublishDraft()
+const { draft, addImage } = usePublishDraft()
 const submitting = ref(false)
 
 const editId = computed(() => {
@@ -77,11 +77,7 @@ async function onSubmit() {
   <MobilePage>
     <TNavbar :title="pageTitle" left-arrow placeholder @left-click="goBack" />
     <div class="publish">
-      <PublishImageRow
-        :images="draft.imageUrls"
-        @add="onAddImage"
-        @remove="removeImage"
-      />
+      <PublishImageRow v-model:images="draft.imageUrls" @add="onAddImage" />
       <input
         v-model="draft.title"
         class="publish__title"
