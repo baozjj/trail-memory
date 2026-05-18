@@ -1,4 +1,3 @@
-export const MAX_IMAGE_COUNT = 9
 export const IMAGE_CELL_SIZE = 96
 export const IMAGE_ROW_GAP = 8
 export const ADD_BTN_WIDTH_FULL = IMAGE_CELL_SIZE

@@ -8,7 +8,6 @@ import {
   DELETE_ZONE_HEIGHT,
   IMAGE_CELL_SIZE,
   IMAGE_ROW_GAP,
-  MAX_IMAGE_COUNT,
   SORTABLE_REORDER_ANIMATION_MS,
 } from './const'
 import { useDragDeleteZone } from './hooks/use-drag-delete-zone'
@@ -18,10 +17,9 @@ import {
   computeImageRowLayout,
   scrollTrackToRevealLastImage,
 } from './utils'
-import type { PublishImageRowEmits, PublishImageRowProps } from './types'
+import type { PublishImageRowEmits } from './types'
 
 const images = defineModel<string[]>('images', { required: true })
-const props = defineProps<PublishImageRowProps>()
 const emit = defineEmits<PublishImageRowEmits>()
 
 const rowRef = ref<HTMLElement | null>(null)
@@ -29,11 +27,8 @@ const trackRef = ref<HTMLElement | null>(null)
 
 const { width: containerWidth } = useElementSize(rowRef)
 
-const maxCount = computed(() => props.maxCount ?? MAX_IMAGE_COUNT)
-const showAddBtn = computed(() => images.value.length < maxCount.value)
-
 const layout = computed(() =>
-  computeImageRowLayout(containerWidth.value, images.value.length, showAddBtn.value),
+  computeImageRowLayout(containerWidth.value, images.value.length, true),
 )
 
 const rowGapPx = `${IMAGE_ROW_GAP}px`
@@ -173,7 +168,7 @@ function onDragEnd(event: SortableEvent) {
         </button>
       </VueDraggable>
       <button
-        v-if="showAddBtn && !layout.pinAddBtn"
+        v-if="!layout.pinAddBtn"
         type="button"
         class="add-btn"
         :class="{ 'add-btn--compact': layout.isCompactAdd }"
@@ -189,7 +184,7 @@ function onDragEnd(event: SortableEvent) {
       </button>
     </div>
     <button
-      v-if="showAddBtn && layout.pinAddBtn"
+      v-if="layout.pinAddBtn"
       type="button"
       class="add-btn add-btn--pinned"
       :class="{ 'add-btn--compact': layout.isCompactAdd }"

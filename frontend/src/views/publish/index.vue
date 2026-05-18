@@ -12,13 +12,12 @@ import {
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import PublishImageRow from '@/components/publish/image-row/index.vue'
 import { usePublishDraft } from './hooks'
-import { MOCK_IMAGES } from '@/mock'
 import { MOCK_LOCATION, SUBMIT_DELAY_MS } from './const'
 
 const router = useRouter()
 const route = useRoute()
 const imprintStore = useImprintStore()
-const { draft, addImage } = usePublishDraft()
+const { draft, pickFromAlbum } = usePublishDraft()
 const submitting = ref(false)
 
 const editId = computed(() => {
@@ -43,8 +42,8 @@ function goBack() {
   router.back()
 }
 
-function onAddImage() {
-  addImage(MOCK_IMAGES.mountain)
+async function onAddImage() {
+  await pickFromAlbum()
 }
 
 function onPickLocation() {
@@ -92,12 +91,7 @@ async function onSubmit() {
         rows="4"
       />
       <div class="publish__config">
-        <TCell
-          title="添加地点"
-          :note="draft.location || undefined"
-          arrow
-          @click="onPickLocation"
-        />
+        <TCell title="添加地点" :note="draft.location || undefined" arrow @click="onPickLocation" />
         <TCell title="设为公开展示">
           <template #right-icon>
             <TSwitch v-model="draft.isPublic" @click.stop />
