@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { VueDraggable, type SortableEvent } from 'vue-draggable-plus'
 import { AddIcon, DeleteIcon } from 'tdesign-icons-vue-next'
@@ -9,9 +9,15 @@ import {
   IMAGE_CELL_SIZE,
   IMAGE_ROW_GAP,
   MAX_IMAGE_COUNT,
+  SORTABLE_REORDER_ANIMATION_MS,
 } from './const'
 import { useDragDeleteZone } from './hooks/use-drag-delete-zone'
-import { cleanupSortableDragArtifacts, computeImageRowLayout } from './utils'
+import { useImageCellPress } from './hooks/use-image-cell-press'
+import {
+  cleanupSortableDragArtifacts,
+  computeImageRowLayout,
+  scrollTrackToRevealLastImage,
+} from './utils'
 import type { PublishImageRowEmits, PublishImageRowProps } from './types'
 
 const images = defineModel<string[]>('images', { required: true })
@@ -46,6 +52,25 @@ function onAddClick() {
   emit('add')
 }
 
+async function revealLastImageAfterAdd() {
+  await nextTick()
+  requestAnimationFrame(() => {
+    const track = trackRef.value
+    if (!track) return
+    scrollTrackToRevealLastImage(track)
+  })
+}
+
+watch(
+  () => images.value.length,
+  (len, prevLen = 0) => {
+    if (len <= prevLen) return
+    void revealLastImageAfterAdd()
+  },
+)
+
+const { pressingIndex, onPressStart, onPressEnd } = useImageCellPress()
+
 const {
   dragging,
   overDeleteZone,
@@ -54,11 +79,20 @@ const {
   onDragEnd: finishDeleteZone,
 } = useDragDeleteZone()
 
-async function onDragStart(event: SortableEvent) {
-  await showDeleteZone()
+function lockDocumentSelection() {
+  document.body.classList.add('tm-image-row--no-select')
+}
+
+function unlockDocumentSelection() {
+  document.body.classList.remove('tm-image-row--no-select')
+}
+
+function onDragStart(event: SortableEvent) {
+  onPressEnd()
+  lockDocumentSelection()
+  void showDeleteZone()
   const index = event.oldIndex
-  dragItemUrl.value =
-    index !== undefined && index >= 0 ? (images.value[index] ?? null) : null
+  dragItemUrl.value = index !== undefined && index >= 0 ? (images.value[index] ?? null) : null
 }
 
 function getDragEndEvent(event: SortableEvent): Event | undefined {
@@ -66,12 +100,14 @@ function getDragEndEvent(event: SortableEvent): Event | undefined {
 }
 
 function onDragEnd(event: SortableEvent) {
+  onPressEnd()
   const shouldDelete = finishDeleteZone(getDragEndEvent(event))
   const url = dragItemUrl.value
   dragItemUrl.value = null
 
   nextTick(() => {
     cleanupSortableDragArtifacts()
+    unlockDocumentSelection()
 
     if (shouldDelete && url) {
       const index = images.value.indexOf(url)
@@ -85,7 +121,13 @@ function onDragEnd(event: SortableEvent) {
 </script>
 
 <template>
-  <div ref="rowRef" class="image-row" :class="{ 'image-row--pin-add': layout.pinAddBtn }">
+  <div
+    ref="rowRef"
+    class="image-row"
+    :class="{ 'image-row--pin-add': layout.pinAddBtn }"
+    @selectstart.prevent
+    @dragstart.prevent
+  >
     <div
       ref="trackRef"
       class="image-row__track"
@@ -96,16 +138,20 @@ function onDragEnd(event: SortableEvent) {
         v-model="images"
         tag="div"
         class="image-row__draggable"
-        :animation="150"
+        :animation="SORTABLE_REORDER_ANIMATION_MS"
         direction="horizontal"
         :scroll="dragScrollTarget"
         :bubble-scroll="false"
         :scroll-sensitivity="48"
-        :scroll-speed="14"
+        :scroll-speed="20"
         :force-fallback="true"
         :fallback-on-body="true"
+        :fallback-tolerance="0"
         :delay="80"
         :delay-on-touch-only="true"
+        chosen-class="image-cell--chosen"
+        ghost-class="image-cell--ghost"
+        drag-class="image-cell--drag"
         @start="onDragStart"
         @end="onDragEnd"
       >
@@ -114,10 +160,14 @@ function onDragEnd(event: SortableEvent) {
           :key="`${url}-${index}`"
           type="button"
           class="image-cell"
+          :class="{ 'image-cell--press': pressingIndex === index }"
           :style="{
             width: `${IMAGE_CELL_SIZE}px`,
             height: `${IMAGE_CELL_SIZE}px`,
           }"
+          @pointerdown="onPressStart(index, $event)"
+          @pointerup="onPressEnd"
+          @pointercancel="onPressEnd"
         >
           <img :src="url" alt="" draggable="false" />
         </button>
@@ -178,6 +228,19 @@ function onDragEnd(event: SortableEvent) {
   display: flex;
   align-items: center;
   height: 96px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.image-row :deep(*) {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.image-row :deep(*)::selection {
+  background: transparent;
 }
 
 .image-row--pin-add {
@@ -237,14 +300,57 @@ function onDragEnd(event: SortableEvent) {
   border-radius: var(--tm-radius-card);
   overflow: hidden;
   background: var(--tm-color-bg-muted);
+  cursor: grab;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    box-shadow 0.14s ease,
+    opacity 0.14s ease;
+}
+
+/* 按下瞬间：提示可继续拖动 */
+@media (hover: hover) {
+  .image-cell:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.image-cell--press:not(.image-cell--chosen):not(.image-cell--drag) {
+  opacity: 0.92;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 选中待拖：不用 scale，避免跟手偏移 */
+.image-cell--chosen {
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.12),
+    0 8px 20px rgba(0, 0, 0, 0.14);
+  z-index: 1;
+  cursor: grabbing;
+  transition: none;
+}
+
+.image-cell--ghost {
+  opacity: 0.35;
+  transition: none;
+}
+
+.image-cell--drag {
+  opacity: 1;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  cursor: grabbing;
+  transition: none !important;
 }
 
 .image-cell img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   pointer-events: none;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
 }
 
 .add-btn {
@@ -352,5 +458,39 @@ function onDragEnd(event: SortableEvent) {
 .delete-zone-leave-to {
   transform: translateY(100%);
   opacity: 0;
+}
+</style>
+
+<style>
+body.tm-image-row--no-select,
+body.tm-image-row--no-select * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.sortable-fallback,
+.sortable-drag,
+.sortable-ghost,
+.sortable-chosen {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: transform;
+}
+
+.sortable-fallback img,
+.sortable-drag img {
+  pointer-events: none;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
+.sortable-fallback.image-cell--chosen,
+.sortable-fallback.image-cell--drag,
+.sortable-drag.image-cell--drag {
+  border-radius: 8px;
+  cursor: grabbing;
 }
 </style>

@@ -75,6 +75,20 @@ export function computeImageRowLayout(
   }
 }
 
+/** 横向滚动到最右侧，让新加入的最后一张图完整露出 */
+export function scrollTrackToRevealLastImage(
+  trackEl: HTMLElement,
+  options?: { smooth?: boolean },
+) {
+  const maxScroll = trackEl.scrollWidth - trackEl.clientWidth
+  if (maxScroll <= 0) return
+
+  trackEl.scrollTo({
+    left: maxScroll,
+    behavior: options?.smooth === false ? 'auto' : 'smooth',
+  })
+}
+
 export function isPointInRect(x: number, y: number, rect: DOMRect | undefined): boolean {
   if (!rect) return false
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
@@ -83,6 +97,7 @@ export function isPointInRect(x: number, y: number, rect: DOMRect | undefined): 
 /** 移除 Sortable forceFallback 残留节点，避免挡住后续点击（如加号） */
 export function cleanupSortableDragArtifacts() {
   document.body.style.touchAction = ''
+  document.body.classList.remove('tm-image-row--no-select')
   document.querySelectorAll('.sortable-fallback, .sortable-drag, .sortable-ghost').forEach((el) => {
     el.remove()
   })
