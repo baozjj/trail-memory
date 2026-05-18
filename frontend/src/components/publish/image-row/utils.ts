@@ -79,3 +79,11 @@ export function isPointInRect(x: number, y: number, rect: DOMRect | undefined): 
   if (!rect) return false
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
 }
+
+/** 移除 Sortable forceFallback 残留节点，避免挡住后续点击（如加号） */
+export function cleanupSortableDragArtifacts() {
+  document.body.style.touchAction = ''
+  document.querySelectorAll('.sortable-fallback, .sortable-drag, .sortable-ghost').forEach((el) => {
+    el.remove()
+  })
+}
