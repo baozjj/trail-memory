@@ -1,0 +1,52 @@
+// Prisma schema — 实体印记管理系统
+// 数据源：SQLite（开发环境）
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// 用户：登录凭证 + 个人名片信息
+model User {
+  id                  String   @id @default(cuid())
+  email               String   @unique
+  passwordHash        String
+  nickname            String
+  signature           String   @default("")
+  avatarUrl           String   @default("")
+  /// 在游客页展示我的名片
+  showCardOnGuestPage Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  memories            Memory[]
+}
+
+/// 印记：列表展示字段 + 详情内容，对应前端 ImprintListItem / ImprintArticle
+model Memory {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  coverUrl     String
+  /// 瀑布流高度权重
+  heightWeight Float    @default(1)
+  /// 公开展示：开启则游客可看
+  isPublic     Boolean  @default(false)
+  /// 分享链接自定义后缀（字母与数字），全局唯一
+  linkSuffix   String   @unique
+  /// 详情正文
+  content      String   @default("")
+  /// 元信息，如「2024年5月16日 · 四川·稻城亚丁」
+  meta         String   @default("")
+  /// 图片 URL 列表，JSON 数组字符串存储
+  images       String   @default("[]")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isPublic])
+}

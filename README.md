@@ -18,6 +18,18 @@ pnpm dev
 - Design Token：[`docs/design-system/project-tokens.md`](./docs/design-system/project-tokens.md)
 - 项目说明：[`project_description.md`](./project_description.md)
 
+## 后端
+
+```bash
+cd backend
+cp .env.example .env
+npm install
+npm run prisma:migrate
+npm run dev
+```
+
+详见 [`backend/README.md`](./backend/README.md)。
+
 ## 目录
 
 ```
@@ -25,5 +37,6 @@ pencil-new.pen          # Pencil 设计（4 画板 + variables）
 images/                 # 设计资源（Pencil 引用）
 terrain-hex-model.png
 frontend/               # Vue 3 应用
+backend/                # Express + Prisma API
 docs/                   # 设计文档
 ```
