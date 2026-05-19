@@ -39,6 +39,25 @@ export const useImprintStore = defineStore('imprint', () => {
     items.value = items.value.filter((item) => item.id !== id)
   }
 
+  function createItem(
+    payload: Pick<ImprintListItem, 'title' | 'coverUrl' | 'isPublic'> &
+      Partial<Pick<ImprintListItem, 'heightWeight' | 'linkSuffix'>>,
+  ): ImprintListItem {
+    const id = String(Date.now())
+    const linkSuffix =
+      payload.linkSuffix ?? Math.random().toString(36).slice(2, 8)
+    const item: ImprintListItem = {
+      id,
+      title: payload.title,
+      coverUrl: payload.coverUrl,
+      isPublic: payload.isPublic,
+      linkSuffix,
+      heightWeight: payload.heightWeight ?? 1,
+    }
+    items.value.unshift(item)
+    return item
+  }
+
   function getShareLink(id: string): string | null {
     const item = getById(id)
     if (!item) return null
@@ -61,6 +80,7 @@ export const useImprintStore = defineStore('imprint', () => {
     setSearchKeyword,
     getById,
     updateItem,
+    createItem,
     removeItem,
     getShareLink,
     clearAll,
