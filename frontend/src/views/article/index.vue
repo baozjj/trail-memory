@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { Navbar as TNavbar } from 'tdesign-mobile-vue'
+import { useRouter } from 'vue-router'
+import { Button as TButton } from 'tdesign-mobile-vue'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import ArticleHero from '@/components/article/hero/index.vue'
+import ArticleNav from '@/components/article/article-nav/index.vue'
 import AuthorCard from '@/components/article/author-card/index.vue'
-import { getArticleById } from '@/mock'
+import { useArticlePage } from './hooks'
+import {
+  ARTICLE_LOADING_TEXT,
+  ARTICLE_NOT_FOUND_TEXT,
+} from './const'
 
-const route = useRoute()
 const router = useRouter()
-
-const article = computed(() => getArticleById(String(route.params.id)))
+const { article, loading, errorMessage, showBack, showAuthorCard, reload } = useArticlePage()
 
 function goBack() {
   router.back()
@@ -18,36 +20,42 @@ function goBack() {
 </script>
 
 <template>
-  <MobilePage v-if="article">
+  <MobilePage v-if="loading" class="article-page">
+    <ArticleNav :show-back="showBack" @back="goBack" />
+    <p class="article-state">{{ ARTICLE_LOADING_TEXT }}</p>
+  </MobilePage>
+
+  <MobilePage v-else-if="article" class="article-page">
     <ArticleHero :images="article.images" />
-    <TNavbar class="article-nav" left-arrow :title="''" @left-click="goBack" />
+    <ArticleNav :show-back="showBack" @back="goBack" />
     <div class="article">
       <div class="article__body">
         <h1 class="article__title">{{ article.title }}</h1>
-        <p class="article__content">{{ article.content }}</p>
-        <p class="article__meta">{{ article.meta }}</p>
+        <p v-if="article.content" class="article__content">{{ article.content }}</p>
+        <p v-if="article.meta" class="article__meta">{{ article.meta }}</p>
       </div>
-      <AuthorCard :author="article.author" />
+      <AuthorCard v-if="showAuthorCard" :author="article.author" />
     </div>
   </MobilePage>
-  <MobilePage v-else>
-    <TNavbar title="印记详情" left-arrow @left-click="goBack" />
-    <p class="article-missing">未找到该印记（Mock）</p>
+
+  <MobilePage v-else class="article-page">
+    <ArticleNav :show-back="showBack" @back="goBack" />
+    <p class="article-state">{{ errorMessage ?? ARTICLE_NOT_FOUND_TEXT }}</p>
+    <TButton v-if="errorMessage" block theme="primary" variant="outline" @click="reload">
+      重试
+    </TButton>
   </MobilePage>
 </template>
 
 <style scoped>
-.article-nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  background: transparent !important;
+.article-page {
+  position: relative;
 }
 
-.article-nav :deep(.t-navbar__content) {
-  background: transparent;
+.article-state {
+  padding: calc(72px + env(safe-area-inset-top, 0px)) 24px 48px;
+  text-align: center;
+  color: var(--tm-color-text-tertiary);
 }
 
 .article {
@@ -80,17 +88,12 @@ function goBack() {
   font-size: 15px;
   line-height: 1.8;
   color: var(--tm-color-text-secondary);
+  white-space: pre-wrap;
 }
 
 .article__meta {
   margin: 0;
   font-size: 12px;
   color: var(--tm-color-text-meta);
-}
-
-.article-missing {
-  padding: 48px 24px;
-  text-align: center;
-  color: var(--tm-color-text-tertiary);
 }
 </style>

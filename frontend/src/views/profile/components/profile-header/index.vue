@@ -9,11 +9,18 @@ function onSignatureInput(event: Event) {
   const target = event.target as HTMLInputElement
   emit('update:signature', target.value)
 }
+
+function onEditAvatar() {
+  emit('edit-avatar')
+}
 </script>
 
 <template>
   <header class="profile-header">
-    <img class="profile-header__avatar" :src="avatarUrl" :alt="nickname" />
+    <button type="button" class="profile-header__avatar-btn" @click="onEditAvatar">
+      <img class="profile-header__avatar" :src="avatarDisplayUrl" :alt="nickname" />
+      <span class="profile-header__avatar-badge">更换头像</span>
+    </button>
     <h1 class="profile-header__nickname">{{ nickname }}</h1>
     <div class="profile-header__signature-wrap">
       <input
@@ -37,11 +44,35 @@ function onSignatureInput(event: Event) {
   padding: 32px 0 40px;
 }
 
+.profile-header__avatar-btn {
+  position: relative;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
 .profile-header__avatar {
+  display: block;
   width: 112px;
   height: 112px;
   border-radius: 50%;
   object-fit: cover;
+  background: var(--tm-color-bg-muted);
+}
+
+.profile-header__avatar-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.52);
+  white-space: nowrap;
 }
 
 .profile-header__nickname {

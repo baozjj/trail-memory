@@ -9,6 +9,18 @@ export interface MemoryDetailDto extends ImprintListItem {
   images: string[]
 }
 
+export interface MemoryAuthorDto {
+  id: string
+  name: string
+  bio: string
+  avatarUrl: string
+  showCardOnGuestPage: boolean
+}
+
+export interface MemoryArticleDto extends MemoryDetailDto {
+  author: MemoryAuthorDto
+}
+
 export interface PatchMemoryPayload {
   isPublic?: boolean
   linkSuffix?: string
@@ -26,4 +38,5 @@ export interface SaveMemoryPayload {
 
 export type MemoriesListResponse = ApiSuccess<{ items: MemoryListItemDto[] }>
 export type MemoryDetailResponse = ApiSuccess<{ item: MemoryDetailDto }>
+export type MemoryArticleResponse = ApiSuccess<{ item: MemoryArticleDto }>
 export type MemoryPatchResponse = ApiSuccess<{ item: MemoryListItemDto }>

@@ -20,6 +20,12 @@ export interface RegisterPayload {
   nickname?: string
 }
 
+export interface UpdateProfilePayload {
+  signature?: string
+  avatarUrl?: string
+  showCardOnGuestPage?: boolean
+}
+
 export interface AuthSession {
   token: string
   user: AuthUser

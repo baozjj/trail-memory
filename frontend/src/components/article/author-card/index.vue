@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { resolveAvatarUrl } from '@/utils/avatar'
 import type { AuthorCardProps } from './types'
 
-defineProps<AuthorCardProps>()
+const props = defineProps<AuthorCardProps>()
+
+const avatarSrc = computed(() => resolveAvatarUrl(props.author.avatarUrl))
 </script>
 
 <template>
   <div class="author-card">
-    <img class="author-card__avatar" :src="author.avatarUrl" :alt="author.name" />
+    <img class="author-card__avatar" :src="avatarSrc" :alt="author.name" />
     <div class="author-card__info">
-      <p class="author-card__name">{ author.name }</p>
-      <p class="author-card__bio">{ author.bio }</p>
+      <p class="author-card__name">{{ author.name }}</p>
+      <p v-if="author.bio" class="author-card__bio">{{ author.bio }}</p>
     </div>
   </div>
 </template>
@@ -30,6 +34,7 @@ defineProps<AuthorCardProps>()
   border-radius: 22px;
   object-fit: cover;
   flex-shrink: 0;
+  background: var(--tm-color-bg-muted);
 }
 
 .author-card__info {

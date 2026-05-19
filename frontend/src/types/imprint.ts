@@ -3,6 +3,8 @@ export interface Author {
   name: string
   bio: string
   avatarUrl: string
+  /** 是否在详情页展示作者名片 */
+  showCardOnGuestPage?: boolean
 }
 
 export interface ImprintListItem {

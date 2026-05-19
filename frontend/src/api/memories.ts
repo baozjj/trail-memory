@@ -2,6 +2,7 @@ import { http } from './axios'
 import { unwrapApiData } from './unwrap'
 import type {
   MemoriesListResponse,
+  MemoryArticleResponse,
   MemoryDetailResponse,
   MemoryListItemDto,
   MemoryPatchResponse,
@@ -17,7 +18,29 @@ export async function fetchMemoriesApi(q?: string): Promise<MemoryListItemDto[]>
   return unwrapApiData(data).items
 }
 
-/** 获取单条印记详情 */
+/** 外链 / NFC 分享进入（/m/{id}-{suffix}） */
+export async function fetchMemoryArticleShareApi(slug: string) {
+  const { data } = await http.get<MemoryArticleResponse>(
+    `/api/memories/share/${encodeURIComponent(slug)}`,
+  )
+  const item = unwrapApiData(data).item
+  if (!item?.id) {
+    throw new Error('印记详情数据异常')
+  }
+  return item
+}
+
+/** 获取印记详情页（App 内预览，可选登录） */
+export async function fetchMemoryArticleViewApi(id: string) {
+  const { data } = await http.get<MemoryArticleResponse>(`/api/memories/view/${id}`)
+  const item = unwrapApiData(data).item
+  if (!item?.id) {
+    throw new Error('印记详情数据异常')
+  }
+  return item
+}
+
+/** 获取单条印记详情（仅本人，编辑用） */
 export async function fetchMemoryByIdApi(id: string) {
   const { data } = await http.get<MemoryDetailResponse>(`/api/memories/${id}`)
   const item = unwrapApiData(data).item

@@ -4,7 +4,7 @@ import { loadEnv } from '../config/env.js'
 import { prisma } from '../lib/prisma.js'
 import { signAccessToken } from '../lib/jwt.js'
 import { AppError } from '../types/app-error.js'
-import type { LoginBody, RegisterBody } from './schema.js'
+import type { LoginBody, RegisterBody, UpdateProfileBody } from './schema.js'
 import type { PublicUser } from './types.js'
 
 const BCRYPT_ROUNDS = 10
@@ -93,5 +93,23 @@ export async function loginUser(
 export async function getUserById(userId: string): Promise<PublicUser | null> {
   const user = await prisma.user.findUnique({ where: { id: userId } })
   if (!user) return null
+  return toPublicUser(user)
+}
+
+/** 更新当前用户资料 */
+export async function updateUserProfile(
+  userId: string,
+  body: UpdateProfileBody,
+): Promise<PublicUser> {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      ...(body.signature !== undefined ? { signature: body.signature } : {}),
+      ...(body.avatarUrl !== undefined ? { avatarUrl: body.avatarUrl } : {}),
+      ...(body.showCardOnGuestPage !== undefined
+        ? { showCardOnGuestPage: body.showCardOnGuestPage }
+        : {}),
+    },
+  })
   return toPublicUser(user)
 }

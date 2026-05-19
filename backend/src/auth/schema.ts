@@ -13,5 +13,29 @@ export const loginBodySchema = z.object({
   password: z.string().min(1, '请输入密码'),
 })
 
+const avatarUrlSchema = z.union([
+  z.literal(''),
+  z
+    .string()
+    .max(500)
+    .refine((v) => v.startsWith('/uploads/'), { message: '头像地址无效' }),
+])
+
+/** 更新个人资料请求体 */
+export const updateProfileBodySchema = z
+  .object({
+    signature: z.string().max(200).optional(),
+    avatarUrl: avatarUrlSchema.optional(),
+    showCardOnGuestPage: z.boolean().optional(),
+  })
+  .refine(
+    (body) =>
+      body.signature !== undefined ||
+      body.avatarUrl !== undefined ||
+      body.showCardOnGuestPage !== undefined,
+    { message: '至少提供一项要更新的资料' },
+  )
+
 export type RegisterBody = z.infer<typeof registerBodySchema>
 export type LoginBody = z.infer<typeof loginBodySchema>
+export type UpdateProfileBody = z.infer<typeof updateProfileBodySchema>

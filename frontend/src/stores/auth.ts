@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { fetchMeApi, loginApi, registerApi } from '@/api/auth'
+import { fetchMeApi, loginApi, registerApi, updateProfileApi } from '@/api/auth'
+import type { UpdateProfilePayload } from '@/types/auth'
 import { getApiErrorMessage } from '@/api/axios'
 import type { AuthUser, LoginPayload, RegisterPayload } from '@/types/auth'
 import { useProfileStore } from '@/stores/profile'
@@ -59,6 +60,21 @@ export const useAuthStore = defineStore('auth', () => {
     return { needEmailVerification: result.needEmailVerification }
   }
 
+  /** 用服务端用户数据刷新本地态 */
+  function applyUser(nextUser: AuthUser) {
+    user.value = nextUser
+    const profile = syncProfileFromUser()
+    if (profile) {
+      useProfileStore().applyFromAuth(profile)
+    }
+  }
+
+  /** 更新资料并同步 profile store */
+  async function updateProfile(payload: UpdateProfilePayload): Promise<void> {
+    const nextUser = await updateProfileApi(payload)
+    applyUser(nextUser)
+  }
+
   /** 退出登录 */
   function logout() {
     removeToken()
@@ -88,6 +104,8 @@ export const useAuthStore = defineStore('auth', () => {
     bootstrap,
     login,
     register,
+    applyUser,
+    updateProfile,
     logout,
     syncProfileFromUser,
     resolveError,

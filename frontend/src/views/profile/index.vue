@@ -10,10 +10,11 @@ import { LOGOUT_LABEL, SHOW_CARD_LABEL } from './const'
 const {
   nickname,
   signature,
-  avatarUrl,
+  avatarDisplayUrl,
   sealedCount,
   showCard,
   onSignatureUpdate,
+  onEditAvatar,
   onTabChange,
   onLogout,
 } = useProfilePage()
@@ -23,10 +24,11 @@ const {
   <MobilePage with-tab-bar>
     <div class="profile">
       <ProfileHeader
-        :avatar-url="avatarUrl"
+        :avatar-display-url="avatarDisplayUrl"
         :nickname="nickname"
         :signature="signature"
         @update:signature="onSignatureUpdate"
+        @edit-avatar="onEditAvatar"
       />
 
       <ProfileStats :count="sealedCount" />

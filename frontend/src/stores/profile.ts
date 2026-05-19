@@ -13,6 +13,10 @@ export const useProfileStore = defineStore('profile', () => {
     signature.value = value
   }
 
+  function setAvatarUrl(value: string) {
+    avatarUrl.value = value
+  }
+
   function setShowCardOnGuestPage(value: boolean) {
     showCardOnGuestPage.value = value
   }
@@ -47,6 +51,7 @@ export const useProfileStore = defineStore('profile', () => {
     avatarUrl,
     showCardOnGuestPage,
     setSignature,
+    setAvatarUrl,
     setShowCardOnGuestPage,
     applyFromAuth,
     restoreMockProfile,

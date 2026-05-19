@@ -47,6 +47,12 @@ const router = createRouter({
       meta: { title: '印记详情' },
     },
     {
+      path: '/m/:slug',
+      name: 'imprint-share',
+      component: () => import('@/views/article/index.vue'),
+      meta: { title: '印记详情', guestEntry: true },
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },
@@ -56,13 +62,15 @@ const router = createRouter({
 router.beforeEach((to) => {
   const requiresAuth = Boolean(to.meta.requiresAuth)
   const isGuestRoute = Boolean(to.meta.guest)
+  const isShareEntry = Boolean(to.meta.guestEntry)
   const hasToken = Boolean(getToken())
 
   if (requiresAuth && !hasToken) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
-  if (isGuestRoute && hasToken) {
+  // 登录/注册页：已登录则进首页；NFC 外链详情页不拦截
+  if (isGuestRoute && hasToken && !isShareEntry) {
     return { name: 'home' }
   }
 

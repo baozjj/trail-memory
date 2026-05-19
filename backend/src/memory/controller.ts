@@ -7,6 +7,8 @@ import {
 import {
   createMemory,
   deleteMemory,
+  getMemoryArticleByShareSlug,
+  getMemoryArticleView,
   getMemoryDetail,
   listMemoriesForUser,
   patchMemoryExhibit,
@@ -62,7 +64,25 @@ export async function update(req: Request, res: Response): Promise<void> {
   res.json({ success: true, data: { item } });
 }
 
-/** 获取单条印记详情 */
+/** 外链 / NFC 分享进入（无需登录） */
+export async function getShareView(req: Request, res: Response): Promise<void> {
+  const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug
+  if (!slug?.trim()) {
+    throw new AppError('无效的分享链接', 400, 'BAD_REQUEST')
+  }
+
+  const item = await getMemoryArticleByShareSlug(slug)
+  res.json({ success: true, data: { item } })
+}
+
+/** 获取印记详情页（游客预览 / 本人私密预览） */
+export async function getArticleView(req: Request, res: Response): Promise<void> {
+  const viewerUserId = req.authUser?.userId
+  const item = await getMemoryArticleView(viewerUserId, parseMemoryId(req.params.id))
+  res.json({ success: true, data: { item } })
+}
+
+/** 获取单条印记详情（仅本人） */
 export async function getById(req: Request, res: Response): Promise<void> {
   const userId = req.authUser?.userId;
   if (!userId) {

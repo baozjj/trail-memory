@@ -54,6 +54,7 @@ backend/
 | POST | `/api/auth/register` | 注册（邮箱唯一） |
 | POST | `/api/auth/login` | 登录，返回 JWT |
 | GET | `/api/auth/me` | 当前用户（需 Bearer Token） |
+| PATCH | `/api/auth/me` | 更新资料（`signature` / `avatarUrl` / `showCardOnGuestPage`） |
 
 环境变量 `EMAIL_VERIFICATION=true` 时注册后 `isVerified` 保持 false，并预留发送验证邮件逻辑（TODO）。
 
@@ -62,7 +63,9 @@ backend/
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | GET | `/api/memories` | 当前用户列表（可选 `?q=` 标题搜索） |
-| GET | `/api/memories/:id` | 单条详情 |
+| GET | `/api/memories/share/:slug` | NFC/外链（`slug` = `{id}-{linkSuffix}`，仅公开印记） |
+| GET | `/api/memories/view/:id` | 详情页（可选登录；本人可看私密，游客仅公开） |
+| GET | `/api/memories/:id` | 单条详情（仅本人，编辑用） |
 | PATCH | `/api/memories/:id` | 更新 `isPublic` / `linkSuffix` |
 | DELETE | `/api/memories/:id` | 删除印记 |
 

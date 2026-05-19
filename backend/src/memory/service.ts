@@ -1,9 +1,14 @@
-import type { Memory } from '@prisma/client'
+import type { Memory, User } from '@prisma/client'
 import { Prisma } from '@prisma/client'
 import { prisma } from '../lib/prisma.js'
 import { AppError, notFoundError } from '../types/app-error.js'
 import type { PatchMemoryBody } from './schema.js'
-import type { MemoryDetailDto, MemoryListItemDto } from './types.js'
+import type {
+  MemoryArticleDto,
+  MemoryAuthorDto,
+  MemoryDetailDto,
+  MemoryListItemDto,
+} from './types.js'
 
 /** 将数据库印记转为列表 DTO */
 export function toMemoryListItemDto(memory: Memory): MemoryListItemDto {
@@ -28,13 +33,40 @@ function parseImages(raw: string): string[] {
   }
 }
 
+/** 详情页图片列表，无图时用封面兜底 */
+function resolveDetailImages(memory: Memory): string[] {
+  const parsed = parseImages(memory.images)
+  if (parsed.length > 0) return parsed
+  if (memory.coverUrl) return [memory.coverUrl]
+  return []
+}
+
 /** 将数据库印记转为详情 DTO */
 export function toMemoryDetailDto(memory: Memory): MemoryDetailDto {
   return {
     ...toMemoryListItemDto(memory),
     content: memory.content,
     meta: memory.meta,
-    images: parseImages(memory.images),
+    images: resolveDetailImages(memory),
+  }
+}
+
+/** 将用户转为详情页作者名片 */
+function toMemoryAuthorDto(user: User): MemoryAuthorDto {
+  return {
+    id: user.id,
+    name: user.nickname,
+    bio: user.signature,
+    avatarUrl: user.avatarUrl,
+    showCardOnGuestPage: user.showCardOnGuestPage,
+  }
+}
+
+/** 将印记与用户转为详情页完整数据 */
+function toMemoryArticleDto(memory: Memory, user: User): MemoryArticleDto {
+  return {
+    ...toMemoryDetailDto(memory),
+    author: toMemoryAuthorDto(user),
   }
 }
 
@@ -69,7 +101,7 @@ export async function listMemoriesForUser(
   return memories.map(toMemoryListItemDto)
 }
 
-/** 获取单条印记详情 */
+/** 获取单条印记详情（仅本人，供编辑） */
 export async function getMemoryDetail(
   userId: string,
   memoryId: string,
@@ -79,6 +111,67 @@ export async function getMemoryDetail(
     throw notFoundError('印记不存在')
   }
   return toMemoryDetailDto(memory)
+}
+
+/** 解析分享 slug：{id}-{linkSuffix} */
+export function parseShareSlug(slug: string): { id: string; linkSuffix: string } | null {
+  const trimmed = slug.trim()
+  if (!trimmed) return null
+
+  const dashIndex = trimmed.lastIndexOf('-')
+  if (dashIndex <= 0) return null
+
+  const id = trimmed.slice(0, dashIndex)
+  const linkSuffix = trimmed.slice(dashIndex + 1)
+  if (!id || !/^[a-zA-Z0-9]+$/.test(linkSuffix)) return null
+
+  return { id, linkSuffix }
+}
+
+/** NFC / 外链进入：校验后缀且仅公开展示 */
+export async function getMemoryArticleByShareSlug(
+  slug: string,
+): Promise<MemoryArticleDto> {
+  const parsed = parseShareSlug(slug)
+  if (!parsed) {
+    throw notFoundError('印记不存在')
+  }
+
+  const memory = await prisma.memory.findUnique({
+    where: { id: parsed.id },
+    include: { user: true },
+  })
+
+  if (!memory || memory.linkSuffix !== parsed.linkSuffix) {
+    throw notFoundError('印记不存在')
+  }
+
+  if (!memory.isPublic) {
+    throw notFoundError('印记不存在')
+  }
+
+  return toMemoryArticleDto(memory, memory.user)
+}
+
+/** 获取印记详情页数据：本人可看私密，游客仅可看公开 */
+export async function getMemoryArticleView(
+  viewerUserId: string | undefined,
+  memoryId: string,
+): Promise<MemoryArticleDto> {
+  const memory = await prisma.memory.findUnique({
+    where: { id: memoryId },
+    include: { user: true },
+  })
+  if (!memory) {
+    throw notFoundError('印记不存在')
+  }
+
+  const isOwner = viewerUserId === memory.userId
+  if (!isOwner && !memory.isPublic) {
+    throw notFoundError('印记不存在')
+  }
+
+  return toMemoryArticleDto(memory, memory.user)
 }
 
 /** 更新展出设置 */

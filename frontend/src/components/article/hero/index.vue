@@ -16,7 +16,7 @@ const indicator = computed(() => `${current.value + 1}/${props.images.length}`)
         <img class="article-hero__img" :src="src" alt="" />
       </TSwiperItem>
     </TSwiper>
-    <span v-if="images.length > 1" class="article-hero__indicator">{ indicator }</span>
+    <span v-if="images.length > 1" class="article-hero__indicator">{{ indicator }}</span>
   </div>
 </template>
 

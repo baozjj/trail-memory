@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express'
-import { loginBodySchema, registerBodySchema } from './schema.js'
-import { getUserById, loginUser, registerUser } from './service.js'
+import { loginBodySchema, registerBodySchema, updateProfileBodySchema } from './schema.js'
+import { getUserById, loginUser, registerUser, updateUserProfile } from './service.js'
 import { notFoundError } from '../types/app-error.js'
 
 /** 处理用户注册 */
@@ -40,6 +40,19 @@ export async function me(req: Request, res: Response): Promise<void> {
   if (!user) {
     throw notFoundError('用户不存在')
   }
+
+  res.json({ success: true, data: { user } })
+}
+
+/** 更新当前用户资料 */
+export async function updateMe(req: Request, res: Response): Promise<void> {
+  const userId = req.authUser?.userId
+  if (!userId) {
+    throw notFoundError()
+  }
+
+  const body = updateProfileBodySchema.parse(req.body)
+  const user = await updateUserProfile(userId, body)
 
   res.json({ success: true, data: { user } })
 }

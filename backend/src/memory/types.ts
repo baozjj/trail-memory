@@ -14,3 +14,17 @@ export interface MemoryDetailDto extends MemoryListItemDto {
   meta: string
   images: string[]
 }
+
+/** 作者名片（详情页展示） */
+export interface MemoryAuthorDto {
+  id: string
+  name: string
+  bio: string
+  avatarUrl: string
+  showCardOnGuestPage: boolean
+}
+
+/** 印记详情页（含作者，供游客/预览） */
+export interface MemoryArticleDto extends MemoryDetailDto {
+  author: MemoryAuthorDto
+}
