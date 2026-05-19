@@ -1,25 +1,47 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { Navbar as TNavbar } from 'tdesign-mobile-vue'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import FloatingTabBar from '@/components/layout/floating-tab-bar/index.vue'
-import type { TabKey } from '@/components/layout/floating-tab-bar/types'
+import ProfileHeader from './components/profile-header/index.vue'
+import ProfileStats from './components/profile-stats/index.vue'
+import ProfileSettingsRow from './components/profile-settings-row/index.vue'
+import { useProfilePage } from './hooks'
+import { LOGOUT_LABEL, SHOW_CARD_LABEL } from './const'
 
-const router = useRouter()
-
-function onTabChange(tab: TabKey) {
-  if (tab === 'grid') {
-    router.push({ name: 'home' })
-  }
-}
+const {
+  nickname,
+  signature,
+  avatarUrl,
+  sealedCount,
+  showCard,
+  onSignatureUpdate,
+  onTabChange,
+  onLogout,
+} = useProfilePage()
 </script>
 
 <template>
   <MobilePage with-tab-bar>
-    <TNavbar title="个人中心" :left-arrow="false" />
     <div class="profile">
-      <p class="profile__hint">个人中心（Mock 占位页）</p>
+      <ProfileHeader
+        :avatar-url="avatarUrl"
+        :nickname="nickname"
+        :signature="signature"
+        @update:signature="onSignatureUpdate"
+      />
+
+      <ProfileStats :count="sealedCount" />
+
+      <section class="profile__settings">
+        <ProfileSettingsRow v-model="showCard" :label="SHOW_CARD_LABEL" />
+      </section>
+
+      <div class="profile__spacer" aria-hidden="true" />
+
+      <button type="button" class="profile__logout" @click="onLogout">
+        {{ LOGOUT_LABEL }}
+      </button>
     </div>
+
     <FloatingTabBar active="user" @change="onTabChange" />
   </MobilePage>
 </template>
@@ -27,16 +49,33 @@ function onTabChange(tab: TabKey) {
 <style scoped>
 .profile {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 50vh;
-  padding: 24px var(--tm-spacing-page-x);
+  flex-direction: column;
+  min-height: calc(100dvh - 88px - env(safe-area-inset-bottom, 0px));
+  padding: 8px 24px 0;
 }
 
-.profile__hint {
-  margin: 0;
-  font-size: 14px;
+.profile__settings {
+  padding-top: 8px;
+}
+
+.profile__spacer {
+  flex: 1;
+  min-height: 24px;
+}
+
+.profile__logout {
+  width: 100%;
+  height: 48px;
+  margin: 0 0 calc(8px + env(safe-area-inset-bottom, 0px));
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 15px;
   color: var(--tm-color-text-meta);
-  text-align: center;
+  cursor: pointer;
+}
+
+.profile__logout:active {
+  opacity: 0.7;
 }
 </style>
