@@ -13,19 +13,22 @@ const emit = defineEmits<FloatingTabBarEmits>()
       class="tab-item"
       :class="{ 'tab-item--active': active === 'grid' }"
       aria-label="印记列表"
+      :aria-current="active === 'grid' ? 'page' : undefined"
       @click="emit('change', 'grid')"
     >
-      <AppIcon class="tab-icon" />
-      <span v-if="active === 'grid'" class="tab-dot" />
+      <AppIcon class="tab-icon" :class="{ 'tab-icon--inactive': active !== 'grid' }" />
+      <span v-if="active === 'grid'" class="tab-dot" aria-hidden="true" />
     </button>
     <button
       type="button"
       class="tab-item"
       :class="{ 'tab-item--active': active === 'user' }"
       aria-label="我的"
+      :aria-current="active === 'user' ? 'page' : undefined"
       @click="emit('change', 'user')"
     >
-      <UserIcon class="tab-icon tab-icon--inactive" />
+      <UserIcon class="tab-icon" :class="{ 'tab-icon--inactive': active !== 'user' }" />
+      <span v-if="active === 'user'" class="tab-dot" aria-hidden="true" />
     </button>
   </div>
 </template>
