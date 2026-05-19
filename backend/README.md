@@ -47,7 +47,16 @@ backend/
 - **User**：`email` + 密码哈希；名片字段 `nickname`、`signature`、`avatarUrl`、`showCardOnGuestPage`
 - **Memory**：对应前端 `ImprintListItem` + 详情字段 `content`、`meta`、`images`（JSON 字符串）
 
+## 认证接口
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/auth/register` | 注册（邮箱唯一） |
+| POST | `/api/auth/login` | 登录，返回 JWT |
+| GET | `/api/auth/me` | 当前用户（需 Bearer Token） |
+
+环境变量 `EMAIL_VERIFICATION=true` 时注册后 `isVerified` 保持 false，并预留发送验证邮件逻辑（TODO）。
+
 ## 后续模块（占位）
 
-- `/api/auth` — 登录 / 注册
 - `/api/memories` — 印记 CRUD、展出设置

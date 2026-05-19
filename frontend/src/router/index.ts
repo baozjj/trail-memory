@@ -1,31 +1,44 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getToken } from '@/utils/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/index.vue'),
+      meta: { title: '登录', guest: true },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/register/index.vue'),
+      meta: { title: '注册', guest: true },
+    },
+    {
       path: '/',
       name: 'home',
       component: () => import('@/views/home/index.vue'),
-      meta: { title: '印记首页' },
+      meta: { title: '印记首页', requiresAuth: true },
     },
     {
       path: '/empty',
       name: 'empty',
       component: () => import('@/views/empty/index.vue'),
-      meta: { title: '空状态' },
+      meta: { title: '空状态', requiresAuth: true },
     },
     {
       path: '/publish',
       name: 'publish',
       component: () => import('@/views/publish/index.vue'),
-      meta: { title: '封存印记' },
+      meta: { title: '封存印记', requiresAuth: true },
     },
     {
       path: '/profile',
       name: 'profile',
       component: () => import('@/views/profile/index.vue'),
-      meta: { title: '个人中心' },
+      meta: { title: '个人中心', requiresAuth: true },
     },
     {
       path: '/article/:id',
@@ -38,6 +51,22 @@ const router = createRouter({
       redirect: '/',
     },
   ],
+})
+
+router.beforeEach((to) => {
+  const requiresAuth = Boolean(to.meta.requiresAuth)
+  const isGuestRoute = Boolean(to.meta.guest)
+  const hasToken = Boolean(getToken())
+
+  if (requiresAuth && !hasToken) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+
+  if (isGuestRoute && hasToken) {
+    return { name: 'home' }
+  }
+
+  return true
 })
 
 router.afterEach((to) => {

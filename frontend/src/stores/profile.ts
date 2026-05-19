@@ -17,6 +17,14 @@ export const useProfileStore = defineStore('profile', () => {
     showCardOnGuestPage.value = value
   }
 
+  /** 从登录用户同步名片字段 */
+  function applyFromAuth(profile: UserProfile) {
+    nickname.value = profile.nickname
+    signature.value = profile.signature
+    avatarUrl.value = profile.avatarUrl
+    showCardOnGuestPage.value = profile.showCardOnGuestPage
+  }
+
   function restoreMockProfile() {
     nickname.value = mockUserProfile.nickname
     signature.value = mockUserProfile.signature
@@ -40,6 +48,7 @@ export const useProfileStore = defineStore('profile', () => {
     showCardOnGuestPage,
     setSignature,
     setShowCardOnGuestPage,
+    applyFromAuth,
     restoreMockProfile,
     snapshot,
   }

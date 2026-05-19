@@ -2,7 +2,9 @@
 export function loadEnv(): {
   port: number
   jwtSecret: string
+  jwtExpiresIn: string
   corsOrigins: string[]
+  emailVerification: boolean
 } {
   const port = Number(process.env.PORT ?? 3000)
   const jwtSecret = process.env.JWT_SECRET
@@ -16,5 +18,8 @@ export function loadEnv(): {
     .map((s) => s.trim())
     .filter(Boolean)
 
-  return { port, jwtSecret, corsOrigins }
+  const jwtExpiresIn = process.env.JWT_EXPIRES_IN ?? '7d'
+  const emailVerification = process.env.EMAIL_VERIFICATION === 'true'
+
+  return { port, jwtSecret, jwtExpiresIn, corsOrigins, emailVerification }
 }

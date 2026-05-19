@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
+import { authRouter } from "./auth/routes.js";
 import { loadEnv } from "./config/env.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { notFoundHandler } from "./middleware/not-found.js";
@@ -36,8 +37,7 @@ export function createApp() {
     res.json({ success: true, data: { status: "ok" } });
   });
 
-  // 业务路由占位（后续按模块接入）
-  // app.use('/api/auth', authRouter)
+  app.use("/api/auth", authRouter);
   // app.use('/api/memories', memoryRouter)
 
   app.use(notFoundHandler);

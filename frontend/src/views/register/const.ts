@@ -1,0 +1,8 @@
+export const PAGE_TITLE = '注册'
+export const EMAIL_LABEL = '邮箱'
+export const PASSWORD_LABEL = '密码'
+export const SUBMIT_LABEL = '注册'
+export const LOGIN_HINT = '已有账号？'
+export const LOGIN_LINK = '去登录'
+export const REGISTER_FAIL_FALLBACK = '注册失败，请重试'
+export const VERIFY_EMAIL_TOAST = '请查收验证邮件完成注册'

@@ -15,6 +15,8 @@ model User {
   id                  String   @id @default(cuid())
   email               String   @unique
   passwordHash        String
+  /// 邮箱是否已验证（注册时默认 false）
+  isVerified          Boolean  @default(false)
   nickname            String
   signature           String   @default("")
   avatarUrl           String   @default("")

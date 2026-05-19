@@ -2,6 +2,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { Dialog, Toast } from 'tdesign-mobile-vue'
+import { useAuthStore } from '@/stores/auth'
 import { useImprintStore } from '@/stores/imprint'
 import { useProfileStore } from '@/stores/profile'
 import type { TabKey } from '@/components/layout/floating-tab-bar/types'
@@ -13,6 +14,7 @@ import {
 
 export function useProfilePage() {
   const router = useRouter()
+  const authStore = useAuthStore()
   const imprintStore = useImprintStore()
   const profileStore = useProfileStore()
 
@@ -41,9 +43,10 @@ export function useProfilePage() {
       confirmBtn: '退出',
       cancelBtn: '取消',
       onConfirm: () => {
+        authStore.logout()
         profileStore.restoreMockProfile()
         Toast({ message: LOGOUT_SUCCESS_TOAST })
-        router.push({ name: 'home' })
+        void router.replace({ name: 'login' })
       },
     })
   }
