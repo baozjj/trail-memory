@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
+import multer from 'multer'
 import { ZodError } from 'zod'
 import { AppError } from '../types/app-error.js'
 
@@ -25,6 +26,17 @@ export function errorHandler(
       error: { code: err.code, message: err.message },
     }
     res.status(err.statusCode).json(body)
+    return
+  }
+
+  if (err instanceof multer.MulterError) {
+    const message =
+      err.code === 'LIMIT_FILE_SIZE' ? '单张图片不能超过 5MB' : '文件上传失败'
+    const body: ErrorBody = {
+      success: false,
+      error: { code: 'UPLOAD_ERROR', message },
+    }
+    res.status(400).json(body)
     return
   }
 

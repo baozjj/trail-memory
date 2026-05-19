@@ -17,6 +17,10 @@ http.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
+  // FormData 需由浏览器自动带 boundary，不能沿用实例默认的 application/json
+  if (config.data instanceof FormData) {
+    config.headers.delete('Content-Type')
+  }
   return config
 })
 
@@ -37,8 +41,11 @@ http.interceptors.response.use(
 
 /** 从 axios 错误中提取后端 message */
 export function getApiErrorMessage(error: unknown, fallback = '请求失败'): string {
-  if (!axios.isAxiosError<ApiErrorBody>(error)) {
-    return fallback
+  if (axios.isAxiosError<ApiErrorBody>(error)) {
+    return error.response?.data?.error?.message ?? fallback
   }
-  return error.response?.data?.error?.message ?? fallback
+  if (error instanceof Error && error.message) {
+    return error.message
+  }
+  return fallback
 }

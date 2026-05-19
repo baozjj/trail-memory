@@ -63,6 +63,9 @@ Desktop.ini
 !.yarn/sdks
 !.yarn/versions
 
+# Local uploads (dev)
+backend/uploads/
+
 # Misc
 *.pid
 *.seed

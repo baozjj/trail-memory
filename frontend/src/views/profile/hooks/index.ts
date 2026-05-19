@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { Dialog, Toast } from 'tdesign-mobile-vue'
@@ -20,6 +20,12 @@ export function useProfilePage() {
 
   const { nickname, signature, avatarUrl, showCardOnGuestPage } = storeToRefs(profileStore)
   const sealedCount = computed(() => imprintStore.items.length)
+
+  onMounted(() => {
+    if (!imprintStore.loaded) {
+      void imprintStore.fetchList()
+    }
+  })
 
   const showCard = computed({
     get: () => showCardOnGuestPage.value,
@@ -44,6 +50,7 @@ export function useProfilePage() {
       cancelBtn: '取消',
       onConfirm: () => {
         authStore.logout()
+        imprintStore.clearAll()
         profileStore.restoreMockProfile()
         Toast({ message: LOGOUT_SUCCESS_TOAST })
         void router.replace({ name: 'login' })

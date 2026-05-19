@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useImprintStore } from '@/stores/imprint'
 import {
   Navbar as TNavbar,
   Switch as TSwitch,
@@ -13,17 +12,16 @@ import {
 import { CopyIcon } from 'tdesign-icons-vue-next'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import PublishImageRow from '@/components/publish/image-row/index.vue'
-import { MOCK_IMAGES } from '@/mock'
 import { SUFFIX_LABEL, SUFFIX_WARNING } from '@/components/imprint/exhibit-settings-sheet/const'
 import { imprintLinkPrefix, sanitizeLinkSuffix } from '@/utils/imprint-link'
 import { copyTextToClipboard } from '@/utils/clipboard'
+import { getApiErrorMessage } from '@/api/axios'
 import { usePublishDraft } from './hooks'
+import { usePublishSubmit } from './hooks/use-publish-submit'
 import {
   COPY_SUCCESS_TOAST,
   EDIT_SUBMIT_BUTTON_LABEL,
-  MOCK_LOCATION,
   SUBMIT_BUTTON_LABEL,
-  SUBMIT_DELAY_MS,
   SUCCESS_DIALOG_HINT,
   SUCCESS_DIALOG_TITLE,
   SUCCESS_DIALOG_TITLE_ICON,
@@ -31,9 +29,9 @@ import {
 
 const router = useRouter()
 const route = useRoute()
-const imprintStore = useImprintStore()
 const { draft, pickFromAlbum } = usePublishDraft()
-const submitting = ref(false)
+const { submitting, loadingDetail, loadEditDetail, submit } = usePublishSubmit()
+
 const successDialogVisible = ref(false)
 const shareLink = ref('')
 const linkSuffix = ref('')
@@ -52,14 +50,14 @@ const lockedLinkPrefix = computed(() => (editId.value ? imprintLinkPrefix(editId
 
 onMounted(() => {
   if (!editId.value) return
-  const item = imprintStore.getById(editId.value)
-  if (!item) return
-  draft.title = item.title
-  draft.isPublic = item.isPublic
-  linkSuffix.value = item.linkSuffix
-  if (!draft.imageUrls.length) {
-    draft.imageUrls.push(item.coverUrl)
-  }
+  void loadEditDetail(editId.value, draft)
+    .then((suffix) => {
+      linkSuffix.value = suffix
+    })
+    .catch((error: unknown) => {
+      Toast({ message: getApiErrorMessage(error, '加载印记失败') })
+      router.back()
+    })
 })
 
 function goBack() {
@@ -70,51 +68,19 @@ async function onAddImage() {
   await pickFromAlbum()
 }
 
-function onPickLocation() {
-  draft.location = MOCK_LOCATION
-  Toast({ message: '已选择示例地点（Mock）' })
-}
-
 function onSuffixInput(event: Event) {
   const target = event.target as HTMLInputElement
   linkSuffix.value = sanitizeLinkSuffix(target.value)
   target.value = linkSuffix.value
 }
 
-function resolveShareLinkAfterSave(): string | null {
-  if (editId.value) {
-    imprintStore.updateItem(editId.value, {
-      title: draft.title.trim(),
-      isPublic: draft.isPublic,
-      linkSuffix: linkSuffix.value,
-    })
-    return imprintStore.getShareLink(editId.value)
-  }
-
-  const coverUrl = draft.imageUrls[0] ?? MOCK_IMAGES.mountain
-  const item = imprintStore.createItem({
-    title: draft.title.trim(),
-    coverUrl,
-    isPublic: draft.isPublic,
-  })
-  return imprintStore.getShareLink(item.id)
-}
-
 async function onSubmit() {
-  if (!draft.title.trim()) {
-    Toast({ message: '请填写标题' })
-    return
-  }
-
-  submitting.value = true
-  await new Promise((r) => setTimeout(r, SUBMIT_DELAY_MS))
-  submitting.value = false
-
-  const link = resolveShareLinkAfterSave()
-  if (!link) {
-    Toast({ message: '链接生成失败，请重试' })
-    return
-  }
+  const link = await submit({
+    editId: editId.value,
+    draft,
+    linkSuffix: linkSuffix.value,
+  })
+  if (!link) return
 
   shareLink.value = link
   successDialogVisible.value = true
@@ -135,7 +101,8 @@ function onSuccessDialogClosed() {
 <template>
   <MobilePage>
     <TNavbar :title="pageTitle" left-arrow placeholder @left-click="goBack" />
-    <div class="publish">
+    <div v-if="loadingDetail" class="publish__loading">加载中...</div>
+    <div v-else class="publish">
       <PublishImageRow v-model:images="draft.imageUrls" @add="onAddImage" />
       <input
         v-model="draft.title"
@@ -151,7 +118,6 @@ function onSuccessDialogClosed() {
         rows="4"
       />
       <div class="publish__config">
-        <!-- <TCell title="添加地点" :note="draft.location || undefined" arrow @click="onPickLocation" /> -->
         <TCell title="设为公开展示">
           <template #right-icon>
             <TSwitch v-model="draft.isPublic" @click.stop />
@@ -181,6 +147,7 @@ function onSuccessDialogClosed() {
         shape="round"
         size="large"
         :loading="submitting"
+        :disabled="loadingDetail"
         @click="onSubmit"
       >
         {{ submitButtonLabel }}
@@ -222,6 +189,13 @@ function onSuccessDialogClosed() {
 </template>
 
 <style scoped>
+.publish__loading {
+  padding: 24px var(--tm-spacing-page-x);
+  font-size: 14px;
+  color: var(--tm-color-text-tertiary);
+  text-align: center;
+}
+
 .publish {
   display: flex;
   flex-direction: column;
@@ -363,7 +337,6 @@ function onSuccessDialogClosed() {
   justify-content: center;
   font-size: 16px;
   line-height: 1;
-  /* emoji 字形基线偏高，微调光学居中 */
   transform: translateY(0.1px);
 }
 

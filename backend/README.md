@@ -57,6 +57,17 @@ backend/
 
 环境变量 `EMAIL_VERIFICATION=true` 时注册后 `isVerified` 保持 false，并预留发送验证邮件逻辑（TODO）。
 
-## 后续模块（占位）
+## 印记接口（需 Bearer Token）
 
-- `/api/memories` — 印记 CRUD、展出设置
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/memories` | 当前用户列表（可选 `?q=` 标题搜索） |
+| GET | `/api/memories/:id` | 单条详情 |
+| PATCH | `/api/memories/:id` | 更新 `isPublic` / `linkSuffix` |
+| DELETE | `/api/memories/:id` | 删除印记 |
+
+| POST | `/api/uploads` | 上传图片（multipart `files`），返回 `/uploads/...` 路径 |
+| POST | `/api/memories` | 创建印记 |
+| PUT | `/api/memories/:id` | 更新印记（发布编辑） |
+
+本地上传目录：`backend/uploads/`（静态访问 `/uploads/*`）。后续可替换为 OSS。

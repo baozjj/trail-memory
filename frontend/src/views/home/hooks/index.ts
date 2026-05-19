@@ -1,7 +1,8 @@
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { Dialog, Toast } from 'tdesign-mobile-vue'
+import { getApiErrorMessage } from '@/api/axios'
 import { useImprintStore } from '@/stores/imprint'
 import type { TabKey } from '@/components/layout/floating-tab-bar/types'
 import type { CardActionKey } from '@/components/imprint/card-action-sheet/types'
@@ -12,7 +13,7 @@ import { buildImprintShareLink } from '@/utils/imprint-link'
 export function useHomePage() {
   const router = useRouter()
   const imprintStore = useImprintStore()
-  const { filteredItems, isEmpty } = storeToRefs(imprintStore)
+  const { filteredItems, isEmpty, loading } = storeToRefs(imprintStore)
 
   const searchKeyword = computed({
     get: () => imprintStore.searchKeyword,
@@ -26,6 +27,12 @@ export function useHomePage() {
   const activeItem = computed(() => {
     if (!activeItemId.value) return null
     return imprintStore.getById(activeItemId.value) ?? null
+  })
+
+  onMounted(() => {
+    void imprintStore.fetchList().catch((error: unknown) => {
+      Toast({ message: getApiErrorMessage(error, '加载印记列表失败') })
+    })
   })
 
   function onSelect(id: string) {
@@ -65,9 +72,15 @@ export function useHomePage() {
           confirmBtn: '确认',
           cancelBtn: '取消',
           onConfirm: () => {
-            imprintStore.removeItem(id)
-            activeItemId.value = null
-            Toast({ message: '已删除' })
+            void (async () => {
+              try {
+                await imprintStore.removeItem(id)
+                activeItemId.value = null
+                Toast({ message: '已删除' })
+              } catch (error: unknown) {
+                Toast({ message: getApiErrorMessage(error, '删除失败') })
+              }
+            })()
           },
         })
         break
@@ -78,17 +91,18 @@ export function useHomePage() {
     const id = activeItemId.value
     if (!id) return
 
-    imprintStore.updateItem(id, payload)
-    exhibitSheetVisible.value = false
+    try {
+      const item = await imprintStore.updateExhibitSettings(id, payload)
+      exhibitSheetVisible.value = false
 
-    const item = imprintStore.getById(id)
-    if (!item) return
-
-    const link = buildImprintShareLink(item)
-    const ok = await copyTextToClipboard(link)
-    Toast({
-      message: ok ? '设置已保存，新链接已复制' : '设置已保存，复制失败请手动复制',
-    })
+      const link = buildImprintShareLink(item)
+      const ok = await copyTextToClipboard(link)
+      Toast({
+        message: ok ? '设置已保存，新链接已复制' : '设置已保存，复制失败请手动复制',
+      })
+    } catch (error: unknown) {
+      Toast({ message: getApiErrorMessage(error, '保存失败') })
+    }
   }
 
   function onTabChange(tab: TabKey) {
@@ -100,6 +114,7 @@ export function useHomePage() {
   return {
     filteredItems,
     isEmpty,
+    loading,
     searchKeyword,
     actionSheetVisible,
     exhibitSheetVisible,

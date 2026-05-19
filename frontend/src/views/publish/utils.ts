@@ -22,8 +22,7 @@ export function pickImagesFromAlbum(): Promise<string[]> {
     input.type = 'file'
     input.accept = IMAGE_ACCEPT
     input.multiple = true
-    input.style.cssText =
-      'position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;'
+    input.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;'
 
     let settled = false
 
@@ -35,9 +34,7 @@ export function pickImagesFromAlbum(): Promise<string[]> {
     }
 
     input.addEventListener('change', () => {
-      const files = Array.from(input.files ?? []).filter((file) =>
-        file.type.startsWith('image/'),
-      )
+      const files = Array.from(input.files ?? []).filter((file) => file.type.startsWith('image/'))
       const urls = files.map((file) => URL.createObjectURL(file))
       finish(urls)
     })
