@@ -29,7 +29,8 @@ export function usePublishSubmit() {
       draft.description = item.content
       draft.location = item.meta
       draft.isPublic = item.isPublic
-      draft.imageUrls = item.images.length > 0 ? [...item.images] : [item.coverUrl]
+      draft.typeId = item.typeId
+      draft.imageUrls = [...item.images]
       return item.linkSuffix
     } finally {
       loadingDetail.value = false
@@ -69,6 +70,7 @@ export function usePublishSubmit() {
         content: draft.description.trim(),
         meta: draft.location.trim(),
         images,
+        typeId: draft.typeId,
         isPublic: draft.isPublic,
         ...(editId && linkSuffix ? { linkSuffix } : {}),
       }

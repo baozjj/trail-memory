@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client'
 import { prisma } from '../lib/prisma.js'
 import { AppError, notFoundError } from '../types/app-error.js'
 import type { PatchMemoryBody } from './schema.js'
+import { resolveCoverUrlForType } from '../imprint-types/registry.js'
 import type {
   MemoryArticleDto,
   MemoryAuthorDto,
@@ -12,10 +13,12 @@ import type {
 
 /** 将数据库印记转为列表 DTO */
 export function toMemoryListItemDto(memory: Memory): MemoryListItemDto {
+  const typeId = memory.typeId ?? null
   return {
     id: memory.id,
     title: memory.title,
-    coverUrl: memory.coverUrl,
+    typeId,
+    coverUrl: memory.coverUrl || resolveCoverUrlForType(typeId),
     heightWeight: memory.heightWeight,
     isPublic: memory.isPublic,
     linkSuffix: memory.linkSuffix,
@@ -33,12 +36,9 @@ function parseImages(raw: string): string[] {
   }
 }
 
-/** 详情页图片列表，无图时用封面兜底 */
+/** 详情页正文图片列表（不含类型封面） */
 function resolveDetailImages(memory: Memory): string[] {
-  const parsed = parseImages(memory.images)
-  if (parsed.length > 0) return parsed
-  if (memory.coverUrl) return [memory.coverUrl]
-  return []
+  return parseImages(memory.images)
 }
 
 /** 将数据库印记转为详情 DTO */
@@ -233,7 +233,8 @@ export async function createMemory(
   body: import('./schema.js').CreateMemoryBody,
 ): Promise<MemoryDetailDto> {
   const linkSuffix = body.linkSuffix ?? randomLinkSuffix()
-  const coverUrl = body.images[0]!
+  const typeId = body.typeId ?? null
+  const coverUrl = resolveCoverUrlForType(typeId)
   const heightWeight = body.heightWeight ?? 1
 
   try {
@@ -241,6 +242,7 @@ export async function createMemory(
       data: {
         userId,
         title: body.title.trim(),
+        typeId,
         coverUrl,
         heightWeight,
         isPublic: body.isPublic,
@@ -273,7 +275,8 @@ export async function updateMemory(
     throw notFoundError('印记不存在')
   }
 
-  const coverUrl = body.images[0]!
+  const typeId = body.typeId !== undefined ? body.typeId : memory.typeId
+  const coverUrl = resolveCoverUrlForType(typeId)
   const linkSuffix = body.linkSuffix ?? memory.linkSuffix
 
   try {
@@ -281,6 +284,7 @@ export async function updateMemory(
       where: { id: memoryId },
       data: {
         title: body.title.trim(),
+        typeId,
         coverUrl,
         heightWeight: body.heightWeight ?? memory.heightWeight,
         isPublic: body.isPublic,

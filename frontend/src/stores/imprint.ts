@@ -5,12 +5,13 @@ import {
   fetchMemoriesApi,
   patchMemoryApi,
 } from '@/api/memories'
+import { resolveImprintTypeCoverSrc } from '@/config/imprint-types'
 import { mockImprintList } from '@/mock'
 import { buildImprintShareLink } from '@/utils/imprint-link'
 import type { ImprintListItem } from '@/types/imprint'
 
 export type ImprintListPatch = Partial<
-  Pick<ImprintListItem, 'title' | 'isPublic' | 'linkSuffix'>
+  Pick<ImprintListItem, 'title' | 'isPublic' | 'linkSuffix' | 'typeId'>
 >
 
 export type ExhibitSettingsPatch = Pick<ImprintListItem, 'isPublic' | 'linkSuffix'>
@@ -45,6 +46,7 @@ export const useImprintStore = defineStore('imprint', () => {
     if (patch.title !== undefined) current.title = patch.title
     if (patch.isPublic !== undefined) current.isPublic = patch.isPublic
     if (patch.linkSuffix !== undefined) current.linkSuffix = patch.linkSuffix
+    if (patch.typeId !== undefined) current.typeId = patch.typeId
   }
 
   function replaceItem(updated: ImprintListItem) {
@@ -82,16 +84,18 @@ export const useImprintStore = defineStore('imprint', () => {
   }
 
   function createItem(
-    payload: Pick<ImprintListItem, 'title' | 'coverUrl' | 'isPublic'> &
-      Partial<Pick<ImprintListItem, 'heightWeight' | 'linkSuffix'>>,
+    payload: Pick<ImprintListItem, 'title' | 'isPublic'> &
+      Partial<Pick<ImprintListItem, 'coverUrl' | 'typeId' | 'heightWeight' | 'linkSuffix'>>,
   ): ImprintListItem {
     const id = String(Date.now())
     const linkSuffix =
       payload.linkSuffix ?? Math.random().toString(36).slice(2, 8)
+    const typeId = payload.typeId ?? null
     const item: ImprintListItem = {
       id,
       title: payload.title,
-      coverUrl: payload.coverUrl,
+      typeId,
+      coverUrl: payload.coverUrl ?? resolveImprintTypeCoverSrc(typeId) ?? '',
       isPublic: payload.isPublic,
       linkSuffix,
       heightWeight: payload.heightWeight ?? 1,
@@ -126,6 +130,7 @@ export const useImprintStore = defineStore('imprint', () => {
     setSearchKeyword,
     getById,
     patchItem,
+    replaceItem,
     fetchList,
     updateExhibitSettings,
     removeItem,

@@ -12,6 +12,7 @@ import {
 import { CopyIcon } from 'tdesign-icons-vue-next'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import PublishImageRow from '@/components/publish/image-row/index.vue'
+import PublishTypePicker from '@/components/publish/type-picker/index.vue'
 import { SUFFIX_LABEL, SUFFIX_WARNING } from '@/components/imprint/exhibit-settings-sheet/const'
 import { imprintLinkPrefix, sanitizeLinkSuffix } from '@/utils/imprint-link'
 import { copyTextToClipboard } from '@/utils/clipboard'
@@ -118,6 +119,7 @@ function onSuccessDialogClosed() {
         rows="4"
       />
       <div class="publish__config">
+        <PublishTypePicker v-model="draft.typeId" />
         <TCell title="设为公开展示">
           <template #right-icon>
             <TSwitch v-model="draft.isPublic" @click.stop />

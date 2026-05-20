@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ImprintCover from '@/components/imprint/imprint-cover/index.vue'
 import type { ImprintCardEmits, ImprintCardProps } from './types'
 
 const props = defineProps<ImprintCardProps>()
@@ -20,7 +21,7 @@ function onMore(event: MouseEvent) {
       class="imprint-card__cover"
       :style="{ paddingBottom: `${props.item.heightWeight * 100}%` }"
     >
-      <img :src="props.item.coverUrl" :alt="props.item.title" loading="lazy" />
+      <ImprintCover :type-id="props.item.typeId" :alt="props.item.title" />
     </div>
     <div class="imprint-card__footer">
       <h3 class="imprint-card__title">{{ props.item.title }}</h3>
@@ -47,14 +48,6 @@ function onMore(event: MouseEvent) {
   border-radius: var(--tm-radius-card);
   overflow: hidden;
   background: var(--tm-color-bg-muted);
-}
-
-.imprint-card__cover img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .imprint-card__footer {

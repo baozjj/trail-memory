@@ -6,6 +6,7 @@ export function createDefaultPublishDraft(): PublishDraft {
     title: '',
     description: '',
     location: '',
+    typeId: null,
     isPublic: false,
   }
 }

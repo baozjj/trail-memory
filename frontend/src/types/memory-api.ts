@@ -31,6 +31,7 @@ export interface SaveMemoryPayload {
   content?: string
   meta?: string
   images: string[]
+  typeId?: string | null
   isPublic: boolean
   linkSuffix?: string
   heightWeight?: number

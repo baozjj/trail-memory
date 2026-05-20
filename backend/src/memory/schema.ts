@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isKnownImprintTypeId } from '../imprint-types/registry.js'
 
 export const linkSuffixSchema = z
   .string()
@@ -15,11 +16,17 @@ const imageUrlSchema = z
     { message: '图片地址无效' },
   )
 
+const imprintTypeIdSchema = z
+  .string()
+  .min(1)
+  .refine((value) => isKnownImprintTypeId(value), { message: '印记类型无效' })
+
 const memoryFieldsSchema = {
   title: z.string().min(1, '标题不能为空').max(60, '标题过长'),
   content: z.string().max(10000).optional().default(''),
   meta: z.string().max(200).optional().default(''),
   images: z.array(imageUrlSchema).min(1, '至少上传一张图片').max(9),
+  typeId: imprintTypeIdSchema.nullable().optional(),
   isPublic: z.boolean(),
   linkSuffix: linkSuffixSchema.optional(),
   heightWeight: z.number().min(0.5).max(2).optional(),

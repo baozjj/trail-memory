@@ -33,7 +33,9 @@ model Memory {
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title        String
-  coverUrl     String
+  /// 印记类型 id（可选），列表封面由类型映射图决定
+  typeId       String?
+  coverUrl     String   @default("")
   /// 瀑布流高度权重
   heightWeight Float    @default(1)
   /// 公开展示：开启则游客可看

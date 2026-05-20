@@ -3,6 +3,7 @@ export interface MemoryListItemDto {
   id: string
   title: string
   coverUrl: string
+  typeId: string | null
   heightWeight: number
   isPublic: boolean
   linkSuffix: string
