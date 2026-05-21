@@ -21,6 +21,7 @@ export const mockImprintList: ImprintListItem[] = [
     isPublic: true,
     linkSuffix: 'chenxi',
     meta: '2024-05-16',
+    createdAt: '2024-05-16T10:00:00.000Z',
   }),
   mockItem({
     id: '2',
@@ -30,6 +31,7 @@ export const mockImprintList: ImprintListItem[] = [
     isPublic: true,
     linkSuffix: 'wusong',
     meta: '2024-04-02',
+    createdAt: '2024-04-02T10:00:00.000Z',
   }),
   mockItem({
     id: '3',
@@ -39,6 +41,7 @@ export const mockImprintList: ImprintListItem[] = [
     isPublic: false,
     linkSuffix: 'jinghu',
     meta: '2024-03-21',
+    createdAt: '2024-03-21T10:00:00.000Z',
   }),
   mockItem({
     id: '4',
@@ -48,6 +51,7 @@ export const mockImprintList: ImprintListItem[] = [
     isPublic: true,
     linkSuffix: 'shamo',
     meta: '2024-02-08',
+    createdAt: '2024-02-08T10:00:00.000Z',
   }),
   mockItem({
     id: '5',
@@ -57,6 +61,7 @@ export const mockImprintList: ImprintListItem[] = [
     isPublic: true,
     linkSuffix: 'coast',
     meta: '2024-01-15',
+    createdAt: '2024-01-15T10:00:00.000Z',
   }),
   mockItem({
     id: '6',
@@ -66,5 +71,6 @@ export const mockImprintList: ImprintListItem[] = [
     isPublic: false,
     linkSuffix: 'hongyan',
     meta: '2023-12-03',
+    createdAt: '2023-12-03T10:00:00.000Z',
   }),
 ]

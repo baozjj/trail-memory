@@ -1,22 +1,15 @@
 import type { ImprintListItem } from '@/types/imprint'
 
-/** 按 heightWeight 累计高度贪心分列，使两列视觉高度更均衡 */
+/**
+ * 按列表顺序交替分列（0→左、1→右、2→左…），与加入时间序一致。
+ * 阅读时同一「行」左右相邻即为时间相邻，避免高度均衡算法打乱顺序感。
+ */
 export function splitWaterfallColumns(items: ImprintListItem[]) {
   const left: ImprintListItem[] = []
   const right: ImprintListItem[] = []
-  let leftHeight = 0
-  let rightHeight = 0
-
-  for (const item of items) {
-    const weight = item.heightWeight > 0 ? item.heightWeight : 1
-    if (leftHeight <= rightHeight) {
-      left.push(item)
-      leftHeight += weight
-    } else {
-      right.push(item)
-      rightHeight += weight
-    }
-  }
-
+  items.forEach((item, index) => {
+    if (index % 2 === 0) left.push(item)
+    else right.push(item)
+  })
   return { left, right }
 }

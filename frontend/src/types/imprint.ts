@@ -22,6 +22,8 @@ export interface ImprintListItem {
   linkSuffix: string
   /** 封存日期，存 ISO：YYYY-MM-DD；历史数据可能含「日期 · 地点」 */
   meta: string
+  /** 加入时间（ISO 8601），列表按此倒序 */
+  createdAt: string
 }
 
 export interface ImprintArticle {

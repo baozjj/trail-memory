@@ -23,6 +23,7 @@ export function toMemoryListItemDto(memory: Memory): MemoryListItemDto {
     isPublic: memory.isPublic,
     linkSuffix: memory.linkSuffix,
     meta: memory.meta,
+    createdAt: memory.createdAt.toISOString(),
   }
 }
 

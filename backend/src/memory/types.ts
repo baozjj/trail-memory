@@ -8,6 +8,8 @@ export interface MemoryListItemDto {
   isPublic: boolean
   linkSuffix: string
   meta: string
+  /** ISO 8601，列表按此倒序展示 */
+  createdAt: string
 }
 
 /** 印记详情（含正文与图片） */

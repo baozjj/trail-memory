@@ -8,6 +8,7 @@ import {
 import { resolveImprintTypeCoverSrc } from '@/config/imprint-types'
 import { mockImprintList } from '@/mock'
 import { buildImprintShareLink } from '@/utils/imprint-link'
+import { sortImprintsByCreatedAtDesc } from '@/utils/imprint-list-sort'
 import type { ImprintListItem } from '@/types/imprint'
 
 export type ImprintListPatch = Partial<
@@ -24,8 +25,10 @@ export const useImprintStore = defineStore('imprint', () => {
 
   const filteredItems = computed(() => {
     const kw = searchKeyword.value.trim().toLowerCase()
-    if (!kw) return items.value
-    return items.value.filter((item) => item.title.toLowerCase().includes(kw))
+    const list = kw
+      ? items.value.filter((item) => item.title.toLowerCase().includes(kw))
+      : items.value
+    return sortImprintsByCreatedAtDesc(list)
   })
 
   const isEmpty = computed(() => !loading.value && items.value.length === 0)
@@ -105,8 +108,9 @@ export const useImprintStore = defineStore('imprint', () => {
       linkSuffix,
       heightWeight: payload.heightWeight ?? 1,
       meta: '',
+      createdAt: new Date().toISOString(),
     }
-    items.value.unshift(item)
+    items.value = sortImprintsByCreatedAtDesc([item, ...items.value])
     return item
   }
 
