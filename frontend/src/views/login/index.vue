@@ -1,7 +1,19 @@
 <script setup lang="ts">
-import { Button, Input } from 'tdesign-mobile-vue'
+import { Button } from 'tdesign-mobile-vue'
+import AuthField from '@/components/auth/auth-field/index.vue'
+import AuthShell from '@/components/auth/auth-shell/index.vue'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
-import { EMAIL_LABEL, PASSWORD_LABEL, REGISTER_HINT, REGISTER_LINK, SUBMIT_LABEL } from './const'
+import {
+  BRAND_TITLE,
+  EMAIL_LABEL,
+  EMAIL_PLACEHOLDER,
+  LOGIN_TAGLINE,
+  PASSWORD_LABEL,
+  PASSWORD_PLACEHOLDER,
+  REGISTER_HINT,
+  REGISTER_LINK,
+  SUBMIT_LABEL,
+} from './const'
 import { useLoginPage } from './hooks'
 
 const { email, password, loading, onSubmit, goRegister } = useLoginPage()
@@ -9,34 +21,27 @@ const { email, password, loading, onSubmit, goRegister } = useLoginPage()
 
 <template>
   <MobilePage>
-    <div class="auth">
-      <h1 class="auth__title">印记</h1>
-
-      <form class="auth__form" @submit.prevent="onSubmit">
-        <label class="auth__field">
-          <span class="auth__label">{{ EMAIL_LABEL }}</span>
-          <Input
+    <AuthShell :title="BRAND_TITLE" :subtitle="LOGIN_TAGLINE">
+      <form class="login-form" @submit.prevent="onSubmit">
+        <div class="login-form__fields">
+          <AuthField
             v-model="email"
+            :label="EMAIL_LABEL"
             type="text"
-            placeholder="name@example.com"
+            :placeholder="EMAIL_PLACEHOLDER"
             autocomplete="email"
-            clearable
           />
-        </label>
-
-        <label class="auth__field">
-          <span class="auth__label">{{ PASSWORD_LABEL }}</span>
-          <Input
+          <AuthField
             v-model="password"
+            :label="PASSWORD_LABEL"
             type="password"
-            placeholder="请输入密码"
+            :placeholder="PASSWORD_PLACEHOLDER"
             autocomplete="current-password"
-            clearable
           />
-        </label>
+        </div>
 
         <Button
-          class="auth__submit"
+          class="login-form__submit"
           theme="primary"
           block
           size="large"
@@ -47,66 +52,54 @@ const { email, password, loading, onSubmit, goRegister } = useLoginPage()
         </Button>
       </form>
 
-      <p class="auth__footer">
+      <template #footer>
         {{ REGISTER_HINT }}
-        <button type="button" class="auth__link" @click="goRegister">{{ REGISTER_LINK }}</button>
-      </p>
-    </div>
+        <button type="button" class="login-form__link" @click="goRegister">
+          {{ REGISTER_LINK }}
+        </button>
+      </template>
+    </AuthShell>
   </MobilePage>
 </template>
 
 <style scoped>
-.auth {
+.login-form {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
-  padding: 48px 24px 24px;
+  gap: 28px;
 }
 
-.auth__title {
-  margin: 0 0 40px;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--tm-color-text-primary);
-  text-align: center;
-}
-
-.auth__form {
+.login-form__fields {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
-.auth__field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.login-form__submit {
+  --td-button-primary-bg-color: var(--tm-color-cta-primary);
+  --td-button-primary-active-bg-color: #1a1a1a;
+  --td-button-primary-color: var(--tm-color-cta-on-primary);
+  --td-button-large-height: 50px;
+  --td-button-border-radius: 12px;
+  --td-button-font-weight: 600;
+  --td-button-font-size: 17px;
+  letter-spacing: -0.01em;
 }
 
-.auth__label {
-  font-size: 14px;
-  color: var(--tm-color-text-meta);
-}
-
-.auth__submit {
-  margin-top: 8px;
-}
-
-.auth__footer {
-  margin-top: auto;
-  padding-top: 32px;
-  text-align: center;
-  font-size: 14px;
-  color: var(--tm-color-text-meta);
-}
-
-.auth__link {
-  margin-left: 4px;
+.login-form__link {
+  margin-left: 6px;
   padding: 0;
   border: none;
   background: none;
-  color: var(--tm-color-brand);
+  color: var(--tm-auth-link, #0071e3);
   font-size: inherit;
+  font-weight: 500;
+  letter-spacing: inherit;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.login-form__link:active {
+  opacity: 0.65;
 }
 </style>
