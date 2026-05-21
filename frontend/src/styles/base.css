@@ -18,25 +18,98 @@ select {
   letter-spacing: inherit;
 }
 
-/* TDesign Mobile — project-wide overrides */
-:root {
-  --td-brand-color: var(--tm-color-link);
-  --td-button-primary-bg-color: var(--tm-color-cta-primary);
-  --td-button-primary-active-bg-color: var(--tm-color-cta-primary-active);
-  --td-button-primary-color: var(--tm-color-cta-on-primary);
+/* TDesign Mobile — Trail Memory theme bridge (neutral CTA, not default blue) */
+:root,
+:root[theme-mode='light'] {
+  /* Brand scale → project neutrals (replaces TDesign blue palette) */
+  --td-brand-color-1: var(--tm-color-bg-surface);
+  --td-brand-color-2: var(--tm-color-bg-surface-active);
+  --td-brand-color-3: var(--tm-color-border-strong);
+  --td-brand-color-4: var(--tm-color-icon-inactive);
+  --td-brand-color-5: var(--tm-color-icon-muted);
+  --td-brand-color-6: var(--tm-color-text-tertiary);
+  --td-brand-color-7: var(--tm-color-cta-primary);
+  --td-brand-color-8: var(--tm-color-cta-primary-active);
+  --td-brand-color-9: var(--tm-color-text-secondary);
+  --td-brand-color-10: var(--tm-color-text-primary);
+  --td-brand-color: var(--tm-color-cta-primary);
+  --td-brand-color-active: var(--tm-color-cta-primary-active);
+  --td-brand-color-disabled: var(--tm-color-icon-inactive);
+  --td-brand-color-focus: var(--tm-color-bg-surface);
+  --td-brand-color-light: var(--tm-color-bg-surface);
+  --td-brand-color-light-active: var(--tm-color-bg-surface-active);
+
+  /* Typography */
+  --td-font-family: var(--tm-font-family);
+  --td-font-family-medium: var(--tm-font-family);
+
+  /* Text & surfaces */
+  --td-text-color-link: var(--tm-color-link);
+  --td-text-color-brand: var(--tm-color-cta-primary);
+  --td-text-color-primary: var(--tm-color-text-primary);
+  --td-text-color-secondary: var(--tm-color-text-secondary);
+  --td-text-color-placeholder: var(--tm-color-text-placeholder);
+  --td-bg-color-page: var(--tm-color-bg-page);
+  --td-bg-color-container: var(--tm-color-bg-page);
+  --td-bg-color-container-active: var(--tm-color-bg-surface-active);
+  --td-component-stroke: var(--tm-color-border-subtle);
+  --td-component-border: var(--tm-color-border-strong);
+
+  /* Button — shared */
   --td-button-border-radius: var(--tm-radius-md);
   --td-button-large-height: 50px;
   --td-button-font-weight: 600;
+
+  /* Button — primary solid */
+  --td-button-primary-bg-color: var(--tm-color-cta-primary);
+  --td-button-primary-active-bg-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-color: var(--tm-color-cta-on-primary);
+  --td-button-primary-border-color: var(--tm-color-cta-primary);
+  --td-button-primary-active-border-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-disabled-bg: var(--tm-color-icon-inactive);
+  --td-button-primary-disabled-border-color: var(--tm-color-icon-inactive);
+
+  /* Button — primary outline / text / light */
+  --td-button-primary-outline-color: var(--tm-color-cta-primary);
+  --td-button-primary-outline-border-color: var(--tm-color-cta-primary);
+  --td-button-primary-outline-active-border-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-outline-active-bg-color: var(--tm-color-bg-surface);
+  --td-button-primary-outline-disabled-color: var(--tm-color-icon-inactive);
+  --td-button-primary-text-color: var(--tm-color-cta-primary);
+  --td-button-primary-text-active-bg-color: var(--tm-color-bg-surface-active);
+  --td-button-primary-text-disabled-color: var(--tm-color-icon-inactive);
+  --td-button-light-color: var(--tm-color-cta-primary);
+  --td-button-light-bg-color: var(--tm-color-bg-surface);
+  --td-button-light-border-color: var(--tm-color-bg-surface);
+  --td-button-light-active-bg-color: var(--tm-color-bg-surface-active);
+  --td-button-light-active-border-color: var(--tm-color-bg-surface-active);
+  --td-button-light-disabled-color: var(--tm-color-icon-inactive);
+
+  /* Button — default outline */
+  --td-button-default-outline-border-color: var(--tm-color-border-strong);
+  --td-button-default-outline-active-border-color: var(--tm-color-border-strong);
+
+  /* Switch / picker / loading */
   --td-switch-checked-color: var(--tm-color-cta-primary);
+  --td-switch-checked-disabled-color: var(--tm-color-icon-inactive);
+  --td-switch-loading-color: var(--tm-color-cta-primary);
+  --td-picker-confirm-color: var(--tm-color-cta-primary);
+  --td-loading-color: var(--tm-color-cta-primary);
+
+  /* Navbar / cell / input */
   --td-navbar-bg-color: var(--tm-color-bg-page);
   --td-navbar-title-color: var(--tm-color-text-primary);
   --td-cell-bg-color: transparent;
   --td-cell-title-color: var(--tm-color-text-primary);
   --td-cell-note-color: var(--tm-color-text-tertiary);
+  --td-cell-left-icon-color: var(--tm-color-icon-muted);
   --td-input-bg-color: var(--tm-color-bg-surface);
   --td-input-border-color: transparent;
   --td-input-placeholder-text-color: var(--tm-color-text-placeholder);
   --td-input-default-text-color: var(--tm-color-text-primary);
+  --td-input-cursor-color: var(--tm-color-cta-primary);
+
+  /* Dialog / popup */
   --td-dialog-border-radius: var(--tm-radius-lg);
   --td-popup-border-radius: var(--tm-radius-lg);
 }
@@ -45,6 +118,12 @@ select {
   --td-button-primary-bg-color: var(--tm-color-cta-primary);
   --td-button-primary-active-bg-color: var(--tm-color-cta-primary-active);
   --td-button-primary-color: var(--tm-color-cta-on-primary);
+  --td-button-primary-border-color: var(--tm-color-cta-primary);
+  --td-button-primary-active-border-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-outline-color: var(--tm-color-cta-primary);
+  --td-button-primary-outline-border-color: var(--tm-color-cta-primary);
+  --td-button-primary-outline-active-border-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-text-color: var(--tm-color-cta-primary);
   --td-button-border-radius: var(--tm-radius-md);
   --td-button-large-height: 50px;
   --td-button-font-size: var(--tm-font-size-body);
