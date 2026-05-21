@@ -11,8 +11,11 @@ const emit = defineEmits<ImagePreviewEmits>()
 const trackRef = ref<HTMLDivElement | null>(null)
 const current = ref(0)
 
+const hasMultiple = computed(() => props.images.length > 1)
+const singleSrc = computed(() => props.images[0] ?? '')
+
 const indicator = computed(() => {
-  if (props.images.length <= 1) return ''
+  if (!hasMultiple.value) return ''
   return `${current.value + 1} / ${props.images.length}`
 })
 
@@ -97,7 +100,12 @@ function onKeydown(event: KeyboardEvent) {
           <CloseIcon />
         </button>
         <span v-if="indicator" class="image-preview__indicator">{{ indicator }}</span>
-        <div ref="trackRef" class="image-preview__track" @scroll.passive="syncIndexFromScroll">
+        <div
+          v-if="hasMultiple"
+          ref="trackRef"
+          class="image-preview__track"
+          @scroll.passive="syncIndexFromScroll"
+        >
           <div
             v-for="(src, i) in images"
             :key="`preview-${src}-${i}`"
@@ -110,6 +118,14 @@ function onKeydown(event: KeyboardEvent) {
               @click.stop
             />
           </div>
+        </div>
+        <div v-else class="image-preview__single">
+          <img
+            class="image-preview__img"
+            :src="singleSrc"
+            alt="图片"
+            @click.stop
+          />
         </div>
       </div>
     </Transition>
@@ -175,6 +191,17 @@ function onKeydown(event: KeyboardEvent) {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.image-preview__single {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: pan-y;
 }
 
 .image-preview__slide {

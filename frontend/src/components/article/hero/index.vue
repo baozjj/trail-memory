@@ -10,6 +10,8 @@ const current = ref(0)
 const previewVisible = ref(false)
 const previewIndex = ref(0)
 
+const hasMultiple = computed(() => props.images.length > 1)
+const singleSrc = computed(() => props.images[0] ?? '')
 const indicator = computed(() => `${current.value + 1}/${props.images.length}`)
 
 function openPreview(index: number) {
@@ -20,7 +22,23 @@ function openPreview(index: number) {
 
 <template>
   <div class="article-hero">
-    <TSwiper v-model:current="current" class="article-hero__swiper" :autoplay="false">
+    <button
+      v-if="!hasMultiple && singleSrc"
+      type="button"
+      class="article-hero__tap article-hero__tap--single"
+      aria-label="查看图片"
+      @click="openPreview(0)"
+    >
+      <img class="article-hero__img" :src="singleSrc" alt="" />
+    </button>
+
+    <TSwiper
+      v-else-if="hasMultiple"
+      v-model:current="current"
+      class="article-hero__swiper"
+      :autoplay="false"
+      :loop="false"
+    >
       <TSwiperItem v-for="(src, i) in images" :key="`${src}-${i}`">
         <button
           type="button"
@@ -32,7 +50,8 @@ function openPreview(index: number) {
         </button>
       </TSwiperItem>
     </TSwiper>
-    <span v-if="images.length > 1" class="article-hero__indicator">{{ indicator }}</span>
+
+    <span v-if="hasMultiple" class="article-hero__indicator">{{ indicator }}</span>
     <ImagePreview
       v-model:visible="previewVisible"
       :images="images"
@@ -46,6 +65,7 @@ function openPreview(index: number) {
   position: relative;
   height: 506px;
   background: var(--tm-color-bg-inverse);
+  overflow: hidden;
 }
 
 .article-hero__swiper {
@@ -60,6 +80,10 @@ function openPreview(index: number) {
   border: none;
   background: transparent;
   cursor: pointer;
+}
+
+.article-hero__tap--single {
+  touch-action: pan-y;
 }
 
 .article-hero__img {
