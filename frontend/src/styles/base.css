@@ -10,6 +10,22 @@ body,
   background: var(--tm-color-bg-shell);
 }
 
+/* 全局隐藏滚动条，保留触摸/滚轮滚动（页面、轮播、横向图片条等） */
+html,
+body,
+#app,
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
 button,
 input,
 textarea,
