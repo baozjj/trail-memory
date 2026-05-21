@@ -3,9 +3,10 @@ import MobilePage from '@/components/layout/mobile-page/index.vue'
 import FloatingTabBar from '@/components/layout/floating-tab-bar/index.vue'
 import ProfileHeader from './components/profile-header/index.vue'
 import ProfileStats from './components/profile-stats/index.vue'
+import AuthorCard from '@/components/article/author-card/index.vue'
 import ProfileSettingsRow from './components/profile-settings-row/index.vue'
 import { useProfilePage } from './hooks'
-import { LOGOUT_LABEL, SHOW_CARD_LABEL } from './const'
+import { CARD_PREVIEW_LABEL, LOGOUT_LABEL, SHOW_CARD_LABEL } from './const'
 
 const {
   nickname,
@@ -13,6 +14,7 @@ const {
   avatarDisplayUrl,
   sealedCount,
   showCard,
+  cardPreviewAuthor,
   onSignatureUpdate,
   onEditAvatar,
   onTabChange,
@@ -35,6 +37,10 @@ const {
 
       <section class="profile__settings">
         <ProfileSettingsRow v-model="showCard" :label="SHOW_CARD_LABEL" />
+        <div v-if="showCard" class="profile__card-preview">
+          <p class="profile__card-preview-label">{{ CARD_PREVIEW_LABEL }}</p>
+          <AuthorCard :author="cardPreviewAuthor" />
+        </div>
       </section>
 
       <div class="profile__spacer" aria-hidden="true" />
@@ -60,6 +66,19 @@ const {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid var(--tm-color-border-subtle);
+}
+
+.profile__card-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 2px 12px;
+}
+
+.profile__card-preview-label {
+  margin: 0;
+  font-size: var(--tm-font-size-footnote);
+  color: var(--tm-color-text-tertiary);
 }
 
 .profile__spacer {

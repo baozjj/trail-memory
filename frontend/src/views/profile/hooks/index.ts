@@ -11,6 +11,7 @@ import { useProfileStore } from '@/stores/profile'
 import { resolveAvatarUrl } from '@/utils/avatar'
 import { pickSingleImageFromAlbum } from '@/utils/pick-image'
 import type { TabKey } from '@/components/layout/floating-tab-bar/types'
+import type { Author } from '@/types/imprint'
 import {
   LOGOUT_DIALOG_CONTENT,
   LOGOUT_DIALOG_TITLE,
@@ -40,6 +41,14 @@ export function useProfilePage() {
       void persistProfile({ showCardOnGuestPage: value }, '设置保存失败')
     },
   })
+
+  /** 名片预览数据（与详情页 AuthorCard 一致） */
+  const cardPreviewAuthor = computed<Author>(() => ({
+    id: '',
+    name: nickname.value,
+    bio: signature.value,
+    avatarUrl: avatarUrl.value,
+  }))
 
   onMounted(() => {
     void refreshFromServer()
@@ -130,6 +139,7 @@ export function useProfilePage() {
     avatarUploading,
     sealedCount,
     showCard,
+    cardPreviewAuthor,
     onSignatureUpdate,
     onEditAvatar,
     onTabChange,

@@ -1,6 +1,7 @@
 export const STATS_LABEL_PREFIX = '已封存印记：'
 export const STATS_LABEL_SUFFIX = '座'
 export const SHOW_CARD_LABEL = '在游客页展示我的名片'
+export const CARD_PREVIEW_LABEL = '游客将看到以下内容'
 export const LOGOUT_LABEL = '退出登录'
 export const SIGNATURE_PLACEHOLDER = '写一句个性签名'
 
