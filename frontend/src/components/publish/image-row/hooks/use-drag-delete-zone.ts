@@ -1,14 +1,48 @@
-import { nextTick, onUnmounted, ref } from 'vue'
+import { nextTick, onUnmounted, ref, type Ref } from 'vue'
 import { DELETE_ZONE_HEIGHT } from '../const'
-import { isPointInRect } from '../utils'
+import {
+  autoScrollTrackByDraggedImage,
+  getSortableDragElement,
+  isPointInRect,
+  isTrackHorizontallyScrollable,
+} from '../utils'
 
-export function useDragDeleteZone() {
+export interface UseDragDeleteZoneOptions {
+  trackRef?: Ref<HTMLElement | null>
+}
+
+export function useDragDeleteZone(options: UseDragDeleteZoneOptions = {}) {
   const dragging = ref(false)
   const overDeleteZone = ref(false)
   const deleteZoneRef = ref<HTMLElement | null>(null)
 
-  let savedBodyOverflow = ''
-  let savedHtmlOverflow = ''
+  let savedBodyOverflowY = ''
+  let savedHtmlOverflowY = ''
+  let trackScrollRafId = 0
+
+  function tickTrackScroll() {
+    if (!dragging.value) return
+
+    const track = options.trackRef?.value
+    if (track && isTrackHorizontallyScrollable(track)) {
+      const dragEl = getSortableDragElement()
+      if (dragEl) {
+        autoScrollTrackByDraggedImage(track, dragEl)
+      }
+    }
+
+    trackScrollRafId = requestAnimationFrame(tickTrackScroll)
+  }
+
+  function startTrackScrollLoop() {
+    cancelAnimationFrame(trackScrollRafId)
+    trackScrollRafId = requestAnimationFrame(tickTrackScroll)
+  }
+
+  function stopTrackScrollLoop() {
+    cancelAnimationFrame(trackScrollRafId)
+    trackScrollRafId = 0
+  }
 
   function getDeleteZoneRect(): DOMRect {
     const el = deleteZoneRef.value
@@ -28,16 +62,17 @@ export function useDragDeleteZone() {
     updatePointer(point.clientX, point.clientY)
   }
 
+  /** 仅锁纵向，保留图片轨道横向滚动 */
   function lockPageScroll() {
-    savedBodyOverflow = document.body.style.overflow
-    savedHtmlOverflow = document.documentElement.style.overflow
-    document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
+    savedBodyOverflowY = document.body.style.overflowY
+    savedHtmlOverflowY = document.documentElement.style.overflowY
+    document.body.style.overflowY = 'hidden'
+    document.documentElement.style.overflowY = 'hidden'
   }
 
   function unlockPageScroll() {
-    document.body.style.overflow = savedBodyOverflow
-    document.documentElement.style.overflow = savedHtmlOverflow
+    document.body.style.overflowY = savedBodyOverflowY
+    document.documentElement.style.overflowY = savedHtmlOverflowY
   }
 
   function onDocumentMove(event: Event) {
@@ -65,12 +100,14 @@ export function useDragDeleteZone() {
     lockPageScroll()
     await nextTick()
     attachDocumentListeners()
+    startTrackScrollLoop()
   }
 
   function onDragEnd(endEvent?: Event) {
     if (endEvent) syncFromEvent(endEvent)
 
     const shouldDelete = overDeleteZone.value
+    stopTrackScrollLoop()
     detachDocumentListeners()
     unlockPageScroll()
     dragging.value = false
@@ -79,6 +116,7 @@ export function useDragDeleteZone() {
   }
 
   onUnmounted(() => {
+    stopTrackScrollLoop()
     detachDocumentListeners()
     unlockPageScroll()
   })

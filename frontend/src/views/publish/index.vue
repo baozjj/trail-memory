@@ -105,20 +105,22 @@ function onSuccessDialogClosed() {
     <TNavbar :title="pageTitle" left-arrow placeholder @left-click="goBack" />
     <div v-if="loadingDetail" class="publish__loading">加载中...</div>
     <div v-else class="publish">
-      <PublishImageRow v-model:images="draft.imageUrls" @add="onAddImage" />
-      <input
-        v-model="draft.title"
-        class="publish__title"
-        type="text"
-        placeholder="填写标题..."
-        maxlength="60"
-      />
-      <textarea
-        v-model="draft.description"
-        class="publish__desc"
-        placeholder="分享这块印记的故事..."
-        rows="4"
-      />
+      <PublishImageRow v-model:images="draft.imageUrls" class="publish__media" @add="onAddImage" />
+      <div class="publish__fields">
+        <input
+          v-model="draft.title"
+          class="publish__title"
+          type="text"
+          placeholder="填写标题..."
+          maxlength="60"
+        />
+        <textarea
+          v-model="draft.description"
+          class="publish__desc"
+          placeholder="分享这块印记的故事..."
+          rows="4"
+        />
+      </div>
       <div class="publish__config">
         <PublishTypePicker v-model="draft.typeId" />
         <PublishDatePicker v-model="draft.sealedDate" />
@@ -207,11 +209,28 @@ function onSuccessDialogClosed() {
   padding: 12px var(--tm-spacing-page-x) 16px;
 }
 
+.publish__media {
+  position: relative;
+  z-index: 0;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.publish__fields {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--tm-color-bg-page);
+}
+
 .publish__title {
   width: 100%;
   border: none;
   outline: none;
   padding: 4px 0;
+  scroll-margin-top: 12px;
   font-size: var(--tm-font-size-title-sm);
   font-weight: 600;
   letter-spacing: var(--tm-letter-spacing-tight);
@@ -241,8 +260,11 @@ function onSuccessDialogClosed() {
 }
 
 .publish__config {
+  position: relative;
+  z-index: 1;
   margin-top: 4px;
   border-top: 1px solid var(--tm-color-border-subtle);
+  background: var(--tm-color-bg-page);
 }
 
 .publish__config :deep(.t-cell) {

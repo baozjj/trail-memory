@@ -7,6 +7,7 @@ import {
   ADD_BTN_WIDTH_TRANSITION_MS,
   DELETE_ZONE_HEIGHT,
   IMAGE_CELL_SIZE,
+  IMAGE_CELL_SHADOW_PAD,
   IMAGE_ROW_GAP,
   SORTABLE_REORDER_ANIMATION_MS,
 } from './const'
@@ -32,13 +33,10 @@ const layout = computed(() =>
 )
 
 const rowGapPx = `${IMAGE_ROW_GAP}px`
+const shadowPadPx = `${IMAGE_CELL_SHADOW_PAD}px`
+const rowMinHeightPx = `${IMAGE_CELL_SIZE + IMAGE_CELL_SHADOW_PAD * 2}px`
 
 const trackScrollable = computed(() => layout.value.needsScroll || layout.value.pinAddBtn)
-
-/** 仅横向图片 track 可滚；禁止冒泡到页面，避免拖到底部时整页下滚 */
-const dragScrollTarget = computed<HTMLElement | boolean>(() =>
-  trackScrollable.value ? (trackRef.value ?? false) : false,
-)
 
 const dragItemUrl = ref<string | null>(null)
 const sortableKey = ref(0)
@@ -72,7 +70,7 @@ const {
   deleteZoneRef,
   onDragStart: showDeleteZone,
   onDragEnd: finishDeleteZone,
-} = useDragDeleteZone()
+} = useDragDeleteZone({ trackRef })
 
 function lockDocumentSelection() {
   document.body.classList.add('tm-image-row--no-select')
@@ -126,7 +124,10 @@ function onDragEnd(event: SortableEvent) {
     <div
       ref="trackRef"
       class="image-row__track"
-      :class="{ 'image-row__track--scrollable': trackScrollable }"
+      :class="{
+        'image-row__track--scrollable': trackScrollable,
+        'image-row__track--dragging': dragging,
+      }"
     >
       <VueDraggable
         :key="sortableKey"
@@ -135,10 +136,8 @@ function onDragEnd(event: SortableEvent) {
         class="image-row__draggable"
         :animation="SORTABLE_REORDER_ANIMATION_MS"
         direction="horizontal"
-        :scroll="dragScrollTarget"
+        :scroll="false"
         :bubble-scroll="false"
-        :scroll-sensitivity="48"
-        :scroll-speed="20"
         :force-fallback="true"
         :fallback-on-body="true"
         :fallback-tolerance="0"
@@ -164,7 +163,9 @@ function onDragEnd(event: SortableEvent) {
           @pointerup="onPressEnd"
           @pointercancel="onPressEnd"
         >
-          <img :src="url" alt="" draggable="false" />
+          <span class="image-cell__frame">
+            <img :src="url" alt="" draggable="false" />
+          </span>
         </button>
       </VueDraggable>
       <button
@@ -220,9 +221,13 @@ function onDragEnd(event: SortableEvent) {
 
 <style scoped>
 .image-row {
+  position: relative;
+  z-index: 0;
   display: flex;
   align-items: center;
-  height: 96px;
+  box-sizing: border-box;
+  min-height: v-bind(rowMinHeightPx);
+  overflow: visible;
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -246,6 +251,9 @@ function onDragEnd(event: SortableEvent) {
   display: flex;
   align-items: center;
   gap: v-bind(rowGapPx);
+  box-sizing: border-box;
+  min-height: v-bind(rowMinHeightPx);
+  padding-block: v-bind(shadowPadPx);
   min-width: 0;
 }
 
@@ -284,6 +292,11 @@ function onDragEnd(event: SortableEvent) {
   display: none;
 }
 
+.image-row__track--scrollable.image-row__track--dragging {
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
 .add-btn--pinned {
   flex-shrink: 0;
 }
@@ -293,13 +306,21 @@ function onDragEnd(event: SortableEvent) {
   padding: 0;
   border: none;
   border-radius: var(--tm-radius-card);
-  overflow: hidden;
+  overflow: visible;
   background: var(--tm-color-bg-surface);
   cursor: grab;
   -webkit-tap-highlight-color: transparent;
   transition:
     box-shadow 0.14s ease,
     opacity 0.14s ease;
+}
+
+.image-cell__frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
 }
 
 /* 按下瞬间：提示可继续拖动 */
@@ -318,8 +339,8 @@ function onDragEnd(event: SortableEvent) {
 .image-cell--chosen {
   box-shadow:
     0 0 0 2px rgba(0, 0, 0, 0.12),
-    0 8px 20px rgba(0, 0, 0, 0.14);
-  z-index: 1;
+    0 6px 16px rgba(0, 0, 0, 0.14);
+  z-index: 2;
   cursor: grabbing;
   transition: none;
 }
@@ -350,7 +371,7 @@ function onDragEnd(event: SortableEvent) {
 
 .add-btn {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   flex-shrink: 0;
   display: flex;
   align-items: center;
