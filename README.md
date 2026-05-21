@@ -48,3 +48,7 @@ frontend/               # Vue 3 应用
 backend/                # Express + Prisma API
 docs/                   # 设计文档
 ```
+
+## 生成封面图片
+
+npm run process-hex-image -- /Users/baozj/Desktop/trail-memory/西湖标毅线.png -o /Users/baozj/Desktop/trail-memory/西湖标毅线-1.png
