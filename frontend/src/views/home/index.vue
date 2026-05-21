@@ -5,6 +5,7 @@ import FloatingTabBar from '@/components/layout/floating-tab-bar/index.vue'
 import ImprintSearchHeader from '@/components/imprint/search-header/index.vue'
 import WaterfallGrid from '@/components/imprint/waterfall-grid/index.vue'
 import EmptyImprintState from '@/components/empty/imprint-state/index.vue'
+import SearchNoResult from '@/components/empty/search-no-result/index.vue'
 import CardActionSheet from '@/components/imprint/card-action-sheet/index.vue'
 import ExhibitSettingsSheet from '@/components/imprint/exhibit-settings-sheet/index.vue'
 import { useHomePage } from './hooks'
@@ -13,6 +14,7 @@ import { useHomeScrollHeader } from './hooks/use-scroll-header'
 const {
   filteredItems,
   isEmpty,
+  isSearchNoResult,
   searchKeyword,
   actionSheetVisible,
   exhibitSheetVisible,
@@ -22,6 +24,7 @@ const {
   onCardAction,
   onExhibitSave,
   onTabChange,
+  onClearSearch,
 } = useHomePage()
 
 const headerRef = ref<HTMLElement | null>(null)
@@ -42,12 +45,13 @@ const { headerVisible, spacerHeight } = useHomeScrollHeader(headerRef)
         v-if="!isEmpty"
         ref="headerRef"
         class="home__header"
-        :class="{ 'home__header--hidden': !headerVisible }"
+        :class="{ 'home__header--hidden': !headerVisible && !isSearchNoResult }"
       >
         <ImprintSearchHeader v-model:keyword="searchKeyword" />
       </header>
 
       <EmptyImprintState v-if="isEmpty" />
+      <SearchNoResult v-else-if="isSearchNoResult" @clear="onClearSearch" />
       <WaterfallGrid
         v-else
         class="home__grid"

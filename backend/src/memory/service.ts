@@ -22,6 +22,7 @@ export function toMemoryListItemDto(memory: Memory): MemoryListItemDto {
     heightWeight: memory.heightWeight,
     isPublic: memory.isPublic,
     linkSuffix: memory.linkSuffix,
+    meta: memory.meta,
   }
 }
 

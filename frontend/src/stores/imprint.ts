@@ -30,6 +30,11 @@ export const useImprintStore = defineStore('imprint', () => {
 
   const isEmpty = computed(() => !loading.value && items.value.length === 0)
 
+  const isSearchNoResult = computed(() => {
+    const kw = searchKeyword.value.trim()
+    return kw.length > 0 && items.value.length > 0 && filteredItems.value.length === 0
+  })
+
   function setSearchKeyword(value: string) {
     searchKeyword.value = value
   }
@@ -99,6 +104,7 @@ export const useImprintStore = defineStore('imprint', () => {
       isPublic: payload.isPublic,
       linkSuffix,
       heightWeight: payload.heightWeight ?? 1,
+      meta: '',
     }
     items.value.unshift(item)
     return item
@@ -127,6 +133,7 @@ export const useImprintStore = defineStore('imprint', () => {
     loaded,
     filteredItems,
     isEmpty,
+    isSearchNoResult,
     setSearchKeyword,
     getById,
     patchItem,

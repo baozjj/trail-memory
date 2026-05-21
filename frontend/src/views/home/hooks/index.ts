@@ -13,7 +13,7 @@ import { buildImprintShareLink } from '@/utils/imprint-link'
 export function useHomePage() {
   const router = useRouter()
   const imprintStore = useImprintStore()
-  const { filteredItems, isEmpty, loading } = storeToRefs(imprintStore)
+  const { filteredItems, isEmpty, isSearchNoResult, loading } = storeToRefs(imprintStore)
 
   const searchKeyword = computed({
     get: () => imprintStore.searchKeyword,
@@ -111,9 +111,14 @@ export function useHomePage() {
     }
   }
 
+  function onClearSearch() {
+    imprintStore.setSearchKeyword('')
+  }
+
   return {
     filteredItems,
     isEmpty,
+    isSearchNoResult,
     loading,
     searchKeyword,
     actionSheetVisible,
@@ -124,5 +129,6 @@ export function useHomePage() {
     onCardAction,
     onExhibitSave,
     onTabChange,
+    onClearSearch,
   }
 }

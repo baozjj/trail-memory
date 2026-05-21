@@ -7,6 +7,7 @@ export interface MemoryListItemDto {
   heightWeight: number
   isPublic: boolean
   linkSuffix: string
+  meta: string
 }
 
 /** 印记详情（含正文与图片） */

@@ -20,6 +20,8 @@ export interface ImprintListItem {
   isPublic: boolean
   /** 分享链接自定义后缀（字母与数字） */
   linkSuffix: string
+  /** 列表副文案，如「2024年5月16日 · 四川·稻城亚丁」 */
+  meta: string
 }
 
 export interface ImprintArticle {
