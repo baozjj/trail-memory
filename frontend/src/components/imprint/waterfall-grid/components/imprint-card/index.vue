@@ -22,15 +22,7 @@ function onMore(event: MouseEvent) {
 
 <template>
   <article class="imprint-card" @click="onSelect">
-    <div
-      class="imprint-card__cover"
-      :class="{ 'imprint-card__cover--no-type': !props.item.typeId }"
-      :style="
-        props.item.typeId
-          ? { paddingBottom: `${props.item.heightWeight * 100}%` }
-          : undefined
-      "
-    >
+    <div class="imprint-card__cover">
       <ImprintCover :type-id="props.item.typeId" :alt="props.item.title" />
       <span v-if="cardMeta.showPrivateBadge" class="imprint-card__badge">
         {{ PRIVATE_BADGE_LABEL }}
@@ -67,16 +59,11 @@ function onMore(event: MouseEvent) {
 .imprint-card__cover {
   position: relative;
   width: 100%;
+  aspect-ratio: 1;
   border-radius: var(--tm-radius-card);
   overflow: hidden;
-  background: var(--tm-color-bg-surface);
-  transition: opacity var(--tm-duration-fast) ease;
-}
-
-.imprint-card__cover--no-type {
-  aspect-ratio: 1;
-  padding-bottom: 0 !important;
   background: var(--tm-color-bg-page);
+  transition: opacity var(--tm-duration-fast) ease;
 }
 
 .imprint-card__footer {
