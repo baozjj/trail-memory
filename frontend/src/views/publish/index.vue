@@ -123,7 +123,7 @@ function onSuccessDialogClosed() {
 
 <template>
   <MobilePage>
-    <TNavbar :title="pageTitle" left-arrow placeholder @left-click="goBack" />
+    <TNavbar :title="pageTitle" :z-index="100" left-arrow placeholder @left-click="goBack" />
     <div v-if="loadingDetail" class="publish__loading">加载中...</div>
     <div v-else class="publish">
       <PublishImageRow v-model:images="draft.imageUrls" class="publish__media" @add="onAddImage" />
@@ -229,6 +229,8 @@ function onSuccessDialogClosed() {
 }
 
 .publish {
+  position: relative;
+  z-index: 0;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -237,15 +239,11 @@ function onSuccessDialogClosed() {
 }
 
 .publish__media {
-  position: relative;
-  z-index: 0;
   flex-shrink: 0;
   overflow: visible;
 }
 
 .publish__fields {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   background: var(--tm-color-bg-page);
@@ -288,8 +286,6 @@ function onSuccessDialogClosed() {
 }
 
 .publish__config {
-  position: relative;
-  z-index: 1;
   margin-top: 4px;
   border-top: 1px solid var(--tm-color-border-subtle);
   background: var(--tm-color-bg-page);
