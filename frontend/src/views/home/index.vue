@@ -57,7 +57,7 @@ const { headerVisible, spacerHeight } = useHomeScrollHeader(headerRef)
       />
     </div>
 
-    <FloatingTabBar active="grid" @change="onTabChange" />
+    <FloatingTabBar active-tab="grid" @change="onTabChange" />
 
     <CardActionSheet v-model:visible="actionSheetVisible" @action="onCardAction" />
     <ExhibitSettingsSheet

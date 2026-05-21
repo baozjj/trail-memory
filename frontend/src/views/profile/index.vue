@@ -44,7 +44,7 @@ const {
       </button>
     </div>
 
-    <FloatingTabBar active="user" @change="onTabChange" />
+    <FloatingTabBar active-tab="user" @change="onTabChange" />
   </MobilePage>
 </template>
 

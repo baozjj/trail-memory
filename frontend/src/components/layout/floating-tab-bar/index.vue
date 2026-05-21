@@ -1,9 +1,20 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { AppIcon, UserIcon } from 'tdesign-icons-vue-next'
+import { TAB_ICON_ACTIVE, TAB_ICON_INACTIVE } from './const'
 import type { FloatingTabBarEmits, FloatingTabBarProps } from './types'
 
-defineProps<FloatingTabBarProps>()
+const props = withDefaults(defineProps<FloatingTabBarProps>(), {
+  activeTab: 'grid',
+})
 const emit = defineEmits<FloatingTabBarEmits>()
+
+const gridStrokeColor = computed(() =>
+  props.activeTab === 'grid' ? TAB_ICON_ACTIVE : TAB_ICON_INACTIVE,
+)
+const userStrokeColor = computed(() =>
+  props.activeTab === 'user' ? TAB_ICON_ACTIVE : TAB_ICON_INACTIVE,
+)
 </script>
 
 <template>
@@ -11,24 +22,24 @@ const emit = defineEmits<FloatingTabBarEmits>()
     <button
       type="button"
       class="tab-item"
-      :class="{ 'tab-item--active': active === 'grid' }"
+      :class="{ 'tab-item--active': activeTab === 'grid' }"
       aria-label="印记列表"
-      :aria-current="active === 'grid' ? 'page' : undefined"
+      :aria-current="activeTab === 'grid' ? 'page' : undefined"
       @click="emit('change', 'grid')"
     >
-      <AppIcon class="tab-icon" :class="{ 'tab-icon--inactive': active !== 'grid' }" />
-      <span v-if="active === 'grid'" class="tab-dot" aria-hidden="true" />
+      <AppIcon class="tab-icon" :stroke-color="gridStrokeColor" />
+      <span v-if="activeTab === 'grid'" class="tab-dot" aria-hidden="true" />
     </button>
     <button
       type="button"
       class="tab-item"
-      :class="{ 'tab-item--active': active === 'user' }"
+      :class="{ 'tab-item--active': activeTab === 'user' }"
       aria-label="我的"
-      :aria-current="active === 'user' ? 'page' : undefined"
+      :aria-current="activeTab === 'user' ? 'page' : undefined"
       @click="emit('change', 'user')"
     >
-      <UserIcon class="tab-icon" :class="{ 'tab-icon--inactive': active !== 'user' }" />
-      <span v-if="active === 'user'" class="tab-dot" aria-hidden="true" />
+      <UserIcon class="tab-icon" :stroke-color="userStrokeColor" />
+      <span v-if="activeTab === 'user'" class="tab-dot" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -76,12 +87,7 @@ const emit = defineEmits<FloatingTabBarEmits>()
 .tab-icon {
   width: 22px;
   height: 22px;
-  color: var(--tm-color-text-primary);
-  transition: color var(--tm-duration-fast) ease;
-}
-
-.tab-icon--inactive {
-  color: var(--tm-color-icon-inactive);
+  flex-shrink: 0;
 }
 
 .tab-dot {

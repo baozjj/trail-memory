@@ -1,7 +1,7 @@
 export type TabKey = 'grid' | 'user'
 
 export interface FloatingTabBarProps {
-  active?: TabKey
+  activeTab?: TabKey
 }
 
 export interface FloatingTabBarEmits {

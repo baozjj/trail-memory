@@ -9,7 +9,7 @@ import EmptyImprintState from '@/components/empty/imprint-state/index.vue'
     <div class="empty-home">
       <EmptyImprintState />
     </div>
-    <FloatingTabBar active="grid" />
+    <FloatingTabBar active-tab="grid" />
   </MobilePage>
 </template>
 
