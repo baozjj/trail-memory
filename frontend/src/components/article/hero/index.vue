@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { Swiper as TSwiper, SwiperItem as TSwiperItem } from 'tdesign-mobile-vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import ImagePreview from '@/components/common/image-preview/index.vue'
 import type { ArticleHeroProps } from './types'
 
 const props = defineProps<ArticleHeroProps>()
 
+const trackRef = ref<HTMLDivElement | null>(null)
 const current = ref(0)
 const previewVisible = ref(false)
 const previewIndex = ref(0)
@@ -14,8 +14,37 @@ const hasMultiple = computed(() => props.images.length > 1)
 const singleSrc = computed(() => props.images[0] ?? '')
 const indicator = computed(() => `${current.value + 1}/${props.images.length}`)
 
+function clampIndex(index: number) {
+  const max = Math.max(props.images.length - 1, 0)
+  return Math.min(Math.max(index, 0), max)
+}
+
+function scrollToIndex(index: number, behavior: ScrollBehavior = 'auto') {
+  const track = trackRef.value
+  if (!track) return
+  const width = track.clientWidth
+  if (!width) return
+  track.scrollTo({ left: width * clampIndex(index), behavior })
+}
+
+function syncIndexFromScroll() {
+  const track = trackRef.value
+  if (!track || !track.clientWidth) return
+  current.value = clampIndex(Math.round(track.scrollLeft / track.clientWidth))
+}
+
+watch(
+  () => props.images,
+  async () => {
+    current.value = 0
+    await nextTick()
+    scrollToIndex(0)
+  },
+  { deep: true },
+)
+
 function openPreview(index: number) {
-  previewIndex.value = index
+  previewIndex.value = clampIndex(index)
   previewVisible.value = true
 }
 </script>
@@ -29,27 +58,47 @@ function openPreview(index: number) {
       aria-label="查看图片"
       @click="openPreview(0)"
     >
-      <img class="article-hero__img" :src="singleSrc" alt="" />
+      <div class="article-hero__frame">
+        <img class="article-hero__bg" :src="singleSrc" alt="" aria-hidden="true" />
+        <img class="article-hero__img" :src="singleSrc" alt="" decoding="async" />
+      </div>
     </button>
 
-    <TSwiper
+    <div
       v-else-if="hasMultiple"
-      v-model:current="current"
-      class="article-hero__swiper"
-      :autoplay="false"
-      :loop="false"
+      ref="trackRef"
+      class="article-hero__track"
+      @scroll.passive="syncIndexFromScroll"
     >
-      <TSwiperItem v-for="(src, i) in images" :key="`${src}-${i}`">
+      <div
+        v-for="(src, i) in images"
+        :key="`hero-slide-${i}`"
+        class="article-hero__slide"
+      >
         <button
           type="button"
           class="article-hero__tap"
           :aria-label="`查看第 ${i + 1} 张图片`"
           @click="openPreview(i)"
         >
-          <img class="article-hero__img" :src="src" alt="" />
+          <div class="article-hero__frame">
+            <img
+              class="article-hero__bg"
+              :src="src"
+              alt=""
+              aria-hidden="true"
+              decoding="async"
+            />
+            <img
+              class="article-hero__img"
+              :src="src"
+              :alt="`图片 ${i + 1}`"
+              decoding="async"
+            />
+          </div>
         </button>
-      </TSwiperItem>
-    </TSwiper>
+      </div>
+    </div>
 
     <span v-if="hasMultiple" class="article-hero__indicator">{{ indicator }}</span>
     <ImagePreview
@@ -72,20 +121,30 @@ function openPreview(index: number) {
   overscroll-behavior: none;
 }
 
-.article-hero__swiper {
+.article-hero__track {
+  display: flex;
+  width: 100%;
   height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   touch-action: pan-x pinch-zoom;
-  overscroll-behavior: contain;
 }
 
-.article-hero__swiper :deep(.t-swiper) {
-  touch-action: pan-x;
+.article-hero__slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .article-hero__tap {
   display: block;
   width: 100%;
-  height: 506px;
+  height: 100%;
   padding: 0;
   border: none;
   background: transparent;
@@ -96,11 +155,40 @@ function openPreview(index: number) {
   touch-action: pan-y;
 }
 
+.article-hero__frame {
+  position: relative;
+  width: 100%;
+  height: 506px;
+  overflow: hidden;
+  background: var(--tm-color-bg-inverse);
+}
+
+/* 留白区：同图放大模糊铺底，避免纯黑边 */
+.article-hero__bg {
+  position: absolute;
+  inset: -16%;
+  width: 132%;
+  height: 132%;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(28px) brightness(0.62) saturate(1.08);
+  transform: scale(1.06);
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 .article-hero__img {
+  position: relative;
+  z-index: 1;
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .article-hero__indicator {
@@ -116,5 +204,13 @@ function openPreview(index: number) {
   color: var(--tm-color-text-on-inverse);
   background: rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-hero__bg {
+    filter: brightness(0.5) saturate(1.05);
+    transform: none;
+  }
 }
 </style>
