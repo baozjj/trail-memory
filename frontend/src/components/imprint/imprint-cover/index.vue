@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { resolveImprintTypeCoverSrc } from '@/config/imprint-types'
-import { flatHexAspectRatio, flatHexPoints, flatHexViewBox } from './utils'
+import {
+  flatHexAspectRatio,
+  flatHexPoints,
+  flatHexViewBox,
+  HEX_STROKE_WIDTH,
+} from './utils'
 import type { ImprintCoverProps } from './types'
 
 const props = withDefaults(defineProps<ImprintCoverProps>(), {
@@ -38,8 +43,10 @@ const coverSrc = computed(() => resolveImprintTypeCoverSrc(props.typeId))
             :points="flatHexPoints"
             fill="var(--imprint-cover-hex-fill, #ffffff)"
             stroke="var(--imprint-cover-hex-stroke, var(--tm-color-icon-inactive))"
-            stroke-width="1.5"
+            :stroke-width="HEX_STROKE_WIDTH"
             stroke-linejoin="round"
+            stroke-miterlimit="1"
+            shape-rendering="geometricPrecision"
           />
         </svg>
       </div>
