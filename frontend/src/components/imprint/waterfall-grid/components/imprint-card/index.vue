@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { MoreIcon } from 'tdesign-icons-vue-next'
 import ImprintCover from '@/components/imprint/imprint-cover/index.vue'
 import type { ImprintCardEmits, ImprintCardProps } from './types'
 import { PRIVATE_BADGE_LABEL } from './const'
@@ -40,7 +41,7 @@ function onMore(event: MouseEvent) {
         aria-label="更多操作"
         @click="onMore"
       >
-        ···
+        <MoreIcon />
       </button>
     </div>
   </article>
@@ -143,10 +144,13 @@ function onMore(event: MouseEvent) {
   border: none;
   border-radius: 50%;
   background: transparent;
-  font-size: var(--tm-font-size-subhead);
-  letter-spacing: 1px;
   color: var(--tm-color-icon-muted);
   cursor: pointer;
+}
+
+.imprint-card__more :deep(svg) {
+  width: 20px;
+  height: 20px;
 }
 
 .imprint-card__more:active {

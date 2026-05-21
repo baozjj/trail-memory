@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import ImagePreview from '@/components/common/image-preview/index.vue'
 import type { ArticleHeroProps } from './types'
 
@@ -9,42 +9,108 @@ const trackRef = ref<HTMLDivElement | null>(null)
 const current = ref(0)
 const previewVisible = ref(false)
 const previewIndex = ref(0)
+const isTeleporting = ref(false)
 
 const hasMultiple = computed(() => props.images.length > 1)
 const singleSrc = computed(() => props.images[0] ?? '')
 const indicator = computed(() => `${current.value + 1}/${props.images.length}`)
 
-function clampIndex(index: number) {
+/** 多图时首尾各加一张克隆，用于循环滑动 */
+const loopSlides = computed(() => {
+  const imgs = props.images
+  if (imgs.length <= 1) return imgs
+  return [imgs[imgs.length - 1]!, ...imgs, imgs[0]!]
+})
+
+function clampLogical(index: number) {
   const max = Math.max(props.images.length - 1, 0)
   return Math.min(Math.max(index, 0), max)
 }
 
-function scrollToIndex(index: number, behavior: ScrollBehavior = 'auto') {
+function slideLogicalIndex(slideIndex: number) {
+  const n = props.images.length
+  if (n <= 1) return slideIndex
+  if (slideIndex === 0) return n - 1
+  if (slideIndex === n + 1) return 0
+  return slideIndex - 1
+}
+
+function scrollToRawIndex(rawIndex: number, behavior: ScrollBehavior = 'auto') {
   const track = trackRef.value
   if (!track) return
   const width = track.clientWidth
   if (!width) return
-  track.scrollTo({ left: width * clampIndex(index), behavior })
+  track.scrollTo({ left: width * rawIndex, behavior })
+}
+
+function scrollToLogical(logical: number, behavior: ScrollBehavior = 'auto') {
+  const n = props.images.length
+  if (n <= 1) {
+    scrollToRawIndex(clampLogical(logical), behavior)
+    return
+  }
+  scrollToRawIndex(clampLogical(logical) + 1, behavior)
+}
+
+function teleportToRaw(rawIndex: number) {
+  isTeleporting.value = true
+  scrollToRawIndex(rawIndex, 'auto')
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      isTeleporting.value = false
+    })
+  })
 }
 
 function syncIndexFromScroll() {
+  if (isTeleporting.value) return
+
   const track = trackRef.value
   if (!track || !track.clientWidth) return
-  current.value = clampIndex(Math.round(track.scrollLeft / track.clientWidth))
+
+  const rawIndex = Math.round(track.scrollLeft / track.clientWidth)
+  const n = props.images.length
+
+  if (n <= 1) {
+    current.value = clampLogical(rawIndex)
+    return
+  }
+
+  if (rawIndex === 0) {
+    current.value = n - 1
+    teleportToRaw(n)
+    return
+  }
+
+  if (rawIndex === n + 1) {
+    current.value = 0
+    teleportToRaw(1)
+    return
+  }
+
+  current.value = clampLogical(rawIndex - 1)
+}
+
+async function resetCarousel() {
+  current.value = 0
+  await nextTick()
+  scrollToLogical(0)
 }
 
 watch(
   () => props.images,
   async () => {
-    current.value = 0
-    await nextTick()
-    scrollToIndex(0)
+    await resetCarousel()
   },
   { deep: true },
 )
 
-function openPreview(index: number) {
-  previewIndex.value = clampIndex(index)
+onMounted(() => {
+  if (hasMultiple.value) void resetCarousel()
+})
+
+function openPreview(slideIndex: number) {
+  previewIndex.value = slideLogicalIndex(slideIndex)
   previewVisible.value = true
 }
 </script>
@@ -71,14 +137,14 @@ function openPreview(index: number) {
       @scroll.passive="syncIndexFromScroll"
     >
       <div
-        v-for="(src, i) in images"
+        v-for="(src, i) in loopSlides"
         :key="`hero-slide-${i}`"
         class="article-hero__slide"
       >
         <button
           type="button"
           class="article-hero__tap"
-          :aria-label="`查看第 ${i + 1} 张图片`"
+          :aria-label="`查看第 ${slideLogicalIndex(i) + 1} 张图片`"
           @click="openPreview(i)"
         >
           <div class="article-hero__frame">
@@ -92,7 +158,7 @@ function openPreview(index: number) {
             <img
               class="article-hero__img"
               :src="src"
-              :alt="`图片 ${i + 1}`"
+              :alt="`图片 ${slideLogicalIndex(i) + 1}`"
               decoding="async"
             />
           </div>
