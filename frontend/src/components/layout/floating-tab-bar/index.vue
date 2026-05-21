@@ -37,17 +37,20 @@ const emit = defineEmits<FloatingTabBarEmits>()
 .floating-tab-bar {
   position: fixed;
   left: 50%;
-  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 168px;
-  height: 52px;
-  padding: 0 36px;
+  width: 172px;
+  height: 54px;
+  padding: 0 38px;
   border-radius: var(--tm-radius-pill);
-  background: var(--tm-color-bg-page);
+  background: var(--tm-color-bg-overlay);
+  backdrop-filter: var(--tm-blur-frosted);
+  -webkit-backdrop-filter: var(--tm-blur-frosted);
+  border: 1px solid var(--tm-color-border-subtle);
   box-shadow: var(--tm-shadow-tab);
 }
 
@@ -63,12 +66,18 @@ const emit = defineEmits<FloatingTabBarEmits>()
   border: none;
   background: transparent;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-item:active {
+  opacity: 0.72;
 }
 
 .tab-icon {
   width: 22px;
   height: 22px;
   color: var(--tm-color-text-primary);
+  transition: color var(--tm-duration-fast) ease;
 }
 
 .tab-icon--inactive {

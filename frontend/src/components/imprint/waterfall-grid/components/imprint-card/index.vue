@@ -45,6 +45,11 @@ function onMore(event: MouseEvent) {
 <style scoped>
 .imprint-card {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.imprint-card:active .imprint-card__cover {
+  opacity: 0.92;
 }
 
 .imprint-card__cover {
@@ -52,13 +57,14 @@ function onMore(event: MouseEvent) {
   width: 100%;
   border-radius: var(--tm-radius-card);
   overflow: hidden;
-  background: var(--tm-color-bg-muted);
+  background: var(--tm-color-bg-surface);
+  transition: opacity var(--tm-duration-fast) ease;
 }
 
 .imprint-card__cover--no-type {
   aspect-ratio: 1;
   padding-bottom: 0 !important;
-  background: var(--tm-color-bg-page, #ffffff);
+  background: var(--tm-color-bg-page);
 }
 
 .imprint-card__footer {
@@ -73,8 +79,9 @@ function onMore(event: MouseEvent) {
   margin: 0;
   flex: 1;
   min-width: 0;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-normal);
   line-height: 1.3;
   color: var(--tm-color-text-primary);
   overflow: hidden;
@@ -92,10 +99,15 @@ function onMore(event: MouseEvent) {
   margin: -8px -8px -8px 0;
   padding: 0;
   border: none;
+  border-radius: 50%;
   background: transparent;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   letter-spacing: 1px;
   color: var(--tm-color-icon-muted);
   cursor: pointer;
+}
+
+.imprint-card__more:active {
+  background: var(--tm-color-bg-surface);
 }
 </style>

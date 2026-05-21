@@ -294,7 +294,7 @@ function onDragEnd(event: SortableEvent) {
   border: none;
   border-radius: var(--tm-radius-card);
   overflow: hidden;
-  background: var(--tm-color-bg-muted);
+  background: var(--tm-color-bg-surface);
   cursor: grab;
   -webkit-tap-highlight-color: transparent;
   transition:
@@ -358,7 +358,7 @@ function onDragEnd(event: SortableEvent) {
   padding: 0;
   border: none;
   border-radius: var(--tm-radius-card);
-  background: var(--tm-color-bg-muted);
+  background: var(--tm-color-bg-surface);
   color: var(--tm-color-icon-inactive);
   cursor: pointer;
   touch-action: manipulation;
@@ -430,9 +430,9 @@ function onDragEnd(event: SortableEvent) {
 }
 
 .delete-zone__label {
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tm-letter-spacing-normal);
   transition:
     font-size 0.2s ease,
     color 0.2s ease;
@@ -485,7 +485,7 @@ body.tm-image-row--no-select * {
 .sortable-fallback.image-cell--chosen,
 .sortable-fallback.image-cell--drag,
 .sortable-drag.image-cell--drag {
-  border-radius: 8px;
+  border-radius: var(--tm-radius-card);
   cursor: grabbing;
 }
 </style>

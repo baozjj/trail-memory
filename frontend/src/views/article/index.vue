@@ -41,7 +41,14 @@ function goBack() {
   <MobilePage v-else class="article-page">
     <ArticleNav :show-back="showBack" @back="goBack" />
     <p class="article-state">{{ errorMessage ?? ARTICLE_NOT_FOUND_TEXT }}</p>
-    <TButton v-if="errorMessage" block theme="primary" variant="outline" @click="reload">
+    <TButton
+      v-if="errorMessage"
+      class="article-retry tm-btn-primary"
+      block
+      theme="primary"
+      variant="outline"
+      @click="reload"
+    >
       重试
     </TButton>
   </MobilePage>
@@ -53,20 +60,25 @@ function goBack() {
 }
 
 .article-state {
-  padding: calc(72px + env(safe-area-inset-top, 0px)) 24px 48px;
+  padding: calc(72px + env(safe-area-inset-top, 0px)) var(--tm-spacing-page-x) 48px;
   text-align: center;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-tertiary);
+}
+
+.article-retry {
+  margin: 0 var(--tm-spacing-page-x);
 }
 
 .article {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: var(--tm-spacing-section);
   min-height: calc(100dvh - 506px);
-  padding: 24px 24px 20px;
-  margin-top: -8px;
-  border-radius: 0;
+  padding: var(--tm-spacing-section) var(--tm-spacing-page-x) 24px;
+  margin-top: -12px;
+  border-radius: var(--tm-radius-lg) var(--tm-radius-lg) 0 0;
   background: var(--tm-color-bg-page);
 }
 
@@ -78,22 +90,25 @@ function goBack() {
 
 .article__title {
   margin: 0;
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 1.25;
+  font-size: var(--tm-font-size-title-md);
+  font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-tight);
+  line-height: 1.2;
+  color: var(--tm-color-text-primary);
 }
 
 .article__content {
   margin: 0;
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: var(--tm-font-size-subhead);
+  line-height: 1.75;
+  letter-spacing: var(--tm-letter-spacing-normal);
   color: var(--tm-color-text-secondary);
   white-space: pre-wrap;
 }
 
 .article__meta {
   margin: 0;
-  font-size: 12px;
-  color: var(--tm-color-text-meta);
+  font-size: var(--tm-font-size-caption);
+  color: var(--tm-color-text-tertiary);
 }
 </style>

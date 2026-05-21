@@ -53,11 +53,13 @@ const {
   display: flex;
   flex-direction: column;
   min-height: calc(100dvh - 88px - env(safe-area-inset-bottom, 0px));
-  padding: 8px 24px 0;
+  padding: 8px var(--tm-spacing-page-x) 0;
 }
 
 .profile__settings {
+  margin-top: 8px;
   padding-top: 8px;
+  border-top: 1px solid var(--tm-color-border-subtle);
 }
 
 .profile__spacer {
@@ -72,12 +74,13 @@ const {
   padding: 0;
   border: none;
   background: transparent;
-  font-size: 15px;
-  color: var(--tm-color-text-meta);
+  font-size: var(--tm-font-size-subhead);
+  color: var(--tm-color-text-tertiary);
   cursor: pointer;
+  transition: opacity var(--tm-duration-fast) ease;
 }
 
 .profile__logout:active {
-  opacity: 0.7;
+  opacity: 0.65;
 }
 </style>

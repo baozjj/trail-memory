@@ -56,8 +56,8 @@ function onSave() {
 
 <template>
   <TPopup v-model:visible="visible" placement="bottom" :close-on-overlay-click="true">
-    <div class="exhibit-sheet" aria-labelledby="exhibit-sheet-title">
-      <h2 id="exhibit-sheet-title" class="exhibit-sheet__title">{{ SHEET_TITLE }}</h2>
+    <div class="exhibit-sheet tm-sheet-panel" aria-labelledby="exhibit-sheet-title">
+      <h2 id="exhibit-sheet-title" class="exhibit-sheet__title tm-sheet-title">{{ SHEET_TITLE }}</h2>
 
       <div class="exhibit-sheet__row">
         <span class="exhibit-sheet__label">{{ PUBLIC_LABEL }}</span>
@@ -66,7 +66,7 @@ function onSave() {
 
       <div class="exhibit-sheet__field">
         <span class="exhibit-sheet__label">{{ SUFFIX_LABEL }}</span>
-        <div class="exhibit-sheet__input-wrap">
+        <div class="exhibit-sheet__input-wrap tm-surface-field">
           <span class="exhibit-sheet__prefix">{{ lockedPrefix }}</span>
           <input
             class="exhibit-sheet__input"
@@ -77,15 +77,14 @@ function onSave() {
             @input="onSuffixInput"
           />
         </div>
-        <p class="exhibit-sheet__warning">{{ SUFFIX_WARNING }}</p>
+        <p class="exhibit-sheet__warning tm-warning-banner">{{ SUFFIX_WARNING }}</p>
       </div>
 
       <TButton
         block
         theme="primary"
-        shape="round"
         size="large"
-        class="exhibit-sheet__save"
+        class="exhibit-sheet__save tm-btn-primary"
         @click="onSave"
       >
         {{ SAVE_BUTTON_TEXT }}
@@ -95,20 +94,6 @@ function onSave() {
 </template>
 
 <style scoped>
-.exhibit-sheet {
-  padding: 20px var(--tm-spacing-page-x) calc(24px + env(safe-area-inset-bottom, 0px));
-  border-radius: 16px 16px 0 0;
-  background: var(--tm-color-bg-page);
-}
-
-.exhibit-sheet__title {
-  margin: 0 0 20px;
-  font-size: 17px;
-  font-weight: 600;
-  text-align: center;
-  color: var(--tm-color-text-primary);
-}
-
 .exhibit-sheet__row {
   display: flex;
   align-items: center;
@@ -124,7 +109,7 @@ function onSave() {
 .exhibit-sheet__label {
   display: block;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   font-weight: 500;
   color: var(--tm-color-text-secondary);
 }
@@ -134,17 +119,12 @@ function onSave() {
 }
 
 .exhibit-sheet__input-wrap {
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 12px;
-  border-radius: 8px;
-  background: var(--tm-color-bg-muted);
+  gap: 0;
 }
 
 .exhibit-sheet__prefix {
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-tertiary);
   user-select: none;
 }
@@ -155,26 +135,15 @@ function onSave() {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-primary);
 }
 
 .exhibit-sheet__warning {
   margin: 12px 0 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #8a4b00;
-  background: #fff4e5;
 }
 
 .exhibit-sheet__save {
   margin-top: 20px;
-  --td-button-primary-bg-color: var(--tm-color-cta-primary);
-  --td-button-primary-color: var(--tm-color-cta-on-primary);
-  height: 52px;
-  font-size: 16px;
-  font-weight: 600;
 }
 </style>

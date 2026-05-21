@@ -1,0 +1,102 @@
+/* Global typography & TDesign theme alignment (Apple-inspired) */
+
+html,
+body,
+#app {
+  font-family: var(--tm-font-family);
+  font-size: var(--tm-font-size-body);
+  color: var(--tm-color-text-primary);
+  letter-spacing: var(--tm-letter-spacing-normal);
+  background: var(--tm-color-bg-shell);
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+/* TDesign Mobile — project-wide overrides */
+:root {
+  --td-brand-color: var(--tm-color-link);
+  --td-button-primary-bg-color: var(--tm-color-cta-primary);
+  --td-button-primary-active-bg-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-color: var(--tm-color-cta-on-primary);
+  --td-button-border-radius: var(--tm-radius-md);
+  --td-button-large-height: 50px;
+  --td-button-font-weight: 600;
+  --td-switch-checked-color: var(--tm-color-cta-primary);
+  --td-navbar-bg-color: var(--tm-color-bg-page);
+  --td-navbar-title-color: var(--tm-color-text-primary);
+  --td-cell-bg-color: transparent;
+  --td-cell-title-color: var(--tm-color-text-primary);
+  --td-cell-note-color: var(--tm-color-text-tertiary);
+  --td-input-bg-color: var(--tm-color-bg-surface);
+  --td-input-border-color: transparent;
+  --td-input-placeholder-text-color: var(--tm-color-text-placeholder);
+  --td-input-default-text-color: var(--tm-color-text-primary);
+  --td-dialog-border-radius: var(--tm-radius-lg);
+  --td-popup-border-radius: var(--tm-radius-lg);
+}
+
+.tm-btn-primary {
+  --td-button-primary-bg-color: var(--tm-color-cta-primary);
+  --td-button-primary-active-bg-color: var(--tm-color-cta-primary-active);
+  --td-button-primary-color: var(--tm-color-cta-on-primary);
+  --td-button-border-radius: var(--tm-radius-md);
+  --td-button-large-height: 50px;
+  --td-button-font-size: var(--tm-font-size-body);
+  --td-button-font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-normal);
+}
+
+.tm-surface-field {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: var(--tm-radius-md);
+  background: var(--tm-color-bg-surface);
+  transition: background-color var(--tm-duration-fast) ease;
+}
+
+.tm-surface-field:focus-within {
+  background: var(--tm-color-bg-surface-active);
+}
+
+.tm-warning-banner {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--tm-radius-md);
+  font-size: var(--tm-font-size-footnote);
+  line-height: 1.5;
+  color: var(--tm-color-warning-text);
+  background: var(--tm-color-warning-bg);
+}
+
+.tm-sheet-panel {
+  padding: 20px var(--tm-spacing-page-x) calc(24px + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--tm-radius-lg) var(--tm-radius-lg) 0 0;
+  background: var(--tm-color-bg-page);
+}
+
+.tm-sheet-title {
+  margin: 0 0 20px;
+  font-size: var(--tm-font-size-body);
+  font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-normal);
+  text-align: center;
+  color: var(--tm-color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -35,7 +35,7 @@ function onBack() {
   z-index: 12;
   display: flex;
   align-items: flex-start;
-  padding: calc(8px + env(safe-area-inset-top, 0px)) 12px 0;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) var(--tm-spacing-page-x) 0;
   pointer-events: none;
 }
 
@@ -48,17 +48,19 @@ function onBack() {
   height: 40px;
   padding: 0;
   border: none;
-  border-radius: 20px;
-  color: #1a1a1a;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  border-radius: 50%;
+  color: var(--tm-color-text-primary);
+  background: var(--tm-color-bg-overlay);
+  backdrop-filter: var(--tm-blur-frosted);
+  -webkit-backdrop-filter: var(--tm-blur-frosted);
+  box-shadow: var(--tm-shadow-floating);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: transform var(--tm-duration-fast) ease;
 }
 
 .article-nav__back:active {
-  transform: scale(0.96);
-  background: rgba(255, 255, 255, 1);
+  transform: scale(0.94);
 }
 
 .article-nav__back :deep(svg) {

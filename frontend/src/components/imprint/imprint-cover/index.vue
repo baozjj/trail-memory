@@ -33,7 +33,7 @@ const coverSrc = computed(() => resolveImprintTypeCoverSrc(props.typeId))
       <polygon
         :points="flatHexPoints"
         fill="var(--imprint-cover-hex-fill, #ffffff)"
-        stroke="var(--imprint-cover-hex-stroke, #c8c8c8)"
+        stroke="var(--imprint-cover-hex-stroke, var(--tm-color-icon-inactive))"
         stroke-width="1.5"
         stroke-linejoin="round"
       />

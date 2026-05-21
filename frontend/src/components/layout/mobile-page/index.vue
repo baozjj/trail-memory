@@ -17,6 +17,7 @@ defineProps<MobilePageProps>()
   margin: 0 auto;
   background: var(--tm-color-bg-page);
   color: var(--tm-color-text-primary);
+  font-family: var(--tm-font-family);
   position: relative;
   overflow-x: hidden;
 }

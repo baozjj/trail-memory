@@ -18,17 +18,8 @@ body,
 #app {
   margin: 0;
   min-height: 100%;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: #f5f5f5;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #app {

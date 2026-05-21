@@ -130,7 +130,7 @@ function onSuccessDialogClosed() {
     <div class="publish__footer">
       <div v-if="isEditMode" class="publish__suffix">
         <span class="publish__suffix-label">{{ SUFFIX_LABEL }}</span>
-        <div class="publish__suffix-input-wrap">
+        <div class="publish__suffix-input-wrap tm-surface-field">
           <span class="publish__suffix-prefix">{{ lockedLinkPrefix }}</span>
           <input
             class="publish__suffix-input"
@@ -141,12 +141,12 @@ function onSuccessDialogClosed() {
             @input="onSuffixInput"
           />
         </div>
-        <p class="publish__suffix-warning">{{ SUFFIX_WARNING }}</p>
+        <p class="publish__suffix-warning tm-warning-banner">{{ SUFFIX_WARNING }}</p>
       </div>
       <TButton
+        class="publish__submit tm-btn-primary"
         block
         theme="primary"
-        shape="round"
         size="large"
         :loading="submitting"
         :disabled="loadingDetail"
@@ -192,8 +192,8 @@ function onSuccessDialogClosed() {
 
 <style scoped>
 .publish__loading {
-  padding: 24px var(--tm-spacing-page-x);
-  font-size: 14px;
+  padding: var(--tm-spacing-section) var(--tm-spacing-page-x);
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-tertiary);
   text-align: center;
 }
@@ -201,7 +201,7 @@ function onSuccessDialogClosed() {
 .publish {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
   padding: 12px var(--tm-spacing-page-x) 16px;
 }
 
@@ -210,8 +210,9 @@ function onSuccessDialogClosed() {
   border: none;
   outline: none;
   padding: 4px 0;
-  font-size: 22px;
+  font-size: var(--tm-font-size-title-sm);
   font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-tight);
   background: transparent;
   color: var(--tm-color-text-primary);
 }
@@ -222,12 +223,13 @@ function onSuccessDialogClosed() {
 
 .publish__desc {
   width: 100%;
-  min-height: 72px;
+  min-height: 80px;
   border: none;
   outline: none;
   resize: none;
-  font-size: 15px;
+  font-size: var(--tm-font-size-subhead);
   line-height: 1.6;
+  letter-spacing: var(--tm-letter-spacing-normal);
   background: transparent;
   color: var(--tm-color-text-primary);
 }
@@ -237,19 +239,25 @@ function onSuccessDialogClosed() {
 }
 
 .publish__config {
+  margin-top: 4px;
   border-top: 1px solid var(--tm-color-border-subtle);
 }
 
 .publish__config :deep(.t-cell) {
   padding-left: 0;
   padding-right: 0;
+  font-size: var(--tm-font-size-subhead);
 }
 
 .publish__footer {
   position: sticky;
   bottom: 0;
-  padding: 0 var(--tm-spacing-page-x) calc(34px + env(safe-area-inset-bottom, 0px));
-  background: var(--tm-color-bg-page);
+  padding: 12px var(--tm-spacing-page-x) calc(28px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--tm-color-bg-page) 24%
+  );
 }
 
 .publish__suffix {
@@ -259,23 +267,18 @@ function onSuccessDialogClosed() {
 .publish__suffix-label {
   display: block;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   font-weight: 500;
   color: var(--tm-color-text-secondary);
 }
 
 .publish__suffix-input-wrap {
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 12px;
-  border-radius: 8px;
-  background: var(--tm-color-bg-muted);
+  gap: 0;
 }
 
 .publish__suffix-prefix {
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-tertiary);
   user-select: none;
 }
@@ -286,33 +289,19 @@ function onSuccessDialogClosed() {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-primary);
 }
 
 .publish__suffix-warning {
   margin: 12px 0 0;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: #8a4b00;
-  background: #fff4e5;
-}
-
-.publish__footer :deep(.t-button) {
-  --td-button-primary-bg-color: var(--tm-color-cta-primary);
-  --td-button-primary-color: var(--tm-color-cta-on-primary);
-  height: 52px;
-  font-size: 16px;
-  font-weight: 600;
 }
 
 .publish-success-dialog__body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 8px 4px 4px;
   text-align: center;
 }
@@ -323,8 +312,9 @@ function onSuccessDialogClosed() {
   justify-content: center;
   gap: 4px;
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: var(--tm-font-size-body);
+  font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-normal);
   line-height: 1;
   color: var(--tm-color-text-primary);
 }
@@ -337,14 +327,13 @@ function onSuccessDialogClosed() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: var(--tm-font-size-subhead);
   line-height: 1;
-  transform: translateY(0.1px);
 }
 
 .publish-success-dialog__hint {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--tm-font-size-footnote);
   line-height: 1.5;
   color: var(--tm-color-text-tertiary);
 }
@@ -357,15 +346,15 @@ function onSuccessDialogClosed() {
   width: 100%;
   margin-top: 4px;
   padding: 12px 14px;
-  border-radius: 10px;
-  background: var(--tm-color-bg-muted);
+  border-radius: var(--tm-radius-md);
+  background: var(--tm-color-bg-surface);
 }
 
 .publish-success-dialog__url {
   flex: 1;
   min-width: 0;
-  font-size: 13px;
-  line-height: 1.4;
+  font-size: var(--tm-font-size-footnote);
+  line-height: 1.45;
   color: var(--tm-color-text-secondary);
   text-align: left;
   overflow: hidden;
@@ -381,14 +370,18 @@ function onSuccessDialogClosed() {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--tm-radius-sm);
   background: transparent;
-  color: var(--tm-color-cta-primary);
+  color: var(--tm-color-link);
   cursor: pointer;
+}
+
+.publish-success-dialog__copy:active {
+  background: var(--tm-color-bg-surface);
 }
 
 .publish-success-dialog__copy :deep(svg) {

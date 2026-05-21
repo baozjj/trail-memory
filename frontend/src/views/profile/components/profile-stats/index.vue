@@ -20,26 +20,27 @@ defineProps<ProfileStatsProps>()
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 36px 0 48px;
+  padding: 32px 0 40px;
 }
 
 .profile-stats__row {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   margin: 0;
 }
 
 .profile-stats__label {
-  font-size: 15px;
+  font-size: var(--tm-font-size-subhead);
   line-height: 1.4;
   color: var(--tm-color-text-tertiary);
 }
 
 .profile-stats__count {
-  font-size: 36px;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: var(--tm-letter-spacing-tight);
   line-height: 1;
   color: var(--tm-color-text-primary);
 }

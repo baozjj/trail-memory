@@ -45,7 +45,7 @@ function openPreview(index: number) {
 .article-hero {
   position: relative;
   height: 506px;
-  background: #000;
+  background: var(--tm-color-bg-inverse);
 }
 
 .article-hero__swiper {
@@ -71,14 +71,16 @@ function openPreview(index: number) {
 
 .article-hero__indicator {
   position: absolute;
-  right: 20px;
-  top: 18px;
+  right: var(--tm-spacing-page-x);
+  top: calc(16px + env(safe-area-inset-top, 0px));
   z-index: 2;
-  padding: 4px 12px;
-  border-radius: 13px;
-  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--tm-radius-chip);
+  font-size: var(--tm-font-size-caption);
   font-weight: 600;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.44);
+  letter-spacing: 0.02em;
+  color: var(--tm-color-text-on-inverse);
+  background: rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(12px);
 }
 </style>

@@ -21,7 +21,7 @@ const menuItems = [
   { label: MENU_COPY_LINK },
   { label: MENU_EXHIBIT },
   { label: MENU_EDIT },
-  { label: MENU_DELETE, color: '#e34d59' },
+  { label: MENU_DELETE, color: '#ff3b30' },
 ]
 
 const actionKeys: CardActionKey[] = ['copy', 'exhibit', 'edit', 'delete']

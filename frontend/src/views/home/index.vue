@@ -72,8 +72,8 @@ const { headerVisible, spacerHeight } = useHomeScrollHeader(headerRef)
 .home {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 4px var(--tm-spacing-page-x) 0;
+  gap: var(--tm-spacing-card-gap);
+  padding: 8px var(--tm-spacing-page-x) 0;
 }
 
 .home__header-spacer {
@@ -90,10 +90,13 @@ const { headerVisible, spacerHeight } = useHomeScrollHeader(headerRef)
   width: 100%;
   max-width: 430px;
   margin: 0 auto;
-  padding: 4px var(--tm-spacing-page-x) 12px;
-  background: var(--tm-color-bg-page);
+  padding: calc(8px + env(safe-area-inset-top, 0px)) var(--tm-spacing-page-x) 12px;
+  background: var(--tm-color-bg-overlay);
+  backdrop-filter: var(--tm-blur-frosted);
+  -webkit-backdrop-filter: var(--tm-blur-frosted);
+  border-bottom: 1px solid var(--tm-color-border-subtle);
   transform: translateY(0);
-  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--tm-duration-normal) var(--tm-ease-standard);
   will-change: transform;
 }
 

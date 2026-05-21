@@ -33,24 +33,22 @@ const model = defineModel<string>({ default: '' })
 
 .auth-field__label {
   padding-left: 4px;
-  font-size: 13px;
+  font-size: var(--tm-font-size-footnote);
   font-weight: 500;
   letter-spacing: 0.01em;
-  color: var(--tm-auth-muted, #86868b);
+  color: var(--tm-auth-muted);
 }
 
 .auth-field__input :deep(.t-input) {
-  --td-input-bg-color: var(--tm-auth-surface, #f5f5f7);
+  --td-input-bg-color: var(--tm-auth-surface);
   --td-input-border-color: transparent;
   --td-input-vertical-padding: 14px 16px;
-  --td-font-size-m: 17px;
-  --td-input-placeholder-text-color: #aeaeb2;
-  --td-input-default-text-color: var(--tm-color-text-primary);
-  border-radius: var(--tm-auth-radius, 12px);
-  transition: background-color 0.2s ease;
+  --td-font-size-m: var(--tm-font-size-body);
+  border-radius: var(--tm-auth-radius);
+  transition: background-color var(--tm-duration-fast) ease;
 }
 
 .auth-field__input :deep(.t-input--focused) {
-  --td-input-bg-color: var(--tm-auth-surface-focus, #ebebed);
+  --td-input-bg-color: var(--tm-auth-surface-focus);
 }
 </style>

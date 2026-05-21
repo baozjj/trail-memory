@@ -34,7 +34,7 @@ function goPublish() {
 .imprint-header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .search-box {
@@ -42,10 +42,15 @@ function goPublish() {
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 40px;
+  height: 44px;
   padding: 0 14px;
-  border-radius: 20px;
-  background: var(--tm-color-bg-muted);
+  border-radius: var(--tm-radius-chip);
+  background: var(--tm-color-bg-surface);
+  transition: background-color var(--tm-duration-fast) ease;
+}
+
+.search-box:focus-within {
+  background: var(--tm-color-bg-surface-active);
 }
 
 .search-icon {
@@ -60,7 +65,7 @@ function goPublish() {
   border: none;
   outline: none;
   background: transparent;
-  font-size: 16px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-primary);
 }
 
@@ -75,16 +80,22 @@ function goPublish() {
   flex-shrink: 0;
   width: 44px;
   height: 44px;
-  margin: -6px -8px -6px 0;
+  margin: -4px -6px -4px 0;
   padding: 0;
   border: none;
-  background: transparent;
+  border-radius: 50%;
+  background: var(--tm-color-bg-surface);
   cursor: pointer;
   color: var(--tm-color-text-primary);
+  transition: background-color var(--tm-duration-fast) ease;
+}
+
+.add-btn:active {
+  background: var(--tm-color-bg-surface-active);
 }
 
 .add-btn :deep(svg) {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
 }
 </style>

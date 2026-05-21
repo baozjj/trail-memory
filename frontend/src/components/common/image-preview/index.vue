@@ -139,8 +139,9 @@ function onKeydown(event: KeyboardEvent) {
   padding: 0;
   border: none;
   border-radius: 50%;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.2);
+  color: var(--tm-color-text-on-inverse);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
   cursor: pointer;
 }
 
@@ -157,10 +158,11 @@ function onKeydown(event: KeyboardEvent) {
   transform: translateX(-50%);
   padding: 6px 14px;
   border-radius: 14px;
-  font-size: 13px;
+  font-size: var(--tm-font-size-footnote);
   font-weight: 500;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.2);
+  color: var(--tm-color-text-on-inverse);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
   pointer-events: none;
 }
 

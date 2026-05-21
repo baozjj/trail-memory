@@ -24,16 +24,12 @@ const checked = computed({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 56px;
-  padding: 0 4px;
+  min-height: 52px;
+  padding: 0 2px;
 }
 
 .profile-settings-row__label {
-  font-size: 15px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-primary);
-}
-
-.profile-settings-row :deep(.t-switch) {
-  --td-switch-checked-color: var(--tm-color-cta-primary);
 }
 </style>

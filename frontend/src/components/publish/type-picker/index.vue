@@ -70,7 +70,7 @@ function onPickerCancel() {
 
 <style scoped>
 .publish-type-picker__note {
-  font-size: 14px;
+  font-size: var(--tm-font-size-subhead);
   color: var(--tm-color-text-primary);
 }
 

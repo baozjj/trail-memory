@@ -41,7 +41,7 @@ const { email, password, loading, onSubmit, goLogin } = useRegisterPage()
         </div>
 
         <Button
-          class="register-form__submit"
+          class="register-form__submit tm-btn-primary"
           theme="primary"
           block
           size="large"
@@ -75,28 +75,16 @@ const { email, password, loading, onSubmit, goLogin } = useRegisterPage()
   gap: 18px;
 }
 
-.register-form__submit {
-  --td-button-primary-bg-color: var(--tm-color-cta-primary);
-  --td-button-primary-active-bg-color: #1a1a1a;
-  --td-button-primary-color: var(--tm-color-cta-on-primary);
-  --td-button-large-height: 50px;
-  --td-button-border-radius: 12px;
-  --td-button-font-weight: 600;
-  --td-button-font-size: 17px;
-  letter-spacing: -0.01em;
-}
-
 .register-form__link {
   margin-left: 6px;
   padding: 0;
   border: none;
   background: none;
-  color: var(--tm-auth-link, #0071e3);
+  color: var(--tm-auth-link);
   font-size: inherit;
   font-weight: 500;
-  letter-spacing: inherit;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--tm-duration-fast) ease;
 }
 
 .register-form__link:active {

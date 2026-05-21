@@ -7,6 +7,7 @@ import router from './router'
 import { useAuthStore } from '@/stores/auth'
 import 'tdesign-mobile-vue/es/style/index.css'
 import './styles/tokens.css'
+import './styles/base.css'
 
 const app = createApp(App)
 const pinia = createPinia()

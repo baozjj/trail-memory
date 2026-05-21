@@ -20,7 +20,13 @@ function goPublish() {
       aria-hidden="true"
     />
     <p class="empty-state__text">{{ EMPTY_HINT_TEXT }}</p>
-    <TButton class="empty-state__cta" theme="primary" shape="round" size="large" @click="goPublish">
+    <TButton
+      class="empty-state__cta tm-btn-primary"
+      theme="primary"
+      block
+      size="large"
+      @click="goPublish"
+    >
       {{ CTA_TEXT }}
     </TButton>
   </div>
@@ -32,31 +38,29 @@ function goPublish() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 28px;
-  padding: 0 40px 100px;
-  min-height: 60vh;
+  gap: 32px;
+  padding: 0 var(--tm-spacing-section) 100px;
+  min-height: 62vh;
 }
 
 .empty-state__hex {
-  width: 168px;
-  height: 168px;
+  width: 160px;
+  height: 160px;
   object-fit: contain;
-  opacity: 0.85;
+  opacity: 0.78;
 }
 
 .empty-state__text {
   margin: 0;
   max-width: 280px;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: var(--tm-font-size-subhead);
+  line-height: 1.55;
+  letter-spacing: var(--tm-letter-spacing-normal);
   text-align: center;
-  color: var(--tm-color-text-meta);
+  color: var(--tm-color-text-tertiary);
 }
 
 .empty-state__cta {
-  width: 200px;
-  --td-button-primary-bg-color: var(--tm-color-cta-primary);
-  --td-button-primary-active-bg-color: #222;
-  --td-button-primary-color: var(--tm-color-cta-on-primary);
+  max-width: 240px;
 }
 </style>

@@ -22,22 +22,12 @@ defineProps<AuthShellProps>()
 
 <style scoped>
 .auth-shell {
-  --tm-auth-font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
-    'Helvetica Neue', sans-serif;
-  --tm-auth-surface: #f5f5f7;
-  --tm-auth-surface-focus: #ebebed;
-  --tm-auth-link: #0071e3;
-  --tm-auth-muted: #86868b;
-  --tm-auth-radius: 12px;
-  --tm-auth-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-
   position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  padding: calc(56px + env(safe-area-inset-top, 0px)) 28px calc(28px + env(safe-area-inset-bottom, 0px));
-  font-family: var(--tm-auth-font);
-  -webkit-font-smoothing: antialiased;
+  padding: calc(56px + env(safe-area-inset-top, 0px)) var(--tm-spacing-page-x)
+    calc(28px + env(safe-area-inset-bottom, 0px));
   animation: auth-shell-enter 0.72s var(--tm-auth-ease) both;
 }
 
@@ -64,9 +54,9 @@ defineProps<AuthShellProps>()
 
 .auth-shell__title {
   margin: 0;
-  font-size: 34px;
+  font-size: var(--tm-font-size-title-lg);
   font-weight: 600;
-  letter-spacing: -0.022em;
+  letter-spacing: var(--tm-letter-spacing-tight);
   line-height: 1.12;
   color: var(--tm-color-text-primary);
 }
@@ -74,10 +64,10 @@ defineProps<AuthShellProps>()
 .auth-shell__subtitle {
   margin: 10px 0 0;
   max-width: 20em;
-  font-size: 17px;
+  font-size: var(--tm-font-size-body);
   font-weight: 400;
   line-height: 1.35;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tm-letter-spacing-normal);
   color: var(--tm-auth-muted);
 }
 
@@ -93,9 +83,9 @@ defineProps<AuthShellProps>()
   margin-top: auto;
   padding-top: 36px;
   text-align: center;
-  font-size: 15px;
+  font-size: var(--tm-font-size-subhead);
   line-height: 1.4;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tm-letter-spacing-normal);
   color: var(--tm-auth-muted);
   animation: auth-shell-enter 0.72s var(--tm-auth-ease) 0.18s both;
 }
