@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   Navbar as TNavbar,
@@ -20,6 +20,7 @@ import { copyTextToClipboard } from '@/utils/clipboard'
 import { getApiErrorMessage } from '@/api/axios'
 import { usePublishDraft } from './hooks'
 import { usePublishSubmit } from './hooks/use-publish-submit'
+import { fitTextareaToContent } from './utils'
 import {
   COPY_SUCCESS_TOAST,
   EDIT_SUBMIT_BUTTON_LABEL,
@@ -37,6 +38,21 @@ const { submitting, loadingDetail, loadEditDetail, submit } = usePublishSubmit()
 const successDialogVisible = ref(false)
 const shareLink = ref('')
 const linkSuffix = ref('')
+const titleFieldRef = ref<HTMLTextAreaElement | null>(null)
+const descFieldRef = ref<HTMLTextAreaElement | null>(null)
+
+const DESC_FIELD_MIN_LINES = 5
+
+function syncPublishFieldHeights() {
+  fitTextareaToContent(titleFieldRef.value, 1)
+  fitTextareaToContent(descFieldRef.value, DESC_FIELD_MIN_LINES)
+}
+
+function onPublishFieldInput(event: Event) {
+  const target = event.target as HTMLTextAreaElement
+  const minLines = Number(target.dataset.minLines) || 1
+  fitTextareaToContent(target, minLines)
+}
 
 const editId = computed(() => {
   const id = route.query.id
@@ -51,6 +67,7 @@ const submitButtonLabel = computed(() =>
 const lockedLinkPrefix = computed(() => (editId.value ? imprintLinkPrefix(editId.value) : '/m/-'))
 
 onMounted(() => {
+  void nextTick(syncPublishFieldHeights)
   if (!editId.value) return
   void loadEditDetail(editId.value, draft)
     .then((suffix) => {
@@ -60,6 +77,10 @@ onMounted(() => {
       Toast({ message: getApiErrorMessage(error, '加载印记失败') })
       router.back()
     })
+})
+
+watch(loadingDetail, (loading) => {
+  if (!loading) void nextTick(syncPublishFieldHeights)
 })
 
 function goBack() {
@@ -107,18 +128,23 @@ function onSuccessDialogClosed() {
     <div v-else class="publish">
       <PublishImageRow v-model:images="draft.imageUrls" class="publish__media" @add="onAddImage" />
       <div class="publish__fields">
-        <input
+        <textarea
+          ref="titleFieldRef"
           v-model="draft.title"
           class="publish__title"
-          type="text"
           placeholder="填写标题..."
           maxlength="60"
+          rows="1"
+          @input="onPublishFieldInput"
         />
         <textarea
+          ref="descFieldRef"
           v-model="draft.description"
           class="publish__desc"
           placeholder="分享这块印记的故事..."
-          rows="4"
+          :data-min-lines="DESC_FIELD_MIN_LINES"
+          rows="5"
+          @input="onPublishFieldInput"
         />
       </div>
       <div class="publish__config">
@@ -130,8 +156,6 @@ function onSuccessDialogClosed() {
           </template>
         </TCell>
       </div>
-    </div>
-    <div class="publish__footer">
       <div v-if="isEditMode" class="publish__suffix">
         <span class="publish__suffix-label">{{ SUFFIX_LABEL }}</span>
         <div class="publish__suffix-input-wrap tm-surface-field">
@@ -147,6 +171,8 @@ function onSuccessDialogClosed() {
         </div>
         <p class="publish__suffix-warning tm-warning-banner">{{ SUFFIX_WARNING }}</p>
       </div>
+    </div>
+    <div class="publish__submit-bar">
       <TButton
         class="publish__submit tm-btn-primary"
         block
@@ -207,6 +233,7 @@ function onSuccessDialogClosed() {
   flex-direction: column;
   gap: 18px;
   padding: 12px var(--tm-spacing-page-x) 16px;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 }
 
 .publish__media {
@@ -221,21 +248,28 @@ function onSuccessDialogClosed() {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 18px;
   background: var(--tm-color-bg-page);
 }
 
-.publish__title {
+.publish__title,
+.publish__desc {
   width: 100%;
   border: none;
   outline: none;
   padding: 4px 0;
+  resize: none;
+  overflow: hidden;
+  background: transparent;
+  color: var(--tm-color-text-primary);
+}
+
+.publish__title {
   scroll-margin-top: 12px;
   font-size: var(--tm-font-size-title-sm);
   font-weight: 600;
   letter-spacing: var(--tm-letter-spacing-tight);
-  background: transparent;
-  color: var(--tm-color-text-primary);
+  line-height: 1.35;
+  min-height: calc(1.35em + 8px);
 }
 
 .publish__title::placeholder {
@@ -243,16 +277,10 @@ function onSuccessDialogClosed() {
 }
 
 .publish__desc {
-  width: 100%;
-  min-height: 80px;
-  border: none;
-  outline: none;
-  resize: none;
   font-size: var(--tm-font-size-subhead);
   line-height: 1.6;
   letter-spacing: var(--tm-letter-spacing-normal);
-  background: transparent;
-  color: var(--tm-color-text-primary);
+  min-height: calc(1.6em * 5 + 8px);
 }
 
 .publish__desc::placeholder {
@@ -273,15 +301,16 @@ function onSuccessDialogClosed() {
   font-size: var(--tm-font-size-subhead);
 }
 
-.publish__footer {
-  position: sticky;
+.publish__submit-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: 0;
+  z-index: 50;
+  max-width: 430px;
+  margin: 0 auto;
   padding: 12px var(--tm-spacing-page-x) calc(28px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    var(--tm-color-bg-page) 24%
-  );
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--tm-color-bg-page) 24%);
 }
 
 .publish__suffix {
