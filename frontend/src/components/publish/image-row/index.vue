@@ -3,6 +3,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useElementSize } from '@vueuse/core'
 import { VueDraggable, type SortableEvent } from 'vue-draggable-plus'
 import { AddIcon, DeleteIcon } from 'tdesign-icons-vue-next'
+import ImagePreview from '@/components/common/image-preview/index.vue'
 import {
   ADD_BTN_WIDTH_TRANSITION_MS,
   DELETE_ZONE_HEIGHT,
@@ -40,6 +41,10 @@ const trackScrollable = computed(() => layout.value.needsScroll || layout.value.
 
 const dragItemUrl = ref<string | null>(null)
 const sortableKey = ref(0)
+const previewVisible = ref(false)
+const previewIndex = ref(0)
+/** 拖拽结束后短暂屏蔽 click，避免误开预览 */
+const blockPreviewTap = ref(false)
 
 function onAddClick() {
   emit('add')
@@ -80,7 +85,18 @@ function unlockDocumentSelection() {
   document.body.classList.remove('tm-image-row--no-select')
 }
 
+function openPreview(index: number) {
+  if (blockPreviewTap.value || dragging.value) return
+  previewIndex.value = index
+  previewVisible.value = true
+}
+
+function onImageCellClick(index: number) {
+  openPreview(index)
+}
+
 function onDragStart(event: SortableEvent) {
+  blockPreviewTap.value = true
   onPressEnd()
   lockDocumentSelection()
   void showDeleteZone()
@@ -109,6 +125,10 @@ function onDragEnd(event: SortableEvent) {
       }
       sortableKey.value += 1
     }
+
+    window.setTimeout(() => {
+      blockPreviewTap.value = false
+    }, 0)
   })
 }
 </script>
@@ -159,6 +179,8 @@ function onDragEnd(event: SortableEvent) {
             width: `${IMAGE_CELL_SIZE}px`,
             height: `${IMAGE_CELL_SIZE}px`,
           }"
+          :aria-label="`查看第 ${index + 1} 张图片`"
+          @click.stop="onImageCellClick(index)"
           @pointerdown="onPressStart(index, $event)"
           @pointerup="onPressEnd"
           @pointercancel="onPressEnd"
@@ -217,6 +239,12 @@ function onDragEnd(event: SortableEvent) {
       </div>
     </Transition>
   </Teleport>
+
+  <ImagePreview
+    v-model:visible="previewVisible"
+    :images="images"
+    :initial-index="previewIndex"
+  />
 </template>
 
 <style scoped>
