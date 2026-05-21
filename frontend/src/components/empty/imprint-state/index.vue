@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { Button as TButton } from 'tdesign-mobile-vue'
-import { MOCK_IMAGES } from '@/mock'
+import ImprintCover from '@/components/imprint/imprint-cover/index.vue'
 import { CTA_TEXT, EMPTY_HINT_TEXT } from './const'
 
 const router = useRouter()
@@ -13,12 +13,9 @@ function goPublish() {
 
 <template>
   <div class="empty-state">
-    <img
-      class="empty-state__hex"
-      :src="MOCK_IMAGES.hexWireframe"
-      alt=""
-      aria-hidden="true"
-    />
+    <div class="empty-state__hex-wrap" aria-hidden="true">
+      <ImprintCover :type-id="null" alt="" />
+    </div>
     <p class="empty-state__text">{{ EMPTY_HINT_TEXT }}</p>
     <TButton
       class="empty-state__cta tm-btn-primary"
@@ -43,11 +40,13 @@ function goPublish() {
   min-height: 62vh;
 }
 
-.empty-state__hex {
+.empty-state__hex-wrap {
+  position: relative;
   width: 160px;
-  height: 160px;
-  object-fit: contain;
-  opacity: 0.78;
+  aspect-ratio: 1;
+  border-radius: var(--tm-radius-card);
+  overflow: hidden;
+  background: var(--tm-color-bg-page);
 }
 
 .empty-state__text {
