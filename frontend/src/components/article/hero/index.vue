@@ -21,7 +21,7 @@ function openPreview(index: number) {
 </script>
 
 <template>
-  <div class="article-hero">
+  <div class="article-hero" :class="{ 'article-hero--multiple': hasMultiple }">
     <button
       v-if="!hasMultiple && singleSrc"
       type="button"
@@ -68,8 +68,18 @@ function openPreview(index: number) {
   overflow: hidden;
 }
 
+.article-hero--multiple {
+  overscroll-behavior: none;
+}
+
 .article-hero__swiper {
   height: 100%;
+  touch-action: pan-x pinch-zoom;
+  overscroll-behavior: contain;
+}
+
+.article-hero__swiper :deep(.t-swiper) {
+  touch-action: pan-x;
 }
 
 .article-hero__tap {
