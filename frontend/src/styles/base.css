@@ -198,6 +198,21 @@ select {
   color: var(--tm-color-text-primary);
 }
 
+/*
+ * TDesign Cell `hover` uses a JS directive (pointerdown → .t-cell--hover).
+ * On touch scroll, pointerup/leave may not fire, so the highlight can stick.
+ * Use :active for press feedback instead; neutralize stuck hover on coarse pointers.
+ */
+@media (hover: none), (pointer: coarse) {
+  .t-cell--hover {
+    background-color: var(--td-cell-bg-color, transparent);
+  }
+
+  .tm-cell-pressable:active {
+    background-color: var(--tm-color-bg-surface-active);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

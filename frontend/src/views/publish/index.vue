@@ -299,6 +299,13 @@ function onSuccessDialogClosed() {
   padding-left: 0;
   padding-right: 0;
   font-size: var(--tm-font-size-subhead);
+  transition: background-color var(--tm-duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .publish__config :deep(.tm-cell-pressable:hover) {
+    background-color: var(--tm-color-bg-surface-active);
+  }
 }
 
 .publish__submit-bar {

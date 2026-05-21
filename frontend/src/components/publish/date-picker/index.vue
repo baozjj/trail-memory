@@ -43,7 +43,7 @@ function onPickerCancel() {
 </script>
 
 <template>
-  <TCell :title="DATE_CELL_TITLE" arrow hover @click="openPicker">
+  <TCell :title="DATE_CELL_TITLE" arrow class="tm-cell-pressable" @click="openPicker">
     <template #note>
       <span
         class="publish-date-picker__note"
