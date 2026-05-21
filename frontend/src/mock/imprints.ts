@@ -20,7 +20,7 @@ export const mockImprintList: ImprintListItem[] = [
     heightWeight: 1.15,
     isPublic: true,
     linkSuffix: 'chenxi',
-    meta: '2024年5月16日 · 浙江·杭州',
+    meta: '2024-05-16',
   }),
   mockItem({
     id: '2',
@@ -29,7 +29,7 @@ export const mockImprintList: ImprintListItem[] = [
     heightWeight: 0.92,
     isPublic: true,
     linkSuffix: 'wusong',
-    meta: '2024年4月2日 · 云南·香格里拉',
+    meta: '2024-04-02',
   }),
   mockItem({
     id: '3',
@@ -38,7 +38,7 @@ export const mockImprintList: ImprintListItem[] = [
     heightWeight: 1.28,
     isPublic: false,
     linkSuffix: 'jinghu',
-    meta: '2024年3月21日 · 浙江·杭州',
+    meta: '2024-03-21',
   }),
   mockItem({
     id: '4',
@@ -47,7 +47,7 @@ export const mockImprintList: ImprintListItem[] = [
     heightWeight: 1.05,
     isPublic: true,
     linkSuffix: 'shamo',
-    meta: '2024年2月8日 · 甘肃·敦煌',
+    meta: '2024-02-08',
   }),
   mockItem({
     id: '5',
@@ -56,7 +56,7 @@ export const mockImprintList: ImprintListItem[] = [
     heightWeight: 0.88,
     isPublic: true,
     linkSuffix: 'coast',
-    meta: '2024年1月15日 · 福建·平潭',
+    meta: '2024-01-15',
   }),
   mockItem({
     id: '6',
@@ -65,6 +65,6 @@ export const mockImprintList: ImprintListItem[] = [
     heightWeight: 1.2,
     isPublic: false,
     linkSuffix: 'hongyan',
-    meta: '2023年12月3日 · 四川·甘孜',
+    meta: '2023-12-03',
   }),
 ]

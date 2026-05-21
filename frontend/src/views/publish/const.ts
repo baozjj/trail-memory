@@ -1,4 +1,3 @@
-export const MOCK_LOCATION = '四川·稻城亚丁'
 export const SUBMIT_DELAY_MS = 600
 
 export const SUBMIT_BUTTON_LABEL = '封存并获取链接'

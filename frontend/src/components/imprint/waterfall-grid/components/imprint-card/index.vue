@@ -32,16 +32,15 @@ function onMore(event: MouseEvent) {
       "
     >
       <ImprintCover :type-id="props.item.typeId" :alt="props.item.title" />
+      <span v-if="cardMeta.showPrivateBadge" class="imprint-card__badge">
+        {{ PRIVATE_BADGE_LABEL }}
+      </span>
     </div>
     <div class="imprint-card__footer">
       <div class="imprint-card__info">
         <h3 class="imprint-card__title">{{ props.item.title }}</h3>
-        <p class="imprint-card__meta">
-          <span class="imprint-card__meta-text">{{ cardMeta.text }}</span>
-          <span v-if="cardMeta.showPrivateBadge" class="imprint-card__badge">
-            {{ PRIVATE_BADGE_LABEL }}
-          </span>
-        </p>
+        <p v-if="cardMeta.dateText" class="imprint-card__date">{{ cardMeta.dateText }}</p>
+        <p v-if="props.item.typeId" class="imprint-card__type">{{ cardMeta.typeText }}</p>
       </div>
       <button
         type="button"
@@ -109,33 +108,40 @@ function onMore(event: MouseEvent) {
   white-space: nowrap;
 }
 
-.imprint-card__meta {
+.imprint-card__date,
+.imprint-card__type {
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   min-width: 0;
   font-size: var(--tm-font-size-footnote);
   line-height: 1.35;
-  color: var(--tm-color-text-tertiary);
-}
-
-.imprint-card__meta-text {
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.imprint-card__date {
+  color: var(--tm-color-text-tertiary);
+}
+
+.imprint-card__type {
+  color: var(--tm-color-text-secondary);
+}
+
 .imprint-card__badge {
-  flex-shrink: 0;
-  padding: 1px 6px;
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 1;
+  padding: 3px 8px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 500;
   line-height: 1.4;
-  color: var(--tm-color-text-secondary);
-  background: var(--tm-color-bg-surface);
+  color: var(--tm-color-cta-on-primary);
+  background: color-mix(in srgb, var(--tm-color-text-primary) 62%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
 }
 
 .imprint-card__more {

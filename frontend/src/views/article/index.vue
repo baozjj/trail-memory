@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Button as TButton } from 'tdesign-mobile-vue'
 import MobilePage from '@/components/layout/mobile-page/index.vue'
 import ArticleHero from '@/components/article/hero/index.vue'
 import ArticleNav from '@/components/article/article-nav/index.vue'
 import AuthorCard from '@/components/article/author-card/index.vue'
+import { formatListDateLabel } from '@/utils/imprint-date'
 import { useArticlePage } from './hooks'
 import {
   ARTICLE_LOADING_TEXT,
@@ -13,6 +15,10 @@ import {
 
 const router = useRouter()
 const { article, loading, errorMessage, showBack, showAuthorCard, reload } = useArticlePage()
+
+const articleDateLabel = computed(() =>
+  article.value ? formatListDateLabel(article.value.meta) : '',
+)
 
 function goBack() {
   router.back()
@@ -32,7 +38,7 @@ function goBack() {
       <div class="article__body">
         <h1 class="article__title">{{ article.title }}</h1>
         <p v-if="article.content" class="article__content">{{ article.content }}</p>
-        <p v-if="article.meta" class="article__meta">{{ article.meta }}</p>
+        <p v-if="articleDateLabel" class="article__meta">{{ articleDateLabel }}</p>
       </div>
       <AuthorCard v-if="showAuthorCard" :author="article.author" />
     </div>

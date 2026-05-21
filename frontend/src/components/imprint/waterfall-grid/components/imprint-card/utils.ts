@@ -1,12 +1,10 @@
 import { getImprintTypeLabel } from '@/config/imprint-types'
 import type { ImprintListItem } from '@/types/imprint'
-import { NO_TYPE_LABEL } from './const'
-
+import { formatListDateLabel } from '@/utils/imprint-date'
 export function buildImprintCardMeta(item: ImprintListItem) {
-  const trimmed = item.meta?.trim()
-  const text = trimmed || getImprintTypeLabel(item.typeId) || NO_TYPE_LABEL
   return {
-    text,
+    typeText: getImprintTypeLabel(item.typeId) ?? '',
+    dateText: formatListDateLabel(item.meta),
     showPrivateBadge: !item.isPublic,
   }
 }

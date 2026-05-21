@@ -6,6 +6,7 @@ import { useImprintStore } from '@/stores/imprint'
 import { buildImprintShareLink } from '@/utils/imprint-link'
 import { isValidLinkSuffix } from '@/utils/imprint-link'
 import type { PublishDraft } from '@/types/imprint'
+import { parseMetaToIsoDate, sealedDateToMeta } from '@/utils/imprint-date'
 import { resolvePublishImageUrls } from '../utils/resolve-images'
 
 export interface PublishSubmitOptions {
@@ -27,7 +28,7 @@ export function usePublishSubmit() {
       const item = await fetchMemoryByIdApi(id)
       draft.title = item.title
       draft.description = item.content
-      draft.location = item.meta
+      draft.sealedDate = parseMetaToIsoDate(item.meta)
       draft.isPublic = item.isPublic
       draft.typeId = item.typeId
       draft.imageUrls = [...item.images]
@@ -68,7 +69,7 @@ export function usePublishSubmit() {
       const payload = {
         title,
         content: draft.description.trim(),
-        meta: draft.location.trim(),
+        meta: sealedDateToMeta(draft.sealedDate),
         images,
         typeId: draft.typeId,
         isPublic: draft.isPublic,

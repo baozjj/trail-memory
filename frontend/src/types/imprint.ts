@@ -20,7 +20,7 @@ export interface ImprintListItem {
   isPublic: boolean
   /** 分享链接自定义后缀（字母与数字） */
   linkSuffix: string
-  /** 列表副文案，如「2024年5月16日 · 四川·稻城亚丁」 */
+  /** 封存日期，存 ISO：YYYY-MM-DD；历史数据可能含「日期 · 地点」 */
   meta: string
 }
 
@@ -37,7 +37,8 @@ export interface PublishDraft {
   imageUrls: string[]
   title: string
   description: string
-  location: string
+  /** 封存日期，ISO：YYYY-MM-DD */
+  sealedDate: string
   typeId: string | null
   isPublic: boolean
 }
