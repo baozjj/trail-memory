@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { resolveImprintTypeCoverSrc } from '@/config/imprint-types'
+import { flatHexAspectRatio, flatHexPoints, flatHexViewBox } from './utils'
 import type { ImprintCoverProps } from './types'
 
 const props = withDefaults(defineProps<ImprintCoverProps>(), {
@@ -12,7 +13,7 @@ const coverSrc = computed(() => resolveImprintTypeCoverSrc(props.typeId))
 </script>
 
 <template>
-  <div class="imprint-cover">
+  <div class="imprint-cover" :class="{ 'imprint-cover--placeholder': !coverSrc }">
     <img
       v-if="coverSrc"
       class="imprint-cover__image"
@@ -20,12 +21,23 @@ const coverSrc = computed(() => resolveImprintTypeCoverSrc(props.typeId))
       :alt="alt"
       loading="lazy"
     />
-    <div
+    <svg
       v-else
       class="imprint-cover__hex"
+      :viewBox="flatHexViewBox"
+      xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
       role="img"
       :aria-label="alt || '未选择类型'"
-    />
+    >
+      <polygon
+        :points="flatHexPoints"
+        fill="var(--imprint-cover-hex-fill, #ffffff)"
+        stroke="var(--imprint-cover-hex-stroke, #c8c8c8)"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+      />
+    </svg>
   </div>
 </template>
 
@@ -33,9 +45,14 @@ const coverSrc = computed(() => resolveImprintTypeCoverSrc(props.typeId))
 .imprint-cover {
   position: absolute;
   inset: 0;
-  display: flex;
+}
+
+.imprint-cover--placeholder {
+  display: grid;
+  grid-template-rows: 1fr 3fr 1fr;
   align-items: center;
-  justify-content: center;
+  justify-items: center;
+  background: var(--tm-color-bg-page, #ffffff);
 }
 
 .imprint-cover__image {
@@ -45,10 +62,11 @@ const coverSrc = computed(() => resolveImprintTypeCoverSrc(props.typeId))
 }
 
 .imprint-cover__hex {
-  width: 52%;
-  max-width: 120px;
-  aspect-ratio: 1;
-  background: #d4d4d4;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  grid-row: 2;
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: v-bind(flatHexAspectRatio);
 }
 </style>

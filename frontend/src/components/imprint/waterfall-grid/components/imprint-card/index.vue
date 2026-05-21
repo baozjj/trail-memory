@@ -19,7 +19,12 @@ function onMore(event: MouseEvent) {
   <article class="imprint-card" @click="onSelect">
     <div
       class="imprint-card__cover"
-      :style="{ paddingBottom: `${props.item.heightWeight * 100}%` }"
+      :class="{ 'imprint-card__cover--no-type': !props.item.typeId }"
+      :style="
+        props.item.typeId
+          ? { paddingBottom: `${props.item.heightWeight * 100}%` }
+          : undefined
+      "
     >
       <ImprintCover :type-id="props.item.typeId" :alt="props.item.title" />
     </div>
@@ -48,6 +53,12 @@ function onMore(event: MouseEvent) {
   border-radius: var(--tm-radius-card);
   overflow: hidden;
   background: var(--tm-color-bg-muted);
+}
+
+.imprint-card__cover--no-type {
+  aspect-ratio: 1;
+  padding-bottom: 0 !important;
+  background: var(--tm-color-bg-page, #ffffff);
 }
 
 .imprint-card__footer {
