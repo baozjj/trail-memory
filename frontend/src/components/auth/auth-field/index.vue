@@ -43,7 +43,7 @@ const model = defineModel<string>({ default: '' })
   --td-input-bg-color: var(--tm-auth-surface);
   --td-input-border-color: transparent;
   --td-input-vertical-padding: 14px 16px;
-  --td-font-size-m: var(--tm-font-size-body);
+  --td-font-size-m: var(--tm-font-size-input);
   border-radius: var(--tm-auth-radius);
   transition: background-color var(--tm-duration-fast) ease;
 }

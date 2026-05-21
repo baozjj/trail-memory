@@ -5,6 +5,8 @@
   --tm-font-size-caption: 12px;
   --tm-font-size-footnote: 13px;
   --tm-font-size-subhead: 15px;
+  /** 表单输入最小字号（≥16px 避免 iOS 聚焦放大） */
+  --tm-font-size-input: 16px;
   --tm-font-size-body: 17px;
   --tm-font-size-title-sm: 22px;
   --tm-font-size-title-md: 28px;

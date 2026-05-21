@@ -26,6 +26,18 @@ body,
   background: transparent;
 }
 
+/* iOS：输入框字号 <16px 会触发聚焦放大；移动端 Web 统一禁止缩放 */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+input:not(.publish__title),
+textarea,
+select {
+  font-size: 16px;
+}
+
 button,
 input,
 textarea,
