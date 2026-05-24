@@ -2,6 +2,7 @@
 const TYPE_COVER_BY_ID: Record<string, string> = {
   'xihu-biaoyi': '/imprint-types/西湖标毅线.png',
   wugongshan: '/imprint-types/武功山.png',
+  'xihu-aixin': '/imprint-types/西湖爱心线.png',
 }
 
 export const KNOWN_IMPRINT_TYPE_IDS = Object.keys(TYPE_COVER_BY_ID)
