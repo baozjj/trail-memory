@@ -7,6 +7,11 @@ export const IMPRINT_TYPE_REGISTRY: readonly ImprintTypeDefinition[] = [
     label: '西湖标毅线',
     coverSrc: '/imprint-types/西湖标毅线.png',
   },
+  {
+    id: 'wugongshan',
+    label: '武功山',
+    coverSrc: '/imprint-types/武功山.png',
+  },
 ] as const
 
 const byId = new Map<string, ImprintTypeDefinition>(
