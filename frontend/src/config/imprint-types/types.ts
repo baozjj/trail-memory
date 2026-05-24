@@ -1,5 +1,5 @@
 /** 印记类型 id（与后端 typeId、静态资源文件名解耦，便于扩展） */
-export type ImprintTypeId = 'xihu-biaoyi' | 'wugongshan' | 'xihu-aixin'
+export type ImprintTypeId = 'xihu-biaoyi' | 'wugongshan' | 'xihu-aixin' | 'wutongshan'
 
 export interface ImprintTypeDefinition {
   id: ImprintTypeId
