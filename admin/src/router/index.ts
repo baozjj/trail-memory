@@ -1,0 +1,97 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import { getToken } from '@/utils/auth'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/login/index.vue'),
+      meta: { title: '登录', guest: true },
+    },
+    {
+      path: '/',
+      component: () => import('@/layouts/admin-layout/index.vue'),
+      children: [
+        { path: '', redirect: { name: 'dashboard' } },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('@/views/dashboard/index.vue'),
+          meta: { title: '运营看板' },
+        },
+        {
+          path: 'users',
+          name: 'users',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '用户管理', placeholder: 'M02' },
+        },
+        {
+          path: 'memories',
+          name: 'memories',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '印记管理', placeholder: 'M03' },
+        },
+        {
+          path: 'imprint-types',
+          name: 'imprint-types',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '印记类型', placeholder: 'M04' },
+        },
+        {
+          path: 'media',
+          name: 'media',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '媒体资源', placeholder: 'M05' },
+        },
+        {
+          path: 'audit-logs',
+          name: 'audit-logs',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '操作审计', placeholder: 'M07' },
+        },
+        {
+          path: 'settings',
+          name: 'settings',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '系统配置', placeholder: 'M08' },
+        },
+        {
+          path: 'admins',
+          name: 'admins',
+          component: () => import('@/views/placeholder/index.vue'),
+          meta: { title: '管理员', placeholder: 'M01' },
+        },
+      ],
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'dashboard' },
+    },
+  ],
+})
+
+router.beforeEach((to) => {
+  const requiresAuth = Boolean(to.meta.requiresAuth)
+  const isGuest = Boolean(to.meta.guest)
+  const hasToken = Boolean(getToken())
+
+  // M01 将为业务路由设置 requiresAuth
+  if (requiresAuth && !hasToken) {
+    return { name: 'login', query: { redirect: to.fullPath } }
+  }
+
+  if (isGuest && hasToken) {
+    return { name: 'dashboard' }
+  }
+
+  return true
+})
+
+router.afterEach((to) => {
+  const title = (to.meta.title as string | undefined) ?? '管理后台'
+  document.title = `${title} · Trail Memory`
+})
+
+export default router

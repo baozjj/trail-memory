@@ -5,19 +5,21 @@ import { authRouter } from "./auth/routes.js";
 import { ensureUploadDir, UPLOAD_DIR } from "./lib/upload-dir.js";
 import { memoryRouter } from "./memory/routes.js";
 import { uploadRouter } from "./upload/routes.js";
+import { adminRouter } from "./admin/index.js";
 import { loadEnv } from "./config/env.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { notFoundHandler } from "./middleware/not-found.js";
 
 /** 创建并配置 Express 应用实例 */
 export function createApp() {
-  const { corsOrigins } = loadEnv();
+  const { corsOrigins, adminCorsOrigins } = loadEnv();
+  const allowedOrigins = [...new Set([...corsOrigins, ...adminCorsOrigins])];
   ensureUploadDir();
   const app = express();
 
   app.use(
     cors({
-      origin: corsOrigins,
+      origin: allowedOrigins,
       credentials: true,
     }),
   );
@@ -45,6 +47,7 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/uploads", uploadRouter);
   app.use("/api/memories", memoryRouter);
+  app.use("/api/admin", adminRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

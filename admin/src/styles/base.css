@@ -1,0 +1,8 @@
+html,
+body,
+#app {
+  font-family: var(--tm-font-family);
+  font-size: 14px;
+  color: var(--tm-color-text-primary);
+  background: var(--tm-color-bg-shell);
+}

@@ -1,0 +1,82 @@
+:root {
+  /* Typography */
+  --tm-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    'Helvetica Neue', sans-serif;
+  --tm-font-size-caption: 12px;
+  --tm-font-size-footnote: 13px;
+  --tm-font-size-subhead: 15px;
+  /** 表单输入最小字号（≥16px 避免 iOS 聚焦放大） */
+  --tm-font-size-input: 16px;
+  --tm-font-size-body: 17px;
+  --tm-font-size-title-sm: 22px;
+  --tm-font-size-title-md: 28px;
+  --tm-font-size-title-lg: 34px;
+  --tm-letter-spacing-tight: -0.022em;
+  --tm-letter-spacing-normal: -0.01em;
+
+  /* Surfaces */
+  --tm-color-bg-shell: #f5f5f7;
+  --tm-color-bg-page: #ffffff;
+  --tm-color-bg-surface: #f5f5f7;
+  --tm-color-bg-surface-active: #ebebed;
+  --tm-color-bg-muted: #f5f5f7;
+  --tm-color-bg-elevated: #f2f2f7;
+  --tm-color-bg-overlay: rgba(255, 255, 255, 0.72);
+  --tm-color-bg-inverse: #1d1d1f;
+
+  /* Text */
+  --tm-color-text-primary: #1d1d1f;
+  --tm-color-text-secondary: #424245;
+  --tm-color-text-tertiary: #86868b;
+  --tm-color-text-placeholder: #aeaeb2;
+  --tm-color-text-hint: #c7c7cc;
+  --tm-color-text-meta: #86868b;
+  --tm-color-text-on-inverse: #ffffff;
+
+  /* Icons & borders */
+  --tm-color-icon-muted: #aeaeb2;
+  --tm-color-icon-inactive: #c7c7cc;
+  --tm-color-border-subtle: rgba(0, 0, 0, 0.06);
+  --tm-color-border-strong: #d2d2d7;
+  --tm-color-link: #0071e3;
+
+  /* Actions */
+  --tm-color-cta-primary: #1d1d1f;
+  --tm-color-cta-primary-active: #333336;
+  --tm-color-cta-on-primary: #ffffff;
+  --tm-color-danger: #ff3b30;
+  --tm-color-warning-text: #8a4b00;
+  --tm-color-warning-bg: #fff4e5;
+
+  /* Radii */
+  --tm-radius-sm: 10px;
+  --tm-radius-md: 12px;
+  --tm-radius-lg: 16px;
+  --tm-radius-card: 12px;
+  --tm-radius-chip: 980px;
+  --tm-radius-pill: 980px;
+
+  /* Spacing */
+  --tm-spacing-page-x: 20px;
+  --tm-spacing-section: 24px;
+  --tm-spacing-grid-gap: 12px;
+  --tm-spacing-card-gap: 20px;
+
+  /* Elevation */
+  --tm-shadow-tab: 0 4px 24px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --tm-shadow-floating: 0 8px 28px rgba(0, 0, 0, 0.1);
+  --tm-blur-frosted: saturate(180%) blur(20px);
+
+  /* Motion */
+  --tm-ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --tm-duration-fast: 0.2s;
+  --tm-duration-normal: 0.32s;
+
+  /* Auth aliases (login/register) */
+  --tm-auth-surface: var(--tm-color-bg-surface);
+  --tm-auth-surface-focus: var(--tm-color-bg-surface-active);
+  --tm-auth-muted: var(--tm-color-text-tertiary);
+  --tm-auth-link: var(--tm-color-link);
+  --tm-auth-radius: var(--tm-radius-md);
+  --tm-auth-ease: var(--tm-ease-standard);
+}
