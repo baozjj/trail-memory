@@ -3,4 +3,6 @@ export interface AdminMenuItem {
   label: string
   to?: { name: string }
   disabled?: boolean
+  /** 仅超级管理员可见 */
+  superAdminOnly?: boolean
 }

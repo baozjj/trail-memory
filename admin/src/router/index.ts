@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getToken } from '@/utils/auth'
+import { useAdminAuthStore } from '@/stores/admin-auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +14,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/layouts/admin-layout/index.vue'),
+      meta: { requiresAuth: true },
       children: [
         { path: '', redirect: { name: 'dashboard' } },
         {
@@ -60,8 +62,8 @@ const router = createRouter({
         {
           path: 'admins',
           name: 'admins',
-          component: () => import('@/views/placeholder/index.vue'),
-          meta: { title: '管理员', placeholder: 'M01' },
+          component: () => import('@/views/admins/index.vue'),
+          meta: { title: '管理员', superAdminOnly: true },
         },
       ],
     },
@@ -72,18 +74,33 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to) => {
-  const requiresAuth = Boolean(to.meta.requiresAuth)
+router.beforeEach(async (to) => {
   const isGuest = Boolean(to.meta.guest)
+  const requiresAuth = Boolean(to.meta.requiresAuth) || to.matched.some((r) => r.meta.requiresAuth)
   const hasToken = Boolean(getToken())
 
-  // M01 将为业务路由设置 requiresAuth
   if (requiresAuth && !hasToken) {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
   if (isGuest && hasToken) {
     return { name: 'dashboard' }
+  }
+
+  if (requiresAuth && hasToken) {
+    const authStore = useAdminAuthStore()
+    if (!authStore.admin) {
+      try {
+        await authStore.fetchMe()
+      } catch {
+        authStore.logout()
+        return { name: 'login', query: { redirect: to.fullPath } }
+      }
+    }
+
+    if (to.meta.superAdminOnly && authStore.admin?.role !== 'SUPER_ADMIN') {
+      return { name: 'dashboard' }
+    }
   }
 
   return true

@@ -54,3 +54,29 @@ model Memory {
   @@index([userId])
   @@index([isPublic])
 }
+
+/// 管理端管理员角色
+enum AdminRole {
+  SUPER_ADMIN
+  OPERATOR
+  VIEWER
+}
+
+/// 管理端管理员状态
+enum AdminStatus {
+  ACTIVE
+  DISABLED
+}
+
+/// 管理端管理员账号
+model AdminUser {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  displayName  String
+  role         AdminRole
+  status       AdminStatus @default(ACTIVE)
+  lastLoginAt  DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
