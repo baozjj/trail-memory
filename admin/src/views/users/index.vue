@@ -64,8 +64,8 @@ function onPageChange(p: { current: number; pageSize: number }) {
   void loadList()
 }
 
-function goAllMemories(userId: string) {
-  void router.push({ name: 'memories', query: { userId } })
+function goAllMemories(userEmail: string) {
+  void router.push({ name: 'memories', query: { userEmail } })
 }
 </script>
 
@@ -253,7 +253,7 @@ function goAllMemories(userId: string) {
                 theme="primary"
                 variant="text"
                 size="small"
-                @click="goAllMemories(detail.id)"
+                @click="goAllMemories(detail.email)"
               >
                 查看全部
               </t-button>

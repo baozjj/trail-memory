@@ -17,3 +17,16 @@ export function resolveCoverUrlForType(typeId: string | null | undefined): strin
   if (!typeId) return ''
   return TYPE_COVER_BY_ID[typeId] ?? ''
 }
+
+const TYPE_LABEL_BY_ID: Record<string, string> = {
+  'xihu-biaoyi': '西湖标毅线',
+  wugongshan: '武功山',
+  'xihu-aixin': '西湖爱心线',
+  wutongshan: '梧桐山',
+}
+
+/** 印记类型展示名；未知类型返回 null */
+export function resolveTypeLabel(typeId: string | null | undefined): string | null {
+  if (!typeId) return null
+  return TYPE_LABEL_BY_ID[typeId] ?? null
+}

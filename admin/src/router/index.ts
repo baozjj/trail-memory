@@ -32,8 +32,8 @@ const router = createRouter({
         {
           path: 'memories',
           name: 'memories',
-          component: () => import('@/views/placeholder/index.vue'),
-          meta: { title: '印记管理', placeholder: 'M03' },
+          component: () => import('@/views/memories/index.vue'),
+          meta: { title: '印记管理' },
         },
         {
           path: 'imprint-types',

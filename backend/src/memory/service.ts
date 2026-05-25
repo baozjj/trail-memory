@@ -72,13 +72,16 @@ function toMemoryArticleDto(memory: Memory, user: User): MemoryArticleDto {
   }
 }
 
-/** 按 ID 获取当前用户的印记（不存在或非本人则 null） */
+/** 未软删印记过滤条件 */
+const notDeleted = { deletedAt: null } as const
+
+/** 按 ID 获取当前用户的印记（不存在、非本人或已软删则 null） */
 async function findOwnedMemory(
   userId: string,
   memoryId: string,
 ): Promise<Memory | null> {
   const memory = await prisma.memory.findFirst({
-    where: { id: memoryId, userId },
+    where: { id: memoryId, userId, ...notDeleted },
   })
   return memory
 }
@@ -92,6 +95,7 @@ export async function listMemoriesForUser(
   const memories = await prisma.memory.findMany({
     where: {
       userId,
+      ...notDeleted,
       ...(q
         ? {
             title: { contains: q },
@@ -148,6 +152,10 @@ export async function getMemoryArticleByShareSlug(
     throw notFoundError('印记不存在')
   }
 
+  if (memory.deletedAt) {
+    throw notFoundError('印记不存在')
+  }
+
   if (!memory.isPublic) {
     throw notFoundError('印记不存在')
   }
@@ -165,6 +173,10 @@ export async function getMemoryArticleView(
     include: { user: true },
   })
   if (!memory) {
+    throw notFoundError('印记不存在')
+  }
+
+  if (memory.deletedAt) {
     throw notFoundError('印记不存在')
   }
 
@@ -207,7 +219,7 @@ export async function patchMemoryExhibit(
   }
 }
 
-/** 删除印记 */
+/** 软删除印记（C 端与管理端统一策略） */
 export async function deleteMemory(
   userId: string,
   memoryId: string,
@@ -216,7 +228,10 @@ export async function deleteMemory(
   if (!memory) {
     throw notFoundError('印记不存在')
   }
-  await prisma.memory.delete({ where: { id: memoryId } })
+  await prisma.memory.update({
+    where: { id: memoryId },
+    data: { deletedAt: new Date() },
+  })
 }
 
 /** 生成默认分享后缀 */
