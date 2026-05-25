@@ -2,10 +2,12 @@ import "dotenv/config";
 import { createApp } from "./app.js";
 import { loadEnv } from "./config/env.js";
 import { prisma } from "./lib/prisma.js";
+import { warmImprintTypeCache } from "./imprint-types/service.js";
 
 /** 启动 HTTP 服务 */
 async function main(): Promise<void> {
   const { port } = loadEnv();
+  await warmImprintTypeCache();
   const app = createApp();
 
   const server = app.listen(port, () => {

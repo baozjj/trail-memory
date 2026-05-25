@@ -1,6 +1,7 @@
-import type { ImprintTypeDefinition, ImprintTypeId } from './types'
+import type { ImprintTypeDefinition } from './types'
+import { useImprintTypesStore } from '@/stores/imprint-types'
 
-/** 新增类型：在此追加一项，并将封面图放入 public/imprint-types/ */
+/** 接口失败时的兜底注册表（与种子数据一致） */
 export const IMPRINT_TYPE_REGISTRY: readonly ImprintTypeDefinition[] = [
   {
     id: 'xihu-biaoyi',
@@ -24,26 +25,40 @@ export const IMPRINT_TYPE_REGISTRY: readonly ImprintTypeDefinition[] = [
   },
 ] as const
 
-const byId = new Map<string, ImprintTypeDefinition>(
+const fallbackById = new Map<string, ImprintTypeDefinition>(
   IMPRINT_TYPE_REGISTRY.map((item) => [item.id, item]),
 )
+
+function enabledRegistry(): ImprintTypeDefinition[] {
+  const store = useImprintTypesStore()
+  if (store.loaded && store.enabledItems.length > 0) {
+    return store.enabledItems
+  }
+  return [...IMPRINT_TYPE_REGISTRY]
+}
 
 export function getImprintTypeById(
   typeId: string | null | undefined,
 ): ImprintTypeDefinition | undefined {
   if (!typeId) return undefined
-  return byId.get(typeId)
+  const fromEnabled = enabledRegistry().find((item) => item.id === typeId)
+  if (fromEnabled) return fromEnabled
+  return fallbackById.get(typeId)
 }
 
 export function getImprintTypeLabel(typeId: string | null | undefined): string | undefined {
   return getImprintTypeById(typeId)?.label
 }
 
-export function isKnownImprintTypeId(typeId: string): typeId is ImprintTypeId {
-  return byId.has(typeId)
+export function isKnownImprintTypeId(typeId: string): boolean {
+  return Boolean(getImprintTypeById(typeId))
 }
 
-/** 列表封面图 URL；无类型或未知类型时返回 null（由 UI 展示六边形占位） */
 export function resolveImprintTypeCoverSrc(typeId: string | null | undefined): string | null {
   return getImprintTypeById(typeId)?.coverSrc ?? null
+}
+
+/** 发布页可选类型（仅 enabled，按 API 顺序） */
+export function getEnabledImprintTypes(): ImprintTypeDefinition[] {
+  return enabledRegistry()
 }

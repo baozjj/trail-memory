@@ -4,6 +4,8 @@ export interface MemoryListItemDto {
   title: string
   coverUrl: string
   typeId: string | null
+  /** 类型展示名（含已停用类型，供 C 端列表展示） */
+  typeLabel?: string
   heightWeight: number
   isPublic: boolean
   linkSuffix: string

@@ -64,7 +64,10 @@ export function isoDateToTimestamp(iso: string): number {
   if (!ISO_DATE_RE.test(iso)) {
     return Date.now()
   }
-  const [y, m, d] = iso.split('-').map((part) => Number(part))
+  const [yRaw, mRaw, dRaw] = iso.split('-').map((part) => Number(part))
+  const y = yRaw ?? 0
+  const m = mRaw ?? 1
+  const d = dRaw ?? 1
   return new Date(y, m - 1, d).getTime()
 }
 

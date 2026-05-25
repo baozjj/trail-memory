@@ -5,6 +5,7 @@ import TDesign from 'tdesign-mobile-vue'
 import App from './App.vue'
 import router from './router'
 import { useAuthStore } from '@/stores/auth'
+import { useImprintTypesStore } from '@/stores/imprint-types'
 import 'tdesign-mobile-vue/es/style/index.css'
 import './styles/tokens.css'
 import './styles/base.css'
@@ -18,7 +19,8 @@ app.use(TDesign)
 
 async function bootstrap() {
   const authStore = useAuthStore(pinia)
-  await authStore.bootstrap()
+  const imprintTypesStore = useImprintTypesStore(pinia)
+  await Promise.all([authStore.bootstrap(), imprintTypesStore.fetchTypes()])
   app.mount('#app')
 }
 

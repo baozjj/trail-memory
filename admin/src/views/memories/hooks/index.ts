@@ -7,6 +7,7 @@ import {
   listMemories,
   softDeleteMemory,
 } from '@/api/memories'
+import { listImprintTypes } from '@/api/imprint-types'
 import { getApiErrorMessage } from '@/api/http'
 import { useAdminAuthStore } from '@/stores/admin-auth'
 import type { MemoryDetail, MemoryListItem } from '../types'
@@ -38,6 +39,7 @@ export function useMemoriesPage() {
 
   const imageViewerVisible = ref(false)
   const imageViewerIndex = ref(0)
+  const typeOptions = ref([{ value: '', label: '全部类型' }])
 
   function buildQueryParams() {
     const params: Parameters<typeof listMemories>[0] = {
@@ -168,10 +170,23 @@ export function useMemoriesPage() {
     imageViewerVisible.value = true
   }
 
+  async function loadTypeOptions() {
+    try {
+      const types = await listImprintTypes()
+      typeOptions.value = [
+        { value: '', label: '全部类型' },
+        ...types.map((t) => ({ value: t.id, label: t.label })),
+      ]
+    } catch {
+      // 筛选降级：无类型选项时仍可查询
+    }
+  }
+
   onMounted(() => {
     if (typeof route.query.userEmail === 'string' && route.query.userEmail) {
       filters.userEmail = route.query.userEmail
     }
+    void loadTypeOptions()
     void loadList()
   })
 
@@ -196,6 +211,7 @@ export function useMemoriesPage() {
     confirmUnpublish,
     confirmDelete,
     copyShareSlug,
+    typeOptions,
     openImageViewer,
   }
 }

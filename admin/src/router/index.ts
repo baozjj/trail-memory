@@ -38,8 +38,8 @@ const router = createRouter({
         {
           path: 'imprint-types',
           name: 'imprint-types',
-          component: () => import('@/views/placeholder/index.vue'),
-          meta: { title: '印记类型', placeholder: 'M04' },
+          component: () => import('@/views/imprint-types/index.vue'),
+          meta: { title: '印记类型' },
         },
         {
           path: 'media',

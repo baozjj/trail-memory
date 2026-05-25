@@ -14,6 +14,8 @@ export interface ImprintListItem {
   coverUrl: string
   /** 印记类型 id，对应 config/imprint-types 注册表；空表示未选类型 */
   typeId: string | null
+  /** 类型展示名（后端解析，含已停用类型） */
+  typeLabel?: string
   /** 瀑布流高度权重，越大卡片越高 */
   heightWeight: number
   /** 公开展示：开启则游客可看 */

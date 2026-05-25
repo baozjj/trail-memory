@@ -2,8 +2,8 @@ import type { Memory, User } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma.js";
 import { AppError, notFoundError } from "../../types/app-error.js";
-import { resolveTypeLabel } from "../../imprint-types/registry.js";
-import { resolveCoverUrlForType } from "../../imprint-types/registry.js";
+import { resolveTypeLabel } from "../../imprint-types/service.js";
+import { resolveCoverUrlForType } from "../../imprint-types/service.js";
 import { writeAuditLog } from "../shared/audit.js";
 import {
   listMemoriesQuerySchema,

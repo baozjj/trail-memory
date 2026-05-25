@@ -1,11 +1,3 @@
-export const IMPRINT_TYPE_OPTIONS = [
-  { value: '', label: '全部类型' },
-  { value: 'xihu-biaoyi', label: '西湖标毅线' },
-  { value: 'wugongshan', label: '武功山' },
-  { value: 'xihu-aixin', label: '西湖爱心线' },
-  { value: 'wutongshan', label: '梧桐山' },
-]
-
 export const PUBLIC_FILTER_OPTIONS = [
   { value: '', label: '全部' },
   { value: 'true', label: '公开' },

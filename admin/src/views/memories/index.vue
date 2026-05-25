@@ -3,7 +3,6 @@ import {
   CONTENT_PREVIEW_LENGTH,
   deletedLabel,
   deletedTheme,
-  IMPRINT_TYPE_OPTIONS,
   PUBLIC_FILTER_OPTIONS,
   publicLabel,
   publicTheme,
@@ -33,6 +32,7 @@ const {
   confirmDelete,
   copyShareSlug,
   openImageViewer,
+  typeOptions,
 } = useMemoriesPage()
 
 const columns = [
@@ -96,7 +96,7 @@ function sharePath(slug: string) {
       />
       <t-select
         v-model="filters.typeId"
-        :options="IMPRINT_TYPE_OPTIONS"
+        :options="typeOptions"
         placeholder="印记类型"
         style="width: 140px"
       />

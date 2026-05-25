@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue'
 import { Cell as TCell, Picker as TPicker, Popup as TPopup } from 'tdesign-mobile-vue'
 import {
+  getEnabledImprintTypes,
   getImprintTypeLabel,
-  IMPRINT_TYPE_REGISTRY,
 } from '@/config/imprint-types'
 import { TYPE_CELL_TITLE, TYPE_CLEAR_LABEL, TYPE_PLACEHOLDER } from './const'
 import type { PublishTypePickerEmits, PublishTypePickerProps } from './types'
@@ -21,7 +21,7 @@ const displayNote = computed(() => {
 const pickerColumns = computed(() => [
   [
     { label: TYPE_CLEAR_LABEL, value: '' },
-    ...IMPRINT_TYPE_REGISTRY.map((item) => ({
+    ...getEnabledImprintTypes().map((item) => ({
       label: item.label,
       value: item.id,
     })),

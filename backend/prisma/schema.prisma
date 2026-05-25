@@ -65,6 +65,17 @@ model Memory {
   @@index([deletedAt])
 }
 
+/// 印记类型配置（M04 入库，替代硬编码 registry）
+model ImprintType {
+  id        String   @id
+  label     String
+  coverPath String
+  sortOrder Int      @default(0)
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 /// 管理端管理员角色
 enum AdminRole {
   SUPER_ADMIN

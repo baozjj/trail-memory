@@ -1,8 +1,8 @@
-/** 印记类型 id（与后端 typeId、静态资源文件名解耦，便于扩展） */
-export type ImprintTypeId = 'xihu-biaoyi' | 'wugongshan' | 'xihu-aixin' | 'wutongshan'
+/** 印记类型 id（动态配置，不再限制为固定 union） */
+export type ImprintTypeId = string
 
 export interface ImprintTypeDefinition {
-  id: ImprintTypeId
+  id: string
   /** 展示名称，如「西湖标毅线」 */
   label: string
   /** 列表封面图（public 目录下路径） */

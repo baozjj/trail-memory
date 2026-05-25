@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isKnownImprintTypeId } from '../imprint-types/registry.js'
+import { isEnabledImprintTypeId } from '../imprint-types/service.js'
 
 export const linkSuffixSchema = z
   .string()
@@ -19,7 +19,7 @@ const imageUrlSchema = z
 const imprintTypeIdSchema = z
   .string()
   .min(1)
-  .refine((value) => isKnownImprintTypeId(value), { message: '印记类型无效' })
+  .refine((value) => isEnabledImprintTypeId(value), { message: '印记类型无效' })
 
 const memoryFieldsSchema = {
   title: z.string().min(1, '标题不能为空').max(60, '标题过长'),

@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client'
 import { prisma } from '../lib/prisma.js'
 import { AppError, notFoundError } from '../types/app-error.js'
 import type { PatchMemoryBody } from './schema.js'
-import { resolveCoverUrlForType } from '../imprint-types/registry.js'
+import { resolveCoverUrlForType, resolveTypeLabel } from '../imprint-types/service.js'
 import type {
   MemoryArticleDto,
   MemoryAuthorDto,
@@ -18,6 +18,7 @@ export function toMemoryListItemDto(memory: Memory): MemoryListItemDto {
     id: memory.id,
     title: memory.title,
     typeId,
+    typeLabel: resolveTypeLabel(typeId) ?? undefined,
     coverUrl: memory.coverUrl || resolveCoverUrlForType(typeId),
     heightWeight: memory.heightWeight,
     isPublic: memory.isPublic,
