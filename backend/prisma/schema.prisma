@@ -10,20 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// C 端用户账号状态
+enum UserStatus {
+  ACTIVE
+  BANNED
+}
+
 /// 用户：登录凭证 + 个人名片信息
 model User {
-  id                  String   @id @default(cuid())
-  email               String   @unique
+  id                  String     @id @default(cuid())
+  email               String     @unique
   passwordHash        String
   /// 邮箱是否已验证（注册时默认 false）
-  isVerified          Boolean  @default(false)
+  isVerified          Boolean    @default(false)
   nickname            String
-  signature           String   @default("")
-  avatarUrl           String   @default("")
+  signature           String     @default("")
+  avatarUrl           String     @default("")
   /// 在游客页展示我的名片
-  showCardOnGuestPage Boolean  @default(true)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  showCardOnGuestPage Boolean    @default(true)
+  status              UserStatus @default(ACTIVE)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
   memories            Memory[]
 }
 
@@ -47,12 +54,15 @@ model Memory {
   /// 元信息，如「2024年5月16日 · 四川·稻城亚丁」
   meta         String   @default("")
   /// 图片 URL 列表，JSON 数组字符串存储
-  images       String   @default("[]")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  images       String    @default("[]")
+  /// 软删时间（M03 写入；null 表示未删除）
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   @@index([userId])
   @@index([isPublic])
+  @@index([deletedAt])
 }
 
 /// 管理端管理员角色

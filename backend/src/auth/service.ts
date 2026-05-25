@@ -51,6 +51,7 @@ export async function registerUser(body: RegisterBody): Promise<{
       passwordHash,
       nickname,
       isVerified: !emailVerification,
+      status: "ACTIVE",
     },
   });
 
@@ -83,6 +84,10 @@ export async function loginUser(
   const matched = await bcrypt.compare(body.password, user.passwordHash);
   if (!matched) {
     throw new AppError(LOGIN_FAIL_MESSAGE, 401, "INVALID_CREDENTIALS");
+  }
+
+  if (user.status === "BANNED") {
+    throw new AppError("账号已停用", 401, "ACCOUNT_BANNED");
   }
 
   const token = signAccessToken({ userId: user.id, email: user.email });

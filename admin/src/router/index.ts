@@ -26,8 +26,8 @@ const router = createRouter({
         {
           path: 'users',
           name: 'users',
-          component: () => import('@/views/placeholder/index.vue'),
-          meta: { title: '用户管理', placeholder: 'M02' },
+          component: () => import('@/views/users/index.vue'),
+          meta: { title: '用户管理' },
         },
         {
           path: 'memories',
