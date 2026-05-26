@@ -11,6 +11,8 @@ export default defineConfig({
     },
   },
   server: {
+    // 监听所有网卡，局域网可通过 http://<电脑IP>:5174 访问
+    host: true,
     port: 5174,
     strictPort: true,
     proxy: {
@@ -29,6 +31,7 @@ export default defineConfig({
     },
   },
   preview: {
+    host: true,
     port: 4174,
     strictPort: true,
   },

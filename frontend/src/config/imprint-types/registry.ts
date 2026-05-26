@@ -1,3 +1,4 @@
+import { getActivePinia } from 'pinia'
 import type { ImprintTypeDefinition } from './types'
 import { useImprintTypesStore } from '@/stores/imprint-types'
 
@@ -30,9 +31,12 @@ const fallbackById = new Map<string, ImprintTypeDefinition>(
 )
 
 function enabledRegistry(): ImprintTypeDefinition[] {
-  const store = useImprintTypesStore()
-  if (store.loaded && store.enabledItems.length > 0) {
-    return store.enabledItems
+  const pinia = getActivePinia()
+  if (pinia) {
+    const store = useImprintTypesStore(pinia)
+    if (store.loaded && store.enabledItems.length > 0) {
+      return store.enabledItems
+    }
   }
   return [...IMPRINT_TYPE_REGISTRY]
 }
