@@ -12,12 +12,15 @@ import type {
   UpdateImprintTypeBody,
 } from "./schema.js";
 import type { AdminImprintType } from "./types.js";
+import { getImprintCoverImageInfo } from "../../lib/imprint-cover-info.js";
 
-function toAdminDto(row: ImprintType): AdminImprintType {
+async function toAdminDto(row: ImprintType): Promise<AdminImprintType> {
+  const coverInfo = await getImprintCoverImageInfo(row.coverPath);
   return {
     id: row.id,
     label: row.label,
     coverPath: row.coverPath,
+    coverInfo,
     sortOrder: row.sortOrder,
     enabled: row.enabled,
     createdAt: row.createdAt.toISOString(),
@@ -47,7 +50,7 @@ export async function listImprintTypes(
     where,
     orderBy: { sortOrder: "asc" },
   });
-  return rows.map(toAdminDto);
+  return await Promise.all(rows.map((row) => toAdminDto(row)));
 }
 
 /** 新建印记类型 */
@@ -80,7 +83,7 @@ export async function createImprintType(
     ip: actor.ip,
   });
 
-  return toAdminDto(row);
+  return await toAdminDto(row);
 }
 
 /** 更新印记类型 */
@@ -114,5 +117,5 @@ export async function updateImprintType(
     ip: actor.ip,
   });
 
-  return toAdminDto(row);
+  return await toAdminDto(row);
 }

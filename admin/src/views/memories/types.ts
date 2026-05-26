@@ -19,6 +19,11 @@ export interface MemoryDetail extends MemoryListItem {
   content: string
   meta: string
   images: string[]
+  imageInfos: Array<{
+    url: string
+    filename: string
+    sizeBytes: number | null
+  }>
   coverUrl: string
   heightWeight: number
   user: {

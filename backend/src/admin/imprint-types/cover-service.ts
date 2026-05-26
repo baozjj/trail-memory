@@ -7,6 +7,7 @@ import {
   IMPRINT_COVER_TEMP_DIR,
   IMPRINT_TYPES_DIR,
 } from "../../lib/imprint-types-dir.js";
+import { getImprintCoverImageInfo, type ImprintCoverImageInfo } from "../../lib/imprint-cover-info.js";
 import { processHexImageBuffer } from "../../lib/process-hex-image.js";
 import { AppError } from "../../types/app-error.js";
 
@@ -86,7 +87,7 @@ export async function processImprintCoverUpload(
 /** 确认并保存处理后的封面到 C 端静态目录 */
 export async function confirmImprintCover(
   body: ConfirmImprintCoverBody,
-): Promise<{ coverPath: string }> {
+): Promise<{ coverPath: string; coverInfo: ImprintCoverImageInfo }> {
   const tempPath = processedCoverPath(body.token);
   try {
     await fs.access(tempPath);
@@ -100,5 +101,7 @@ export async function confirmImprintCover(
   await fs.copyFile(tempPath, finalPath);
   await removeFileIfExists(tempPath);
 
-  return { coverPath: `/imprint-types/${filename}` };
+  const coverPath = `/imprint-types/${filename}`;
+  const coverInfo = await getImprintCoverImageInfo(coverPath);
+  return { coverPath, coverInfo };
 }

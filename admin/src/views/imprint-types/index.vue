@@ -19,6 +19,7 @@ const {
   coverConfirming,
   coverPreview,
   coverConfirmed,
+  coverInfo,
   coverPreviewSrc,
   canConfirmCover,
   coverNeedsConfirm,
@@ -34,7 +35,7 @@ const {
 } = useImprintTypesPage()
 
 const columns = [
-  { colKey: 'coverPath', title: '封面', width: 88 },
+  { colKey: 'coverPath', title: '封面', width: 200 },
   { colKey: 'id', title: 'ID', width: 140 },
   { colKey: 'label', title: '名称', width: 140 },
   { colKey: 'sortOrder', title: '排序', width: 80 },
@@ -56,6 +57,13 @@ function onFileInputChange(event: Event) {
   const file = input.files?.[0] ?? null
   onCoverFileChange(file)
   input.value = ''
+}
+
+function formatBytes(value: number | null) {
+  if (value === null || value < 0) return '大小未知'
+  if (value < 1024) return `${value} B`
+  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`
+  return `${(value / (1024 * 1024)).toFixed(2)} MB`
 }
 </script>
 
@@ -88,11 +96,19 @@ function onFileInputChange(event: Event) {
 
     <t-table row-key="id" :data="items" :columns="columns" :loading="loading" bordered stripe hover>
       <template #coverPath="{ row }">
-        <t-image
-          :src="(row as ImprintTypeItem).coverPath"
-          fit="cover"
-          class="imprint-types-page__cover"
-        />
+        <div class="imprint-types-page__cover-cell">
+          <t-image
+            :src="(row as ImprintTypeItem).coverPath"
+            fit="cover"
+            class="imprint-types-page__cover"
+          />
+          <div class="imprint-types-page__cover-meta">
+            <span class="imprint-types-page__cover-name" :title="(row as ImprintTypeItem).coverInfo.filename">
+              {{ (row as ImprintTypeItem).coverInfo.filename }}
+            </span>
+            <span>{{ formatBytes((row as ImprintTypeItem).coverInfo.sizeBytes) }}</span>
+          </div>
+        </div>
       </template>
       <template #enabled="{ row }">
         <t-switch
@@ -189,6 +205,12 @@ function onFileInputChange(event: Event) {
         <t-form-item label="封面路径">
           <t-input v-model="form.coverPath" placeholder="/imprint-types/maolihao.png" readonly />
         </t-form-item>
+        <t-form-item v-if="coverInfo" label="封面信息">
+          <div class="imprint-types-page__drawer-cover-meta">
+            <span class="imprint-types-page__cover-name" :title="coverInfo.filename">{{ coverInfo.filename }}</span>
+            <span>{{ formatBytes(coverInfo.sizeBytes) }}</span>
+          </div>
+        </t-form-item>
 
         <t-form-item label="排序">
           <t-input-number v-model="form.sortOrder" :min="0" :max="9999" theme="column" />
@@ -227,6 +249,29 @@ function onFileInputChange(event: Event) {
   width: 56px;
   height: 56px;
   border-radius: 6px;
+}
+
+.imprint-types-page__cover-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.imprint-types-page__cover-meta,
+.imprint-types-page__drawer-cover-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--td-text-color-secondary);
+}
+
+.imprint-types-page__cover-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .imprint-types-page__cover-field {

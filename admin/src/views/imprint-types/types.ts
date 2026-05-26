@@ -1,8 +1,15 @@
+/** 封面文件信息（与后端 coverInfo 对齐） */
+export interface ImprintCoverImageInfo {
+  filename: string
+  sizeBytes: number | null
+}
+
 /** 印记类型 */
 export interface ImprintTypeItem {
   id: string
   label: string
   coverPath: string
+  coverInfo: ImprintCoverImageInfo
   sortOrder: number
   enabled: boolean
   createdAt: string

@@ -9,7 +9,12 @@ import {
 } from '@/api/imprint-types'
 import { getApiErrorMessage } from '@/api/http'
 import { useAdminAuthStore } from '@/stores/admin-auth'
-import type { CreateImprintTypePayload, ImprintCoverPreview, ImprintTypeItem } from '../types'
+import type {
+  CreateImprintTypePayload,
+  ImprintCoverImageInfo,
+  ImprintCoverPreview,
+  ImprintTypeItem,
+} from '../types'
 
 const emptyForm = (): CreateImprintTypePayload => ({
   id: '',
@@ -42,6 +47,7 @@ export function useImprintTypesPage() {
   const coverConfirming = ref(false)
   const coverPreview = ref<ImprintCoverPreview | null>(null)
   const coverConfirmed = ref(false)
+  const coverInfo = ref<ImprintCoverImageInfo | null>(null)
 
   const coverPreviewSrc = computed(() => {
     if (coverPreview.value?.previewBase64) return coverPreview.value.previewBase64
@@ -63,6 +69,7 @@ export function useImprintTypesPage() {
     coverConfirming.value = false
     coverPreview.value = null
     coverConfirmed.value = false
+    coverInfo.value = null
   }
 
   function syncSuggestedCoverPath() {
@@ -123,6 +130,7 @@ export function useImprintTypesPage() {
     form.enabled = row.enabled
     resetCoverState()
     coverConfirmed.value = true
+    coverInfo.value = row.coverInfo
     drawerVisible.value = true
   }
 
@@ -171,8 +179,10 @@ export function useImprintTypesPage() {
 
     coverConfirming.value = true
     try {
-      const { coverPath } = await confirmImprintCover(coverPreview.value.token, typeId)
+      const result = await confirmImprintCover(coverPreview.value.token, typeId)
+      const { coverPath } = result
       form.coverPath = coverPath
+      coverInfo.value = result.coverInfo
       coverConfirmed.value = true
       MessagePlugin.success('封面已确认，可以保存类型')
     } catch (err) {
@@ -285,6 +295,7 @@ export function useImprintTypesPage() {
     coverConfirming,
     coverPreview,
     coverConfirmed,
+    coverInfo,
     coverPreviewSrc,
     canConfirmCover,
     coverNeedsConfirm,

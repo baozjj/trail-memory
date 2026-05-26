@@ -2,6 +2,7 @@ import { http } from '@/api/http'
 import type { ApiSuccessBody } from '@/types/api'
 import type {
   CreateImprintTypePayload,
+  ImprintCoverImageInfo,
   ImprintCoverPreview,
   ImprintTypeItem,
   UpdateImprintTypePayload,
@@ -64,10 +65,9 @@ export async function processImprintCover(
 export async function confirmImprintCover(
   token: string,
   typeId: string,
-): Promise<{ coverPath: string }> {
-  const { data } = await http.post<ApiSuccessBody<{ coverPath: string }>>(
-    '/api/admin/imprint-types/confirm-cover',
-    { token, typeId },
-  )
+): Promise<{ coverPath: string; coverInfo: ImprintCoverImageInfo }> {
+  const { data } = await http.post<
+    ApiSuccessBody<{ coverPath: string; coverInfo: ImprintCoverImageInfo }>
+  >('/api/admin/imprint-types/confirm-cover', { token, typeId })
   return data.data
 }

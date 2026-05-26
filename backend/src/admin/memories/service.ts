@@ -1,9 +1,12 @@
 import type { Memory, User } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { prisma } from "../../lib/prisma.js";
 import { AppError, notFoundError } from "../../types/app-error.js";
 import { resolveTypeLabel } from "../../imprint-types/service.js";
 import { resolveCoverUrlForType } from "../../imprint-types/service.js";
+import { UPLOAD_DIR } from "../../lib/upload-dir.js";
 import { writeAuditLog } from "../shared/audit.js";
 import {
   listMemoriesQuerySchema,
@@ -27,6 +30,32 @@ function parseImages(raw: string): string[] {
   }
 }
 
+function extractFilename(url: string): string {
+  try {
+    const pathname = new URL(url, "http://localhost").pathname;
+    return path.basename(pathname);
+  } catch {
+    return path.basename(url);
+  }
+}
+
+async function resolveImageSizeBytes(url: string): Promise<number | null> {
+  if (!url.startsWith("/uploads/")) {
+    return null;
+  }
+  const relativePath = url.slice("/uploads/".length);
+  if (!relativePath || relativePath.includes("..")) {
+    return null;
+  }
+  const filePath = path.join(UPLOAD_DIR, relativePath);
+  try {
+    const stat = await fs.stat(filePath);
+    return stat.isFile() ? stat.size : null;
+  } catch {
+    return null;
+  }
+}
+
 function toListItem(
   memory: Memory & { user: Pick<User, "email" | "nickname"> },
 ): AdminMemoryListItem {
@@ -47,15 +76,24 @@ function toListItem(
   };
 }
 
-function toDetail(
+async function toDetail(
   memory: Memory & { user: Pick<User, "id" | "email" | "nickname"> },
-): AdminMemoryDetail {
+): Promise<AdminMemoryDetail> {
   const typeId = memory.typeId ?? null;
+  const images = parseImages(memory.images);
+  const imageInfos = await Promise.all(
+    images.map(async (url) => ({
+      url,
+      filename: extractFilename(url),
+      sizeBytes: await resolveImageSizeBytes(url),
+    })),
+  );
   return {
     ...toListItem(memory),
     content: memory.content,
     meta: memory.meta,
-    images: parseImages(memory.images),
+    images,
+    imageInfos,
     coverUrl: memory.coverUrl || resolveCoverUrlForType(typeId),
     heightWeight: memory.heightWeight,
     user: {
@@ -153,7 +191,7 @@ export async function getMemoryDetail(id: string): Promise<AdminMemoryDetail> {
   if (!memory) {
     throw notFoundError("印记不存在");
   }
-  return toDetail(memory);
+  return await toDetail(memory);
 }
 
 /** 强制下架（isPublic → false，幂等不写审计） */
@@ -177,7 +215,7 @@ export async function forceUnpublishMemory(
   }
 
   if (memory.isPublic === false) {
-    return toDetail(memory);
+    return await toDetail(memory);
   }
 
   const updated = await prisma.memory.update({
@@ -200,7 +238,7 @@ export async function forceUnpublishMemory(
     ip: actor.ip,
   });
 
-  return toDetail(updated);
+  return await toDetail(updated);
 }
 
 /** 软删除印记（幂等不写审计） */

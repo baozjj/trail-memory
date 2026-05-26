@@ -66,6 +66,18 @@ function displayContent(content: string) {
 function sharePath(slug: string) {
   return `/m/${slug}`
 }
+
+function formatBytes(value: number | null) {
+  if (value === null || value < 0) return '大小未知'
+  if (value < 1024) return `${value} B`
+  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`
+  return `${(value / (1024 * 1024)).toFixed(2)} MB`
+}
+
+function getDetailImages(detail: MemoryDetail) {
+  if (detail.imageInfos?.length) return detail.imageInfos
+  return detail.images.map((url) => ({ url, filename: '未命名', sizeBytes: null }))
+}
 </script>
 
 <template>
@@ -227,14 +239,24 @@ function sharePath(slug: string) {
           <div v-if="detail.images.length" class="memories-page__images">
             <h3 class="memories-page__section-title">图片</h3>
             <div class="memories-page__image-grid">
-              <t-image
-                v-for="(url, index) in detail.images"
-                :key="url"
-                :src="url"
-                fit="cover"
-                class="memories-page__thumb"
-                @click="openImageViewer(index)"
-              />
+              <div
+                v-for="(image, index) in getDetailImages(detail)"
+                :key="image.url"
+                class="memories-page__image-item"
+              >
+                <t-image
+                  :src="image.url"
+                  fit="cover"
+                  class="memories-page__thumb"
+                  @click="openImageViewer(index)"
+                />
+                <div class="memories-page__image-meta">
+                  <span class="memories-page__image-name" :title="image.filename">
+                    {{ image.filename }}
+                  </span>
+                  <span>{{ formatBytes(image.sizeBytes) }}</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -332,11 +354,31 @@ function sharePath(slug: string) {
   gap: 8px;
 }
 
+.memories-page__image-item {
+  width: 120px;
+}
+
 .memories-page__thumb {
-  width: 96px;
-  height: 96px;
+  width: 120px;
+  height: 120px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.memories-page__image-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--tm-color-text-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.memories-page__image-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .memories-page__content-text {
