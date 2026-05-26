@@ -1,6 +1,5 @@
 import cors from "cors";
 import express from "express";
-import rateLimit from "express-rate-limit";
 import { authRouter } from "./auth/routes.js";
 import { ensureImprintTypesDir, IMPRINT_TYPES_DIR } from "./lib/imprint-types-dir.js";
 import { ensureUploadDir, UPLOAD_DIR } from "./lib/upload-dir.js";
@@ -28,19 +27,6 @@ export function createApp() {
   );
 
   app.use(express.json({ limit: "1mb" }));
-
-  app.use(
-    rateLimit({
-      windowMs: 15 * 60 * 1000,
-      max: 200,
-      standardHeaders: true,
-      legacyHeaders: false,
-      message: {
-        success: false,
-        error: { code: "RATE_LIMIT", message: "请求过于频繁，请稍后再试" },
-      },
-    }),
-  );
 
   app.get("/health", (_req, res) => {
     res.json({ success: true, data: { status: "ok" } });
