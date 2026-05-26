@@ -7,6 +7,7 @@ import {
   Cell as TCell,
   Button as TButton,
   Dialog as TDialog,
+  Upload as TUpload,
   Toast,
 } from 'tdesign-mobile-vue'
 import { CopyIcon } from 'tdesign-icons-vue-next'
@@ -32,7 +33,7 @@ import {
 
 const router = useRouter()
 const route = useRoute()
-const { draft, pickFromAlbum } = usePublishDraft()
+const { draft, pickFromAlbum, imageCompressing, uploadRef, imageUploadRequest } = usePublishDraft()
 const { submitting, loadingDetail, loadEditDetail, submit } = usePublishSubmit()
 
 const successDialogVisible = ref(false)
@@ -125,7 +126,20 @@ function onSuccessDialogClosed() {
   <MobilePage>
     <TNavbar :title="pageTitle" :z-index="100" left-arrow placeholder @left-click="goBack" />
     <div v-if="loadingDetail" class="publish__loading">加载中...</div>
-    <div v-else class="publish">
+    <div v-else class="publish" :class="{ 'publish--compressing': imageCompressing }">
+      <TUpload
+        ref="uploadRef"
+        class="publish__image-upload"
+        accept="image/*"
+        multiple
+        :auto-upload="true"
+        :add-btn="false"
+        :files="[]"
+        :request-method="imageUploadRequest"
+      />
+      <div v-if="imageCompressing" class="publish__compress-mask" aria-busy="true">
+        图片压缩中...
+      </div>
       <PublishImageRow v-model:images="draft.imageUrls" class="publish__media" @add="onAddImage" />
       <div class="publish__fields">
         <textarea
@@ -179,7 +193,7 @@ function onSuccessDialogClosed() {
         theme="primary"
         size="large"
         :loading="submitting"
-        :disabled="loadingDetail"
+        :disabled="loadingDetail || imageCompressing"
         @click="onSubmit"
       >
         {{ submitButtonLabel }}
@@ -236,6 +250,32 @@ function onSuccessDialogClosed() {
   gap: 18px;
   padding: 12px var(--tm-spacing-page-x) 16px;
   padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+
+.publish--compressing {
+  pointer-events: none;
+}
+
+.publish__image-upload {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.publish__compress-mask {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: var(--tm-font-size-subhead);
+  color: var(--tm-color-text-secondary);
+  pointer-events: auto;
 }
 
 .publish__media {

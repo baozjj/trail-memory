@@ -2,7 +2,7 @@ import { onUnmounted, reactive, toRefs, watch } from 'vue'
 import { createDefaultPublishDraft } from '@/mock'
 import type { PublishDraft } from '@/types/imprint'
 import { isBlobImageUrl, revokeBlobImageUrls } from '../utils'
-import { usePickAlbumImages } from './use-pick-album-images'
+import { usePublishImageUpload } from './use-publish-image-upload'
 
 export function usePublishDraft(initial?: Partial<PublishDraft>) {
   const draft = reactive<PublishDraft>({
@@ -10,7 +10,12 @@ export function usePublishDraft(initial?: Partial<PublishDraft>) {
     ...initial,
   })
 
-  const { pickFromAlbum } = usePickAlbumImages(draft)
+  const {
+    compressing: imageCompressing,
+    uploadRef,
+    requestMethod: imageUploadRequest,
+    pickFromAlbum,
+  } = usePublishImageUpload(draft)
 
   function addImage(url: string) {
     draft.imageUrls.push(url)
@@ -43,5 +48,8 @@ export function usePublishDraft(initial?: Partial<PublishDraft>) {
     addImage,
     pickFromAlbum,
     resetDraft,
+    imageCompressing,
+    uploadRef,
+    imageUploadRequest,
   }
 }
