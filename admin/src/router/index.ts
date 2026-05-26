@@ -44,8 +44,8 @@ const router = createRouter({
         {
           path: 'media',
           name: 'media',
-          component: () => import('@/views/placeholder/index.vue'),
-          meta: { title: '媒体资源', placeholder: 'M05' },
+          component: () => import('@/views/media/index.vue'),
+          meta: { title: '图片管理' },
         },
         {
           path: 'audit-logs',

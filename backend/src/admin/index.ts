@@ -5,6 +5,7 @@ import { adminsRouter } from "./admins/routes.js";
 import { usersRouter } from "./users/routes.js";
 import { memoriesRouter } from "./memories/routes.js";
 import { adminImprintTypesRouter } from "./imprint-types/routes.js";
+import { mediaRouter } from "./media/routes.js";
 
 /** 管理端 API 路由聚合 */
 export const adminRouter = Router();
@@ -24,3 +25,4 @@ adminRouter.use("/admins", adminsRouter);
 adminRouter.use("/users", usersRouter);
 adminRouter.use("/memories", memoriesRouter);
 adminRouter.use("/imprint-types", adminImprintTypesRouter);
+adminRouter.use("/media", mediaRouter);
