@@ -11,7 +11,8 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
-    "compress-uploads": "tsx scripts/compress-uploads.ts"
+    "compress-uploads": "tsx scripts/compress-uploads.ts",
+    "imprint-covers:migrate-jpeg": "tsx scripts/migrate-imprint-type-covers-png-to-jpeg.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

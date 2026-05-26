@@ -34,7 +34,7 @@ export interface ProcessedImprintCoverPreview {
 }
 
 function processedCoverPath(token: string): string {
-  return path.join(IMPRINT_COVER_TEMP_DIR, `${token}.png`);
+  return path.join(IMPRINT_COVER_TEMP_DIR, `${token}.jpg`);
 }
 
 async function removeFileIfExists(filePath: string): Promise<void> {
@@ -72,11 +72,11 @@ export async function processImprintCoverUpload(
   await fs.writeFile(processedCoverPath(token), processed.buffer);
 
   const safeTypeId = typeId?.trim() || "cover";
-  const suggestedCoverPath = `/imprint-types/${safeTypeId}.png`;
+  const suggestedCoverPath = `/imprint-types/${safeTypeId}.jpg`;
 
   return {
     token,
-    previewBase64: `data:image/png;base64,${processed.buffer.toString("base64")}`,
+    previewBase64: `data:image/jpeg;base64,${processed.buffer.toString("base64")}`,
     hexWidth: processed.hexWidth,
     hexHeight: processed.hexHeight,
     canvasSize: processed.canvasSize,
@@ -96,7 +96,7 @@ export async function confirmImprintCover(
   }
 
   ensureImprintTypesDir();
-  const filename = `${body.typeId}.png`;
+  const filename = `${body.typeId}.jpg`;
   const finalPath = path.join(IMPRINT_TYPES_DIR, filename);
   await fs.copyFile(tempPath, finalPath);
   await removeFileIfExists(tempPath);

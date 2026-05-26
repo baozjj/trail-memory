@@ -213,7 +213,7 @@ trail-memory/
 **六边形封面处理**（示例）：
 
 ```bash
-npm run process-hex-image -- ./西湖标毅线.png -o ./西湖标毅线-1.png
+npm run process-hex-image -- ./西湖标毅线.png -o ./西湖标毅线-1.jpg
 ```
 
 ---

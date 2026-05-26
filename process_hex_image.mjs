@@ -74,7 +74,7 @@ async function processImage() {
         }
 
         // 5. 创建纯白画布，并使用 top/left 绝对坐标强制粘贴
-        await sharp({
+        const pipeline = sharp({
             create: {
                 width: totalSize,
                 height: totalSize,
@@ -84,10 +84,18 @@ async function processImage() {
         })
         .composite([{ 
             input: trimmedBuffer.data, 
-            top: paddingTop,    // 强制控制上间距
-            left: paddingLeft   // 强制控制左间距
-        }])
-        .toFile(outputPath);
+            top: paddingTop,
+            left: paddingLeft
+        }]);
+
+        const outLower = outputPath.toLowerCase();
+        if (outLower.endsWith('.jpg') || outLower.endsWith('.jpeg')) {
+            await pipeline
+                .jpeg({ quality: 82, mozjpeg: true, chromaSubsampling: '4:4:4' })
+                .toFile(outputPath);
+        } else {
+            await pipeline.png().toFile(outputPath);
+        }
 
         if (isVerbose) {
             console.log(`[+] 处理完成！图片已完美按比例保存至: ${outputPath}\n`);

@@ -7,22 +7,22 @@ export const IMPRINT_TYPE_REGISTRY: readonly ImprintTypeDefinition[] = [
   {
     id: 'xihu-biaoyi',
     label: '西湖标毅线',
-    coverSrc: '/imprint-types/西湖标毅线.png',
+    coverSrc: '/imprint-types/西湖标毅线.jpg',
   },
   {
     id: 'wugongshan',
     label: '武功山',
-    coverSrc: '/imprint-types/武功山.png',
+    coverSrc: '/imprint-types/武功山.jpg',
   },
   {
     id: 'xihu-aixin',
     label: '西湖爱心线',
-    coverSrc: '/imprint-types/西湖爱心线.png',
+    coverSrc: '/imprint-types/西湖爱心线.jpg',
   },
   {
     id: 'wutongshan',
     label: '梧桐山',
-    coverSrc: '/imprint-types/梧桐山.png',
+    coverSrc: '/imprint-types/梧桐山.jpg',
   },
 ] as const
 

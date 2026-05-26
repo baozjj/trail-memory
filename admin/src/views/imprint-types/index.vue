@@ -203,7 +203,7 @@ function formatBytes(value: number | null) {
         </t-form-item>
 
         <t-form-item label="封面路径">
-          <t-input v-model="form.coverPath" placeholder="/imprint-types/maolihao.png" readonly />
+          <t-input v-model="form.coverPath" placeholder="/imprint-types/maolihao.jpg" readonly />
         </t-form-item>
         <t-form-item v-if="coverInfo" label="封面信息">
           <div class="imprint-types-page__drawer-cover-meta">

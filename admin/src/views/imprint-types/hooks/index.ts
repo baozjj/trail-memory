@@ -76,7 +76,7 @@ export function useImprintTypesPage() {
     const id = form.id.trim()
     if (!id) return
     if (coverConfirmed.value || coverPreview.value) return
-    form.coverPath = `/imprint-types/${id}.png`
+    form.coverPath = `/imprint-types/${id}.jpg`
   }
 
   watch(

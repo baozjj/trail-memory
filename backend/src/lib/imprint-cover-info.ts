@@ -17,7 +17,7 @@ function extractFilename(coverPath: string): string {
   }
 }
 
-/** 根据 coverPath（如 /imprint-types/foo.png）解析磁盘上的文件大小 */
+/** 根据 coverPath（如 /imprint-types/foo.jpg）解析磁盘上的文件大小 */
 export async function getImprintCoverImageInfo(
   coverPath: string,
 ): Promise<ImprintCoverImageInfo> {

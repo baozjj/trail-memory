@@ -3,6 +3,8 @@ import sharp from "sharp";
 export interface ProcessHexImageOptions {
   /** 白底裁剪容差，越大越能去掉边缘浅灰阴影 */
   threshold?: number;
+  /** JPEG 质量 1–100，默认 82（体积明显小于 PNG） */
+  jpegQuality?: number;
 }
 
 export interface ProcessHexImageResult {
@@ -21,6 +23,7 @@ export async function processHexImageBuffer(
   options: ProcessHexImageOptions = {},
 ): Promise<ProcessHexImageResult> {
   const trimThreshold = options.threshold ?? 50;
+  const jpegQuality = options.jpegQuality ?? 82;
 
   const trimmedBuffer = await sharp(input)
     .flatten({ background: { r: 255, g: 255, b: 255 } })
@@ -51,7 +54,7 @@ export async function processHexImageBuffer(
         left: paddingLeft,
       },
     ])
-    .png()
+    .jpeg({ quality: jpegQuality, mozjpeg: true, chromaSubsampling: "4:4:4" })
     .toBuffer();
 
   return {
