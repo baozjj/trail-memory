@@ -8,7 +8,7 @@ import {
   publicTheme,
 } from './const'
 import { useMemoriesPage } from './hooks'
-import type { MemoryListItem } from './types'
+import type { MemoryDetail, MemoryListItem } from './types'
 
 const {
   canWrite,
