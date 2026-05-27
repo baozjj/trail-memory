@@ -64,7 +64,7 @@ function displayContent(content: string) {
 }
 
 function sharePath(slug: string) {
-  return `/m/${slug}`
+  return `/#/m/${slug}`
 }
 
 function formatBytes(value: number | null) {

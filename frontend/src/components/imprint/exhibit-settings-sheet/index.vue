@@ -36,7 +36,7 @@ watch(
 )
 
 const lockedPrefix = computed(() =>
-  props.item ? imprintLinkPrefix(props.item.id) : '/m/-',
+  props.item ? imprintLinkPrefix(props.item.id) : imprintLinkPrefix(''),
 )
 
 function onSuffixInput(event: Event) {

@@ -65,7 +65,9 @@ const pageTitle = computed(() => (isEditMode.value ? '编辑印记' : '封存印
 const submitButtonLabel = computed(() =>
   isEditMode.value ? EDIT_SUBMIT_BUTTON_LABEL : SUBMIT_BUTTON_LABEL,
 )
-const lockedLinkPrefix = computed(() => (editId.value ? imprintLinkPrefix(editId.value) : '/m/-'))
+const lockedLinkPrefix = computed(() =>
+  editId.value ? imprintLinkPrefix(editId.value) : imprintLinkPrefix(''),
+)
 
 onMounted(() => {
   void nextTick(syncPublishFieldHeights)

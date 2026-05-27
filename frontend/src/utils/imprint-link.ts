@@ -1,7 +1,10 @@
 import { SHARE_DOMAIN } from '@/mock/domain'
 import type { ImprintListItem } from '@/types/imprint'
 
-/** 解析分享路径 /m/{id}-{linkSuffix} */
+/** Hash 路由下分享路径（复制/NFC 写入必须带 `#`） */
+export const IMPRINT_SHARE_ROUTE_PREFIX = '/#/m/'
+
+/** 解析分享路径 /m/{id}-{linkSuffix}（slug 不含 # 前缀） */
 export function parseShareSlug(slug: string): { id: string; linkSuffix: string } | null {
   const trimmed = slug.trim()
   if (!trimmed) return null
@@ -28,11 +31,11 @@ export function buildImprintShareLink(
     typeof window !== 'undefined' && window.location.protocol
       ? window.location.protocol
       : 'https:'
-  return `${protocol}//${host}/m/${item.id}-${item.linkSuffix}`
+  return `${protocol}//${host}${IMPRINT_SHARE_ROUTE_PREFIX}${item.id}-${item.linkSuffix}`
 }
 
 export function imprintLinkPrefix(id: string): string {
-  return `/m/${id}-`
+  return `${IMPRINT_SHARE_ROUTE_PREFIX}${id}-`
 }
 
 const SUFFIX_PATTERN = /^[a-zA-Z0-9]*$/
