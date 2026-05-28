@@ -73,7 +73,9 @@ backend/
 | POST | `/api/memories` | 创建印记 |
 | PUT | `/api/memories/:id` | 更新印记（发布编辑） |
 
-本地上传目录：`backend/uploads/`（静态访问 `/uploads/*`）。后续可替换为 OSS。
+上传目录通过 `UPLOAD_DIR` 配置，默认值为 `../data/uploads`（相对 `backend/`，即 `backend` 外层持久化目录），静态访问 `/uploads/*`。
+
+SQLite 通过 `DATABASE_URL` 配置，推荐使用 `file:../../data/db/dev.db`（相对 `backend/prisma/schema.prisma`）或服务器绝对路径，避免部署覆盖代码时影响数据库文件。
 
 npm run build
 npx prisma db push

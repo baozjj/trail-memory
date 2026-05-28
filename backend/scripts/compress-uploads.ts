@@ -6,6 +6,7 @@
  *   npm run compress-uploads --prefix backend
  *   npm run compress-uploads --prefix backend -- --dry-run
  */
+import 'dotenv/config'
 import fs from 'node:fs'
 import path from 'node:path'
 import { parseArgs } from 'node:util'
