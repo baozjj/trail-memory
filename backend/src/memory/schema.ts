@@ -25,7 +25,7 @@ const memoryFieldsSchema = {
   title: z.string().min(1, '标题不能为空').max(60, '标题过长'),
   content: z.string().max(10000).optional().default(''),
   meta: z.string().max(200).optional().default(''),
-  images: z.array(imageUrlSchema).min(1, '至少上传一张图片').max(9),
+  images: z.array(imageUrlSchema).min(1, '至少上传一张图片'),
   typeId: imprintTypeIdSchema.nullable().optional(),
   isPublic: z.boolean(),
   linkSuffix: linkSuffixSchema.optional(),

@@ -76,9 +76,7 @@ export function usePublishSubmit() {
         ...(editId && linkSuffix ? { linkSuffix } : {}),
       }
 
-      const item = editId
-        ? await updateMemoryApi(editId, payload)
-        : await createMemoryApi(payload)
+      const item = editId ? await updateMemoryApi(editId, payload) : await createMemoryApi(payload)
 
       try {
         await imprintStore.fetchList()
